@@ -1,24 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
-  NavItem,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Container,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input
+  Container
 } from "reactstrap";
 
-import routes from "routes.js";
 
 class Header extends React.Component {
   state = {
@@ -46,31 +38,7 @@ class Header extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   };
-  getBrand = () => {
-    var name;
-    routes.map((prop, key) => {
-      if (prop.collapse) {
-        prop.views.map((prop, key) => {
-          if (prop.path === this.props.location.pathname) {
-            name = prop.name;
-          }
-          return null;
-        });
-      } else {
-        if (prop.redirect) {
-          if (prop.path === this.props.location.pathname) {
-            name = prop.name;
-          }
-        } else {
-          if (prop.path === this.props.location.pathname) {
-            name = prop.name;
-          }
-        }
-      }
-      return null;
-    });
-    return name;
-  };
+ 
   openSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
     this.sidebarToggle.current.classList.toggle("toggled");
@@ -116,7 +84,7 @@ class Header extends React.Component {
               (this.state.color === "transparent" ? "navbar-transparent " : "")
         }
       >
-        <Container fluid>
+        <Container>
           <div className="navbar-wrapper">
             <div className="navbar-toggle">
               <button
@@ -130,7 +98,6 @@ class Header extends React.Component {
                 <span className="navbar-toggler-bar bar3" />
               </button>
             </div>
-            <NavbarBrand href="/">{this.getBrand()}</NavbarBrand>
           </div>
           <NavbarToggler onClick={this.toggle}>
             <span className="navbar-toggler-bar navbar-kebab" />
@@ -162,6 +129,7 @@ class Header extends React.Component {
             </Nav>
           </Collapse>
         </Container>
+        
       </Navbar>
     );
   }
