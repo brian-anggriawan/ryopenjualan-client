@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Nav , Dropdown , DropdownItem , DropdownToggle , DropdownMenu , Collapse , Button , Card , CardBody } from "reactstrap";
+import { Nav , Collapse } from "reactstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 
 import logo from "Ryo.jpg";
@@ -12,16 +12,23 @@ class Sidebar extends React.Component {
     super(props)
     this.state = {
       isOpen: false,
-      collapse: false
+      setup: false,
+      transaksi: false
     }
     this.activeRoute.bind(this);
-    this.toggle = this.toggle.bind(this)
+    this.setup = this.setup.bind(this);
+    this.transaksi = this.transaksi.bind(this)
 
   }
 
-  toggle() {
-    this.setState({ collapse: !this.state.collapse });
+  setup() {
+    this.setState({ setup: !this.state.setup , transaksi: false });
   }
+
+  transaksi() {
+    this.setState({ transaksi: !this.state.transaksi , setup: false });
+  }
+
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
@@ -53,6 +60,7 @@ class Sidebar extends React.Component {
             href="https://www.ryopercetakan.com/"
             className="simple-text logo-mini"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <div className="logo-img">
               <img src={logo} alt="react-logo" />
@@ -61,6 +69,7 @@ class Sidebar extends React.Component {
           <a
             href="https://www.ryopercetakan.com/"
             className="simple-text logo-normal"
+            rel="noopener noreferrer"
             target="_blank"
           >
             Ryo Percetakan
@@ -68,71 +77,86 @@ class Sidebar extends React.Component {
         </div>
         <div className="sidebar-wrapper" ref="sidebar">
           <Nav>
-            {this.props.routes.map((prop, key) => {
-              if (prop.redirect) return null;
-              return (
-                <li
-                  className={
-                    this.activeRoute(prop.layout + prop.path) +
-                    (prop.pro ? " active active-pro" : "")
-                  }
-                  key={key}
-                >
-                  <NavLink
-                    to={prop.layout + prop.path}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    <i className={"now-ui-icons " + prop.icon} />
-                    <p>{prop.name}</p>
-                  </NavLink>
-                </li>
-              );
-            })}
-
-           
+            <li className='active'>
                 <NavLink
                     className="nav-link"
-                    activeClassName="active"
-                    onClick={this.toggle}
+                    activeClassName="text-dark"
                   >
                     <i className={"now-ui-icons design_app"} />
-                    <p className='text-light'>Brian</p>
-                  </NavLink>
-                <Collapse isOpen={this.state.collapse} className='ml-5 text-light'>
-                <NavLink
-                    className="nav-link"
-                    activeClassName="active ml-5 text-light"
-                    to='/admin/dashboard'
-                    
-                  >
-                    <i className={"now-ui-icons design_app"} />
-                    <p>1</p>
-                  </NavLink>
-                  <NavLink
-                    className="nav-link ml-5 text-light"
-                    activeClassName="active"
-                    to='/admin/test'
-                    
-                  >
-                    <i className={"now-ui-icons design_app"} />
-                    <p>2</p>
-                  </NavLink>
+                    <p>Dashboard</p>
                   
-                </Collapse>
-              <Dropdown  nav
-                isOpen={this.state.dropdownOpen}
-                toggle={e => this.dropdownToggle(e)}>
-                <DropdownToggle caret nav>
-                <i className={"now-ui-icons design_app"} />
-                 haloo
-                </DropdownToggle>
-                <DropdownMenu  right>
-                  <DropdownItem tag="a">My Profile jhjgjgjgjgjs</DropdownItem>
-                  <DropdownItem tag="a">Logout</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-              
+                </NavLink>
+            </li>
+            <li className='active'>
+                <NavLink
+                    className="nav-link"
+                    activeClassName="text-dark"
+                    onClick={this.setup}
+                  >
+                    <i className={"now-ui-icons design_app"} />
+                    <p>Setup</p>
+                    <Collapse isOpen={this.state.setup} className='ml-4'>
+                    <NavLink
+                        className="nav-link text-dark"
+                        to='/admin/test'          
+                      >
+                        <p>Anggota</p>
+                      </NavLink>
+                      <NavLink
+                        className="nav-link text-dark"
+                        to='/admin/dashboard'
+                        
+                      >
+                        <p>Harga</p>
+                      </NavLink>
+                    </Collapse>
+                </NavLink>
+              </li>
+
+              <li className='active'>
+                <NavLink
+                    className="nav-link"
+                    activeClassName="text-dark"
+                    onClick={this.transaksi}
+                  >
+                    <i className={"now-ui-icons design_app"} />
+                    <p>Transaksi</p>
+                    <Collapse isOpen={this.state.transaksi} className='ml-4'>
+                    <NavLink
+                        className="nav-link text-dark"
+                        to='/admin/test'          
+                      >
+                        <p>Penjualan</p>
+                      </NavLink>
+                      <NavLink
+                        className="nav-link text-dark"
+                        to='/admin/dashboard'
+                        
+                      >
+                        <p>Pembelian</p>
+                      </NavLink>
+                    </Collapse>
+                </NavLink>
+              </li>
+              <li className='active'>
+                <NavLink
+                    className="nav-link"
+                    activeClassName="text-dark"
+                  >
+                    <i className={"now-ui-icons design_app"} />
+                    <p>Report</p>
+                </NavLink>
+            </li>
+            <li className='active'>
+                <NavLink
+                    className="nav-link"
+                    activeClassName="text-dark"
+                  >
+                    <i className={"now-ui-icons design_app"} />
+                    <p>Config</p>
+                  
+                </NavLink>
+            </li>
           </Nav>
         </div>
       </div>
