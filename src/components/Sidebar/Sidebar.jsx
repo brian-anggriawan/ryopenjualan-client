@@ -144,6 +144,7 @@ class Sidebar extends React.Component {
                             to={`${x.layout}${x.path}`}
                             key={i}
                           >
+                            <i className={`now-ui-icons ${x.icon}`} />
                             <p>{x.name}</p>
                           </Link>
                         ))
@@ -167,6 +168,7 @@ class Sidebar extends React.Component {
                             to={`${x.layout}${x.path}`}
                             key={i}
                           >
+                            <i className={`now-ui-icons ${x.icon}`} />
                             <p>{x.name}</p>
                           </Link>
                         ))
@@ -199,6 +201,7 @@ class Sidebar extends React.Component {
                             to={`${x.layout}${x.path}`}
                             key={i}
                           >
+                            <i className={`now-ui-icons ${x.icon}`} />
                             <p>{x.name}</p>
                           </Link>
                         ))

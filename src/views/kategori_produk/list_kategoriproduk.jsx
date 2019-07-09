@@ -15,24 +15,21 @@ class Jenisbiaya extends React.Component {
 
   render() {
     let data =  [
-                  { nama: 'Biaya Administrasi' , id: 1},
-                  { nama: 'Biaya ATK' , id: 2},
-                  { nama: 'Biaya Pembelian' , id: 3},
-                  { nama: 'Biaya Perbaikan' , id: 4},
-                  { nama: 'Biaya Sosial' , id: 5},
-                  { nama: 'Biaya Transportasi' , id: 6}
+                  { kategori: 'a3' , id: 1},
+                  { kategori: 'Trotec uv' , id: 2},
+                  { kategori: 'Offset' , id: 3},
                 ]
     return (
-      <Page title={'Jenis Biaya'}>
-        <Input type='text' placeholder='Jenis Biaya' />
+      <Page title={'Kategori Produk'}>
+        <Input type='text' placeholder='Kategor Produk' />
         <Button color='primary' size='sm' style={{ width: '100%'}} className='mb-4'>Simpan</Button>
         <Tabel
           data ={data}
           keyField = {'id'}
           columns ={[
             {
-                dataField: 'nama',
-                text: 'Jenis Biaya'
+                dataField: 'kategori',
+                text: 'Kategori Produk'
             },
             {
               dataField: 'id',

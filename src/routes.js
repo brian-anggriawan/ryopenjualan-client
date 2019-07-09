@@ -8,6 +8,8 @@ import Supplier from 'views/Supplier/list_supplier';
 import Tarif from 'views/Tarif_Jasa/list_tarif';
 import Userlogin from 'views/user_login/list_user_login';
 import Useraccess from 'views/user_access/list_user_access';
+import satuan from 'views/satuan/list_satuan';
+import kategori from 'views/kategori_produk/list_kategoriproduk';
 
 
 var dashRoutes = [
@@ -22,7 +24,7 @@ var dashRoutes = [
   {
     path: "/pelanggan",
     name: "pelanggan",
-    icon: "design_app",
+    icon: "business_badge",
     component: Pelanggan,
     layout: "/admin",
     group: 'setup'
@@ -30,15 +32,31 @@ var dashRoutes = [
   {
     path: "/supplier",
     name: "supplier",
-    icon: "design_app",
+    icon: "emoticons_satisfied",
     component: Supplier,
     layout: "/admin",
     group: 'setup'
   },
   {
-    path: "/tarifjasa",
-    name: "Tarif Jasa",
-    icon: "design_app",
+    path: "/satuan",
+    name: "Satuan",
+    icon: "design-2_ruler-pencil",
+    component: satuan,
+    layout: "/admin",
+    group: 'setup'
+  },
+  {
+    path: "/kategoriproduk",
+    name: "Kategori Produk",
+    icon: "shopping_tag-content",
+    component: kategori,
+    layout: "/admin",
+    group: 'setup'
+  },
+  {
+    path: "/hargaproduk",
+    name: "Harga Produk",
+    icon: "business_money-coins",
     component: Tarif,
     layout: "/admin",
     group: 'setup'
@@ -46,7 +64,7 @@ var dashRoutes = [
   {
     path: "/jenisbiaya",
     name: "Jenis Biaya",
-    icon: "design_app",
+    icon: "files_paper",
     component: Jenisbiaya,
     layout: "/admin",
     group: 'setup'
@@ -54,7 +72,7 @@ var dashRoutes = [
   {
     path: "/petugas",
     name: "Petugas Desain",
-    icon: "design_app",
+    icon: "users_circle-08",
     component: Petugas,
     layout: "/admin",
     group: 'setup'
@@ -62,7 +80,7 @@ var dashRoutes = [
   {
     path: "/penjualan",
     name: "Penjualan",
-    icon: "design_app",
+    icon: "shopping_box",
     component: Penjualan,
     layout: "/admin",
     group: 'transaksi'
@@ -70,7 +88,7 @@ var dashRoutes = [
   {
     path: "/pengeluaran",
     name: "Pengeluaran",
-    icon: "design_app",
+    icon: "shopping_cart-simple",
     component: Pengeluaran,
     layout: "/admin",
     group: 'transaksi'
@@ -78,7 +96,7 @@ var dashRoutes = [
   {
     path: "/userlogin",
     name: "User Login",
-    icon: "design_app",
+    icon: "users_single-02",
     component: Userlogin,
     layout: "/admin",
     group: 'config'
@@ -86,7 +104,7 @@ var dashRoutes = [
   {
     path: "/useraccess",
     name: "User Access",
-    icon: "design_app",
+    icon: "sport_user-run",
     component: Useraccess,
     layout: "/admin",
     group: 'config'

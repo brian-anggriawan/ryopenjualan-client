@@ -10,19 +10,6 @@ class Footer extends React.Component {
       >
         <hr/>
         <Container fluid={this.props.fluid ? true : false}>
-          <nav>
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com?ref=nudr-footer" target="_blank" rel="noopener noreferrer">Creative Tim</a>
-              </li>
-              <li>
-                <a href="https://presentation.creative-tim.com?ref=nudr-footer" target="_blank" rel="noopener noreferrer">About Us</a>
-              </li>
-              <li>
-                <a href="https://blog.creative-tim.com?ref=nudr-footer" target="_blank" rel="noopener noreferrer">Blog</a>
-              </li>
-            </ul>
-          </nav>
           <div className="copyright">
             &copy; 2019 , Design by
             <a

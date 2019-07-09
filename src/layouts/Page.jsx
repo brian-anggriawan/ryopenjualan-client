@@ -15,6 +15,7 @@ export default class Page extends React.Component {
                   <CardHeader>
                     <h5 className="title">{title}</h5>
                   </CardHeader>
+                  <hr/>
                   <CardBody className="all-icons">
                     <Row>
                      <Col>
