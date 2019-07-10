@@ -114,7 +114,7 @@ class Listuseraccess extends React.Component {
       <Page title={'User Access'}>
         <List mode={this.mode} modal={this.state.modal} data={data}/>
         <Row className='mb-3'>
-          <Col>
+          <Col className='mt-3'>
             <Input type='select'>
               <option value='0'>Pilih User Level</option>
               <option value='1'>Administrator</option>
@@ -123,7 +123,7 @@ class Listuseraccess extends React.Component {
             </Input>
           </Col>
           <Col>
-            <Button color='success' onClick={this.mode} size='sm'> Tambah</Button>
+            <Button color='success' onClick={this.mode}> Tambah</Button>
           </Col>
         </Row>
         <Tabel
