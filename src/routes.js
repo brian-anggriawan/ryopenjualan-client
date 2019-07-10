@@ -10,6 +10,8 @@ import Userlogin from 'views/user_login/list_user_login';
 import Useraccess from 'views/user_access/list_user_access';
 import satuan from 'views/satuan/list_satuan';
 import kategori from 'views/kategori_produk/list_kategoriproduk';
+import Setupkasir from 'views/Setup_kasir/list_kasir';
+import Userlevel from 'views/user_level/list_user_level';
 
 
 var dashRoutes = [
@@ -78,6 +80,14 @@ var dashRoutes = [
     group: 'setup'
   },
   {
+    path: "/setupkasir",
+    name: "Setup Kasir",
+    icon: "tech_laptop",
+    component: Setupkasir,
+    layout: "/admin",
+    group: 'setup'
+  },
+  {
     path: "/penjualan",
     name: "Penjualan",
     icon: "shopping_box",
@@ -98,6 +108,14 @@ var dashRoutes = [
     name: "User Login",
     icon: "users_single-02",
     component: Userlogin,
+    layout: "/admin",
+    group: 'config'
+  },
+  {
+    path: "/userlevel",
+    name: "User Level",
+    icon: "design_bullet-list-67",
+    component: Userlevel,
     layout: "/admin",
     group: 'config'
   },

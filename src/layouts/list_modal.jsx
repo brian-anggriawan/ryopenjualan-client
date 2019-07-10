@@ -3,7 +3,6 @@ import {
     Button,
     Modal
 } from 'reactstrap';
-import 'app.css';
 
 
 class formModal extends React.Component{
@@ -15,24 +14,25 @@ class formModal extends React.Component{
     }
 
     render(){
+        let { modal , mode , title } = this.props;
         return (
             <React.Fragment>  
             <Modal
                 className = 'modal-dialog-centered'
-                isOpen = {this.props.modal}
-                toggle = {this.props.mode}
+                isOpen = {modal}
+                toggle = {mode}
                 size='lg'
             >
                 <div className='modal-header'>
                     <h5 className='modal-title'>
-                        {this.props.title}
+                        {title}
                     </h5>
                     <Button
                         aria-label='Close'
                         className='close'
                         data-dismiss ='modal'
                         type ='button'
-                        onClick={this.props.mode}
+                        onClick={mode}
                     >
                         <span aria-hidden = {true}> x </span>
                     </Button>

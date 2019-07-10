@@ -20,11 +20,11 @@ class Table extends React.Component{
                 >
                     {
                     props => (
-                        <div>
+                        <div style={{ overflow: 'scroll'}}>
                             <div className='float-right'>
                                 <SearchBar { ...props.searchProps }  style={this.props.width}/>
                             </div>
-                            <div >
+                            <div>
                                 <BootstrapTable pagination ={paginationFactory(optionTable)}
                                     { ...props.baseProps }
                                     striped
