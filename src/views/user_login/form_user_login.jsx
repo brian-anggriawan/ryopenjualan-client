@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/form_modal_with_button';
 import { Input , Form , FormGroup , Label  } from 'reactstrap';
+import Select from 'components/Select/select';
 
 export default class form_user_login extends Component {
     render() {
@@ -14,12 +15,20 @@ export default class form_user_login extends Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for='userlevel'>User Level</Label>
-                            <Input type='select' name='userlevel' id='userlevel' >
-                                <option value='0'>Pilih User Lvel </option>
-                                <option value='1'>Administrator </option>
-                                <option value='2'>Owner </option>
-                                <option value='3'>Kasir </option>
-                            </Input>
+                            <Select  data={[
+                                {
+                                value:'1',
+                                text: 'Administrator'
+                                },
+                                {
+                                value:'2',
+                                text: 'Administrator'
+                                },
+                                {
+                                value:'2',
+                                text: 'Kasir'
+                                }
+                            ]} name='userlevel' id='userlevel'/>
                         </FormGroup>
                         <FormGroup>
                             <Label for='password'>Password</Label>

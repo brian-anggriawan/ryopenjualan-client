@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/form_modal_with_button';
 import { Input , Form , FormGroup , Label } from 'reactstrap';
+import Select from 'components/Select/select';
 
 export default class form_jasa extends Component {
     render() {
@@ -14,21 +15,37 @@ export default class form_jasa extends Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for='kategori'>Kategori Produk</Label>
-                            <Input type='select' name='kategori' id='kategori'>
-                                <option value='0'>Pilih Kategori Produk</option>
-                                <option value='1'>a3</option>
-                                <option value='2'>a1</option>
-                                <option value='3'>a2</option>
-                            </Input>
+                            <Select  data={[
+                                {
+                                value:'1',
+                                text: 'A1'
+                                },
+                                {
+                                value:'2',
+                                text: 'A2'
+                                },
+                                {
+                                value:'3',
+                                text: 'A3'
+                                }
+                            ]} name='kategori' id='kategori'/>
                         </FormGroup>
                         <FormGroup>
                             <Label for='satuan'>Satuan</Label>
-                            <Input type='select' name='satuan' id='satuan'>
-                                <option value='0'>Pilih Satuan</option>
-                                <option value='1'>pcs</option>
-                                <option value='2'>m3</option>
-                                <option value='3'>Pack</option>
-                            </Input>
+                            <Select  data={[
+                                {
+                                value:'1',
+                                text: 'PCS'
+                                },
+                                {
+                                value:'2',
+                                text: 'M3'
+                                },
+                                {
+                                value:'3',
+                                text: 'Pack'
+                                }
+                            ]} name='satuan' id='satuan'/>
                         </FormGroup>
                         <FormGroup>
                             <Label for='hpp'>Harga Pokok</Label>

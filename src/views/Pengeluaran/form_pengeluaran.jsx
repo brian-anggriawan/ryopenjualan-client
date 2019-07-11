@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/form_modal_with_button';
 import { Input , Form , FormGroup , Label  } from 'reactstrap';
+import Select from 'components/Select/select';
 
 export default class form_pengeluaran extends Component {
     render() {
@@ -14,10 +15,16 @@ export default class form_pengeluaran extends Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for='jenisbiaya'>Jenis Biaya</Label>
-                            <Input type='select' name='jenisbiaya' id='jenisbiaya'>
-                                <option value= '0'>Pilih Jenis Biaya</option>
-                                <option value= '1'>Biaya Lain Lain</option>
-                            </Input>
+                            <Select  data={[
+                                {
+                                value:'1',
+                                text: 'Biaya Lain Lain'
+                                },
+                                {
+                                value:'2',
+                                text: 'Biaya Transportasi'
+                                }
+                            ]} name='jenisbiaya' id='jenisbiaya'/>
                         </FormGroup>
                         <FormGroup>
                             <Label for='nominal'>Nominal</Label>

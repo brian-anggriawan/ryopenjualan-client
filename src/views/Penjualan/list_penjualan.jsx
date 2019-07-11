@@ -3,6 +3,7 @@ import Page from 'layouts/Page';
 import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
 import Serialize from 'form-serialize';
 import { formatRupiah } from 'app';
+import Select from 'components/Select/select';
 
 class Listpenjualan extends React.Component {
   constructor(){
@@ -25,24 +26,37 @@ class Listpenjualan extends React.Component {
     document.getElementById('groupdesain').hidden = false;
     document.getElementById('save').hidden = false;
     document.getElementById('cancel').hidden = false;
-    document.getElementById('member').focus();
+    document.getElementById('nota').focus();
+
 
     let row = [];
     for (let i = 0; i < 10; i++) {
       row.push(<tr key={i}>
                 <td>
-                  <Input type='select' name={`nama${i}`} id={`nama${i}`} tabIndex={i + 2}>
-                    <option value=''>Nama Barang</option>
-                    <option value='1'>Undangan</option>
-                    <option value='2'>Baliho</option>
-                    <option value='3'>Spanduk</option>
-                  </Input>
+                    <Select data={[
+                    {
+                      value:'',
+                      text: ''
+                    },
+                    {
+                      value:'1',
+                      text: 'Undangan'
+                    },
+                    {
+                      value:'2',
+                      text: 'Baliho'
+                    },
+                    {
+                      value:'3',
+                      text: 'Spanduk'
+                    }
+                  ]} name={`nama${i}`} id={`nama${i}`} index={i + 4}/>
                 </td>
                 <td>
-                  <Input type='number' name={`qty${i}`} id={`qty${i}`} onChange={this.setQty} tabIndex={i+2} />
+                  <Input type='number' name={`qty${i}`} id={`qty${i}`} onChange={this.setQty} tabIndex={i+4} />
                 </td>
                 <td>
-                  <Input type='number' name={`diskon${i}`} id={`diskon${i}`} onChange={this.setHarga} tabIndex={i+2} />
+                  <Input type='number' name={`diskon${i}`} id={`diskon${i}`} onChange={this.setHarga} tabIndex={i+4} />
                 </td>
                 <td>
                   <Input type='text' name={`harga${i}`} id={`harga${i}`} readOnly tabIndex='0' />
@@ -95,10 +109,8 @@ class Listpenjualan extends React.Component {
     console.log(dataDetail);
   }
 
-
   render() {
     let { row } = this.state;
-
     return (
       <Page title={'Penjualan'}>
         <Button color='primary' onClick={this.add}>Tambah Nota</Button>
@@ -108,25 +120,41 @@ class Listpenjualan extends React.Component {
             <Form id='header'>
               <FormGroup>
                 <Label for='nota'>Nota</Label>
-                <Input type='text' name='nota' id='nota' readOnly tabIndex='0' />
+                <Input type='text' name='nota' id='nota' readOnly tabIndex='1' />
               </FormGroup>
               <FormGroup id='groupmember' hidden>
                 <Label for='member'>Nama Member</Label>
-                <Input type='select' name='member' id='member' tabIndex='1' >
-                  <option value=''>Pilih Member</option>
-                  <option value='1'>Andi</option>
-                  <option value='2'>Dina</option>
-                  <option value='3'>Azril</option>
-                </Input>
+                <Select text={'Pilih Member'} data={[
+                  {
+                    value:'1',
+                    text: 'Andi'
+                  },
+                  {
+                    value:'2',
+                    text: 'Dina'
+                  },
+                  {
+                    value:'3',
+                    text: 'Azril'
+                  }
+                ]} name='member' id='member' index={2}/>
               </FormGroup>
-              <FormGroup id='groupdesain'  hidden >
+              <FormGroup id='groupdesain'  hidden>
                 <Label for='desain'>Petugas Desain</Label>
-                <Input type='select' name='desain' className='danger' id='desain' tabIndex='2'>
-                  <option value=''>Pilih Petugas Desain</option>
-                  <option value='1'>Deni</option>
-                  <option value='2'>Ahmad</option>
-                  <option value='3'>Zaki</option>
-                </Input>
+                <Select text={'Pilih Petugas Desain'} data={[
+                  {
+                    value:'1',
+                    text: 'Deni'
+                  },
+                  {
+                    value:'2',
+                    text: 'Ahmad'
+                  },
+                  {
+                    value:'3',
+                    text: 'Zaki'
+                  }
+                ]} name='desain' id='desain' index={3}/>
               </FormGroup>
               <Row>
                 <Col>
