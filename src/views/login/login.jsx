@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './main.css';
 import './util.css';
+import image from 'assets/img/img-01.png';
 
 export default class login extends Component {
     render() {
@@ -9,7 +10,7 @@ export default class login extends Component {
             <div className="container-login100">
                 <div className="wrap-login100">
                     <div className="login100-pic js-tilt" data-tilt>
-                        <img src="images/img-01.png" alt="IMG" />
+                        <img src={image} alt="IMG" />
                     </div>
     
                     <form className="login100-form validate-form">
@@ -38,21 +39,11 @@ export default class login extends Component {
                                 Login
                             </button>
                         </div>
-    
-                        <div className="text-center p-t-12">
-                            <span className="txt1">
-                                Forgot
-                            </span>
-                            <a className="txt2" href="#">
-                                Username / Password?
-                            </a>
-                        </div>
-    
                         <div className="text-center p-t-136">
-                            <a className="txt2" href="#">
+                            <p>
                                 Create your Account
                                 <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-                            </a>
+                            </p>
                         </div>
                     </form>
                 </div>
