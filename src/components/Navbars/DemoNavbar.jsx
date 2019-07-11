@@ -13,11 +13,16 @@ import {
 
 
 class Header extends React.Component {
-  state = {
-    isOpen: false,
-    dropdownOpen: false,
-    color: "transparent"
-  };
+  constructor(){
+    super()
+    this.state = {
+      isOpen: false,
+      dropdownOpen: false,
+      color: "transparent"
+    };
+    this.Logout = this.Logout.bind(this);
+  }
+ 
   sidebarToggle = React.createRef();
   toggle = () => {
     if (this.state.isOpen) {
@@ -67,6 +72,11 @@ class Header extends React.Component {
       document.documentElement.classList.toggle("nav-open");
       this.sidebarToggle.current.classList.toggle("toggled");
     }
+  }
+
+  Logout(){
+    let path = '/login';
+    this.props.history.push(path);
   }
   render() {
     return (
@@ -123,7 +133,7 @@ class Header extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem tag="a">My Profile</DropdownItem>
-                  <DropdownItem tag="a">Logout</DropdownItem>
+                  <DropdownItem onClick={this.Logout}>Logout</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </Nav>

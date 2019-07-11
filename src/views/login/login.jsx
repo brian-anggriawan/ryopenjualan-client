@@ -2,8 +2,22 @@ import React, { Component } from 'react';
 import './main.css';
 import './util.css';
 import image from 'assets/img/img-01.png';
+import { Button } from 'reactstrap';
 
-export default class login extends Component {
+
+class login extends Component {
+    constructor(){
+        super()
+        this.state ={}
+        this.Login = this.Login.bind(this);
+    }
+    
+
+    Login(){
+        let path = '/admin/dashboard';
+        this.props.history.push(path);
+    }
+
     render() {
         return (
             <div className="limiter">
@@ -15,7 +29,7 @@ export default class login extends Component {
     
                     <form className="login100-form validate-form">
                         <span className="login100-form-title">
-                            Member Login
+                            Login
                         </span>
     
                         <div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
@@ -35,9 +49,9 @@ export default class login extends Component {
                         </div>
                         
                         <div className="container-login100-form-btn">
-                            <button className="login100-form-btn">
+                            <Button className="login100-form-btn" onClick={this.Login}>
                                 Login
-                            </button>
+                            </Button>
                         </div>
                         <div className="text-center p-t-136">
                             <p>
@@ -52,3 +66,5 @@ export default class login extends Component {
         )
     }
 }
+
+export default login;
