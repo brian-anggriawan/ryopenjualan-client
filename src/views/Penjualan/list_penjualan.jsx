@@ -4,6 +4,7 @@ import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from '
 import Serialize from 'form-serialize';
 import { formatRupiah } from 'app';
 import Select from 'components/Select/select';
+import { IoMdTrash } from 'react-icons/io';
 
 class Listpenjualan extends React.Component {
   constructor(){
@@ -66,6 +67,9 @@ class Listpenjualan extends React.Component {
                 </td>
                 <td>
                   <Input type='text' name={`total${i}`} id={`total${i}`} readOnly tabIndex='0'/>
+                </td>
+                <td>
+                  <Button color='danger' size='sm'><IoMdTrash /></Button>
                 </td>
               </tr>
       )
@@ -177,6 +181,7 @@ class Listpenjualan extends React.Component {
                     <th>Harga</th>
                     <th>Harga Diskon</th>
                     <th>Total Harga</th>
+                    <th>Delete</th>
                   </tr>
               </thead>
               <tbody>
