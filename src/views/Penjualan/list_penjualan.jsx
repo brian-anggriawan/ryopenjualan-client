@@ -13,8 +13,7 @@ class Listpenjualan extends React.Component {
     super()
     this.state = {
       row:[],
-      qty: 0,
-      keys:''
+      qty: 0
     }
     this.add = this.add.bind(this);
     this.cancel = this.cancel.bind(this);
@@ -25,6 +24,7 @@ class Listpenjualan extends React.Component {
     this.addRow = this.addRow.bind(this);
  
   }
+
 
   add(){
     document.getElementById('nota').focus();
@@ -218,7 +218,7 @@ class Listpenjualan extends React.Component {
             <Form id='header' onSubmit={(e)=>  e.preventDefault()}>
               <FormGroup>
                 <Label for='nota'>Nota</Label>
-                <Input type='text' name='nota' id='nota' readOnly tabIndex='1' />
+                <Input type='text' name='nota' id='nota' tabIndex='1' readOnly />
               </FormGroup>
               <FormGroup id='groupmember' hidden>
                 <Label for='member'>Nama Member</Label>
