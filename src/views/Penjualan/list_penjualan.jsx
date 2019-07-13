@@ -5,37 +5,39 @@ import Serialize from 'form-serialize';
 import { formatRupiah } from 'app';
 import Select from 'components/Select/select';
 import { IoMdTrash } from 'react-icons/io';
+import Hotkeys from 'react-hot-keys';
+import cuid from 'cuid';
 
 class Listpenjualan extends React.Component {
   constructor(){
     super()
     this.state = {
       row:[],
-      qty: 0
+      qty: 0,
+      keys:''
     }
     this.add = this.add.bind(this);
     this.cancel = this.cancel.bind(this);
     this.setQty = this.setQty.bind(this);
     this.setHarga = this.setHarga.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
  
   }
 
   add(){
-
+    document.getElementById('nota').focus();
     document.getElementById('nota').value = '1242/45/66/RYO';
     document.getElementById('groupmember').hidden = false;
     document.getElementById('groupdesain').hidden = false;
     document.getElementById('save').hidden = false;
     document.getElementById('cancel').hidden = false;
-    document.getElementById('nota').focus();
-
 
     let row = [];
-    for (let i = 0; i < 10; i++) {
-      row.push(<tr key={i}>
+    let id = cuid(10);
+      row.push(<tr key={id}>
                 <td>
-                    <Select data={[
-                    {
+                  <Select text={'Jasa'} data={[
+                     {
                       value:'',
                       text: ''
                     },
@@ -51,30 +53,29 @@ class Listpenjualan extends React.Component {
                       value:'3',
                       text: 'Spanduk'
                     }
-                  ]} name={`nama${i}`} id={`nama${i}`} index={i + 4}/>
+                  ]} name={`jasa${id}`} id={`jasa${id}`} index={4}/>
                 </td>
                 <td>
-                  <Input type='number' name={`qty${i}`} id={`qty${i}`} onChange={this.setQty} tabIndex={i+4} />
+                  <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
                 </td>
                 <td>
-                  <Input type='number' name={`diskon${i}`} id={`diskon${i}`} onChange={this.setHarga} tabIndex={i+4} />
+                  <Input type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
                 </td>
                 <td>
-                  <Input type='text' name={`harga${i}`} id={`harga${i}`} readOnly tabIndex='0' />
+                  <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
                 </td>
                 <td>
-                  <Input type='text' name={`hargadiskon${i}`} id={`hargadiskon${i}`} readOnly tabIndex='0' />
+                  <Input type='text' name={`hargadiskon${id}`} id={`hargadiskon${id}`} readOnly tabIndex='0' />
                 </td>
                 <td>
-                  <Input type='text' name={`total${i}`} id={`total${i}`} readOnly tabIndex='0'/>
+                  <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
                 </td>
                 <td>
                   <Button color='danger' size='sm'><IoMdTrash /></Button>
                 </td>
               </tr>
       )
-    }
-    this.setState({ row: row})
+    this.setState({ row: row});
 
   }
   setQty(e){
@@ -113,15 +114,74 @@ class Listpenjualan extends React.Component {
     console.log(dataDetail);
   }
 
+  onKeyDown(keyName, e, handle) {
+
+    if (keyName === 'shift+a') {
+      return this.add();
+    }else if(keyName === 'shift+s'){
+      let row = [];
+      let id = cuid(10);
+        row.push(<tr key={id}>
+                  <td>
+                    <Select text={'Jasa'} data={[
+                       {
+                        value:'',
+                        text: ''
+                      },
+                      {
+                        value:'1',
+                        text: 'Undangan'
+                      },
+                      {
+                        value:'2',
+                        text: 'Baliho'
+                      },
+                      {
+                        value:'3',
+                        text: 'Spanduk'
+                      }
+                    ]} name={`jasa${id}`} id={`jasa${id}`} index={4}/>
+                  </td>
+                  <td>
+                    <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
+                  </td>
+                  <td>
+                    <Input type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
+                  </td>
+                  <td>
+                    <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
+                  </td>
+                  <td>
+                    <Input type='text' name={`hargadiskon${id}`} id={`hargadiskon${id}`} readOnly tabIndex='0' />
+                  </td>
+                  <td>
+                    <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
+                  </td>
+                  <td>
+                    <Button color='danger' size='sm'><IoMdTrash /></Button>
+                  </td>
+                </tr>
+        )
+
+        let copy = [ ...this.state.row , row];
+        this.setState({ row: copy});
+    }
+
+  }
+
   render() {
     let { row } = this.state;
     return (
+      <Hotkeys 
+      keyName="shift+a ,shift+s"
+      onKeyDown={this.onKeyDown}
+    >
       <Page title={'Penjualan'}>
         <Button color='primary' onClick={this.add}>Tambah Nota</Button>
         <hr/>
         <Row>
           <Col sm='3'>
-            <Form id='header'>
+            <Form id='header' onSubmit={()=> {return false}}>
               <FormGroup>
                 <Label for='nota'>Nota</Label>
                 <Input type='text' name='nota' id='nota' readOnly tabIndex='1' />
@@ -171,11 +231,11 @@ class Listpenjualan extends React.Component {
             </Form>
           </Col>
           <Col sm='9'>
-            <Form id='detail'>
+            <Form id='detail' onSubmit={()=> {return false}}>
             <Table responsive>
               <thead>
                   <tr>
-                    <th>Nama Barang</th>
+                    <th className='w-25'>Nama Jasa</th>
                     <th>QTY</th>
                     <th>Diskon %</th>
                     <th>Harga</th>
@@ -188,13 +248,14 @@ class Listpenjualan extends React.Component {
                 {
                   row
                 }
-
               </tbody>
+              
             </Table>
             </Form>
           </Col>
         </Row>
       </Page>
+      </Hotkeys>
     );
   }
 }
