@@ -7,6 +7,7 @@ import Select from 'components/Select/select';
 import { IoMdTrash } from 'react-icons/io';
 import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
+import { UncontrolledTooltip } from 'reactstrap';
 
 class Listpenjualan extends React.Component {
   constructor(){
@@ -203,10 +204,16 @@ class Listpenjualan extends React.Component {
           <Col sm='3'>
             <Row>
               <Col>
-                <Button color='primary' onClick={this.add} style={{width:'100%'}}>Tambah Nota</Button>
+                <Button color='primary' onClick={this.add} style={{width:'100%'}} id='tambahnota'>Tambah Nota</Button>
+                <UncontrolledTooltip placement="top" target="tambahnota" delay={0}>
+                  Bisa Juga Dengan Shift + A
+                </UncontrolledTooltip>
               </Col>
               <Col>
                 <Button color='info' id='addrow' onClick={this.addRow} style={{width:'100%'}} hidden>Tambah Row</Button>
+                <UncontrolledTooltip placement="top" target="addrow" delay={0}>
+                  Bisa Juga Dengan Shift + S
+                </UncontrolledTooltip>
               </Col>
             </Row>
           </Col>
