@@ -21,6 +21,8 @@ class Listpenjualan extends React.Component {
     this.setQty = this.setQty.bind(this);
     this.setHarga = this.setHarga.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.deleteRow = this.deleteRow.bind(this);
+    this.addRow = this.addRow.bind(this);
  
   }
 
@@ -31,6 +33,7 @@ class Listpenjualan extends React.Component {
     document.getElementById('groupdesain').hidden = false;
     document.getElementById('save').hidden = false;
     document.getElementById('cancel').hidden = false;
+    document.getElementById('addrow').hidden = false;
 
     let row = [];
     let id = cuid(10);
@@ -71,13 +74,64 @@ class Listpenjualan extends React.Component {
                   <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
                 </td>
                 <td>
-                  <Button color='danger' size='sm'><IoMdTrash /></Button>
+                  <Button color='danger' size='sm' onClick={()=> this.deleteRow(id)}><IoMdTrash /></Button>
                 </td>
               </tr>
       )
     this.setState({ row: row});
 
   }
+
+  addRow(){
+    let id = cuid(10);
+   
+    let copy = [ ...this.state.row];
+    copy.push( 
+      <tr key={id}>
+              <td>
+                <Select text={'Jasa'} data={[
+                   {
+                    value:'',
+                    text: ''
+                  },
+                  {
+                    value:'1',
+                    text: 'Undangan'
+                  },
+                  {
+                    value:'2',
+                    text: 'Baliho'
+                  },
+                  {
+                    value:'3',
+                    text: 'Spanduk'
+                  }
+                ]} name={`jasa${id}`} id={`jasa${id}`} index={4}/>
+              </td>
+              <td>
+                <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4}/>
+              </td>
+              <td>
+                <Input type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
+              </td>
+              <td>
+                <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
+              </td>
+              <td>
+                <Input type='text' name={`hargadiskon${id}`} id={`hargadiskon${id}`} readOnly tabIndex='0' />
+              </td>
+              <td>
+                <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
+              </td>
+              <td>
+                <Button color='danger' size='sm' onClick={()=> this.deleteRow(id)}><IoMdTrash /></Button>
+              </td>
+            </tr>
+     );
+
+     this.setState({ row : copy})
+  }
+
   setQty(e){
     this.setState({ qty : e.target.value })
   }
@@ -102,6 +156,7 @@ class Listpenjualan extends React.Component {
     document.getElementById('groupdesain').hidden = true;
     document.getElementById('save').hidden = true;
     document.getElementById('cancel').hidden = true;
+    document.getElementById('addrow').hidden = true;
   }
 
   save(){
@@ -116,72 +171,51 @@ class Listpenjualan extends React.Component {
 
   onKeyDown(keyName, e, handle) {
 
-    if (keyName === 'shift+a') {
-      return this.add();
-    }else if(keyName === 'shift+s'){
-      let row = [];
-      let id = cuid(10);
-        row.push(<tr key={id}>
-                  <td>
-                    <Select text={'Jasa'} data={[
-                       {
-                        value:'',
-                        text: ''
-                      },
-                      {
-                        value:'1',
-                        text: 'Undangan'
-                      },
-                      {
-                        value:'2',
-                        text: 'Baliho'
-                      },
-                      {
-                        value:'3',
-                        text: 'Spanduk'
-                      }
-                    ]} name={`jasa${id}`} id={`jasa${id}`} index={4}/>
-                  </td>
-                  <td>
-                    <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
-                  </td>
-                  <td>
-                    <Input type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
-                  </td>
-                  <td>
-                    <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
-                  </td>
-                  <td>
-                    <Input type='text' name={`hargadiskon${id}`} id={`hargadiskon${id}`} readOnly tabIndex='0' />
-                  </td>
-                  <td>
-                    <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
-                  </td>
-                  <td>
-                    <Button color='danger' size='sm'><IoMdTrash /></Button>
-                  </td>
-                </tr>
-        )
 
-        let copy = [ ...this.state.row , row];
-        this.setState({ row: copy});
+    if (keyName === 'shift+a') {
+      let count = this.state.row.length;
+      if (count === 0) {
+        return this.add();
+      }
+    }else if(keyName === 'shift+s'){
+      return this.addRow()
+    }else if(keyName === 'f5'){
+      e.preventDefault()
     }
 
+  }
+
+  deleteRow(id){
+    this.setState({
+      row: this.state.row.filter( x => x.key !== id) 
+    })
   }
 
   render() {
     let { row } = this.state;
     return (
       <Hotkeys 
-      keyName="shift+a ,shift+s"
-      onKeyDown={this.onKeyDown}
-    >
+        keyName="shift+a ,shift+s ,f5"
+        onKeyDown={this.onKeyDown}
+      >
       <Page title={'Penjualan'}>
-        <Button color='primary' onClick={this.add}>Tambah Nota</Button>
+        <Row>
+          <Col sm='3'>
+            <Row>
+              <Col>
+                <Button color='primary' onClick={this.add} style={{width:'100%'}}>Tambah Nota</Button>
+              </Col>
+              <Col>
+                <Button color='info' id='addrow' onClick={this.addRow} style={{width:'100%'}} hidden>Tambah Row</Button>
+              </Col>
+            </Row>
+          </Col>
+          <Col sm='9'></Col>
+        </Row>
         <hr/>
         <Row>
           <Col sm='3'>
-            <Form id='header' onSubmit={()=> {return false}}>
+            <Form id='header' onSubmit={(e)=>  e.preventDefault()}>
               <FormGroup>
                 <Label for='nota'>Nota</Label>
                 <Input type='text' name='nota' id='nota' readOnly tabIndex='1' />
@@ -231,7 +265,7 @@ class Listpenjualan extends React.Component {
             </Form>
           </Col>
           <Col sm='9'>
-            <Form id='detail' onSubmit={()=> {return false}}>
+            <Form id='detail' onSubmit={(e)=>  e.preventDefault()}>
             <Table responsive>
               <thead>
                   <tr>
