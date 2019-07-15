@@ -7,7 +7,7 @@ import './select.css';
 
 export default class select extends Component {
     render() {
-        let { text , data , change , index} = this.props;
+        let { text , data , change , index , name } = this.props;
         return (
             <Dropdown
                 placeholder={text}
@@ -17,8 +17,9 @@ export default class select extends Component {
                 selection
                 options={data}
                 onChange={change}
-                id="selectbrian"
+                id='selectbrian'
                 tabIndex={index}
+                name={name}
             />
         )
     }

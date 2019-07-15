@@ -3,11 +3,12 @@ import Page from 'layouts/Page';
 import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
 import Serialize from 'form-serialize';
 import { formatRupiah } from 'app';
-import Select from 'components/Select/select';
 import { IoMdTrash } from 'react-icons/io';
 import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
 import { UncontrolledTooltip } from 'reactstrap';
+import Select from 'react-select';
+
 
 class Listpenjualan extends React.Component {
   constructor(){
@@ -23,9 +24,18 @@ class Listpenjualan extends React.Component {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
     this.addRow = this.addRow.bind(this);
+    this.addRowInTable = this.addRowInTable.bind(this);
  
   }
 
+  addRowInTable(e , id){
+    let index = this.state.row.findIndex( x => x.key === id) + 1;
+    let count = this.state.row.length;
+
+    if (e.keyCode === 40 && index === count) {
+      this.addRow();
+    }
+  }
 
   add(){
     document.getElementById('nota').focus();
@@ -40,30 +50,26 @@ class Listpenjualan extends React.Component {
     let id = cuid(10);
       row.push(<tr key={id}>
                 <td>
-                  <Select text={'Jasa'} data={[
-                     {
-                      value:'',
-                      text: ''
-                    },
+                  <Select onKeyDown={(e)=> this.addRowInTable(e , id)} placeholder={'Jasa'} className='select' options={[
                     {
                       value:'1',
-                      text: 'Undangan'
+                      label: 'Undangan'
                     },
                     {
                       value:'2',
-                      text: 'Baliho'
+                      label: 'Baliho'
                     },
                     {
                       value:'3',
-                      text: 'Spanduk'
+                      label: 'Spanduk'
                     }
-                  ]} name={`jasa${id}`} id={`jasa${id}`} index={4}/>
+                  ]} name={`jasa${id}`} id={`jasa${id}`} tabIndex={4}/>
                 </td>
                 <td>
-                  <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
+                  <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
                 </td>
                 <td>
-                  <Input type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
+                  <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
                 </td>
                 <td>
                   <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
@@ -90,30 +96,26 @@ class Listpenjualan extends React.Component {
     copy.push( 
       <tr key={id}>
               <td>
-                <Select text={'Jasa'} data={[
-                   {
-                    value:'',
-                    text: ''
-                  },
+                <Select onKeyDown={(e)=> this.addRowInTable(e , id)} placeholder={'Jasa'} options={[
                   {
                     value:'1',
-                    text: 'Undangan'
+                    label: 'Undangan'
                   },
                   {
                     value:'2',
-                    text: 'Baliho'
+                    label: 'Baliho'
                   },
                   {
                     value:'3',
-                    text: 'Spanduk'
+                    label: 'Spanduk'
                   }
-                ]} name={`jasa${id}`} id={`jasa${id}`} index={4}/>
+                ]} name={`jasa${id}`} id={`jasa${id}`} tabIndex={4} className='select'/>
               </td>
               <td>
-                <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4}/>
+                <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4}/>
               </td>
               <td>
-                <Input type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
+                <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
               </td>
               <td>
                 <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
@@ -204,13 +206,13 @@ class Listpenjualan extends React.Component {
           <Col sm='3'>
             <Row>
               <Col>
-                <Button color='primary' onClick={this.add} style={{width:'100%'}} id='tambahnota'>Tambah Nota</Button>
+                <Button color='primary' onClick={this.add} style={{width:'100%'}} id='tambahnota' tabIndex='0'>Tambah Nota</Button>
                 <UncontrolledTooltip placement="top" target="tambahnota" delay={0}>
                   Bisa Juga Dengan Shift + A
                 </UncontrolledTooltip>
               </Col>
               <Col>
-                <Button color='info' id='addrow' onClick={this.addRow} style={{width:'100%'}} hidden>Tambah Row</Button>
+                <Button color='info' id='addrow' onClick={this.addRow} style={{width:'100%'}} hidden tabIndex='0'>Tambah Row</Button>
                 <UncontrolledTooltip placement="top" target="addrow" delay={0}>
                   Bisa Juga Dengan Shift + S
                 </UncontrolledTooltip>
@@ -229,37 +231,19 @@ class Listpenjualan extends React.Component {
               </FormGroup>
               <FormGroup id='groupmember' hidden>
                 <Label for='member'>Nama Member</Label>
-                <Select text={'Pilih Member'} data={[
-                  {
-                    value:'1',
-                    text: 'Andi'
-                  },
-                  {
-                    value:'2',
-                    text: 'Dina'
-                  },
-                  {
-                    value:'3',
-                    text: 'Azril'
-                  }
-                ]} name='member' id='member' index={2}/>
+                <Select options={ [
+                  { label: "Andi", value: 1 },
+                  { label: "Andi", value: 2 },
+                  { label: "Netflix", value: 3 },
+                ] } name='member' id='member' className='select' placeholder={'Pilih Member'} tabIndex='2'/>
               </FormGroup>
               <FormGroup id='groupdesain'  hidden>
                 <Label for='desain'>Petugas Desain</Label>
-                <Select text={'Pilih Petugas Desain'} data={[
-                  {
-                    value:'1',
-                    text: 'Deni'
-                  },
-                  {
-                    value:'2',
-                    text: 'Ahmad'
-                  },
-                  {
-                    value:'3',
-                    text: 'Zaki'
-                  }
-                ]} name='desain' id='desain' index={3}/>
+                <Select options={ [
+                  { label: "Deni", value: 1 },
+                  { label: "Ahamd", value: 2 },
+                  { label: "Zaki", value: 3 },
+                ] } name='desain' id='desain' className='select' placeholder={'Pilih Petugas Desain'} tabIndex='3'/>
               </FormGroup>
               <Row>
                 <Col>
@@ -289,8 +273,7 @@ class Listpenjualan extends React.Component {
                 {
                   row
                 }
-              </tbody>
-              
+              </tbody> 
             </Table>
             </Form>
           </Col>
