@@ -1,3 +1,5 @@
+import sw from 'sweetalert2';
+
 export let optionTable = {
     paginationSize: 5,
     pageStartIndex: 1,
@@ -24,3 +26,43 @@ export let formatRupiah = (angka, prefix)=>{
     rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
     return prefix === undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 }
+
+/* Sweet Alert */
+export let msgerror = (msg) =>{
+    sw.fire({
+    type: 'error',
+    title: 'Oops...',
+    text: msg
+    })
+}
+
+export let msgok =(msg , url)=>{
+    sw.fire({
+        type: "success",
+        title: "Berhasil",
+        text: msg  
+    }).then(()=>{
+        window.location.href = url
+    })
+}
+
+export let msgdialog = (msg)=>{
+   return sw.fire({
+        title: 'Are you sure?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: msg
+      }).then((result) => {
+        return result.value
+      })
+}
+/* Sweet Alert */
+
+/* API Back end */
+
+
+/* API Back end */
+
+

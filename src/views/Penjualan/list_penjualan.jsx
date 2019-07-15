@@ -1,6 +1,6 @@
 import React from "react";
 import Page from 'layouts/Page';
-import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
+import { Input , Button , Row , Col , Form , FormGroup , Label , Table } from 'reactstrap';
 import Serialize from 'form-serialize';
 import { formatRupiah } from 'app';
 import { IoMdTrash } from 'react-icons/io';
@@ -25,6 +25,7 @@ class Listpenjualan extends React.Component {
     this.deleteRow = this.deleteRow.bind(this);
     this.addRow = this.addRow.bind(this);
     this.addRowInTable = this.addRowInTable.bind(this);
+    this.save = this.save.bind(this)
  
   }
 
@@ -32,7 +33,7 @@ class Listpenjualan extends React.Component {
     let index = this.state.row.findIndex( x => x.key === id) + 1;
     let count = this.state.row.length;
 
-    if (e.keyCode === 40 && index === count) {
+    if (e.keyCode === 9 && index === count) {
       this.addRow();
     }
   }
@@ -50,7 +51,7 @@ class Listpenjualan extends React.Component {
     let id = cuid(10);
       row.push(<tr key={id}>
                 <td>
-                  <Select onKeyDown={(e)=> this.addRowInTable(e , id)} placeholder={'Jasa'} className='select' options={[
+                  <Select placeholder={'Jasa'} className='select' options={[
                     {
                       value:'1',
                       label: 'Undangan'
@@ -66,7 +67,7 @@ class Listpenjualan extends React.Component {
                   ]} name={`jasa${id}`} id={`jasa${id}`} tabIndex={4}/>
                 </td>
                 <td>
-                  <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
+                  <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4} />
                 </td>
                 <td>
                   <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
@@ -96,7 +97,7 @@ class Listpenjualan extends React.Component {
     copy.push( 
       <tr key={id}>
               <td>
-                <Select onKeyDown={(e)=> this.addRowInTable(e , id)} placeholder={'Jasa'} options={[
+                <Select placeholder={'Jasa'} options={[
                   {
                     value:'1',
                     label: 'Undangan'
@@ -112,7 +113,7 @@ class Listpenjualan extends React.Component {
                 ]} name={`jasa${id}`} id={`jasa${id}`} tabIndex={4} className='select'/>
               </td>
               <td>
-                <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4}/>
+                <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={4}/>
               </td>
               <td>
                 <Input onKeyDown={(e)=> this.addRowInTable(e , id)} type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={4} />
@@ -170,6 +171,21 @@ class Listpenjualan extends React.Component {
 
     console.log(dataHeader);
     console.log(dataDetail);
+
+    let arrayDetail = [];
+
+    this.state.row.map(x => (
+      arrayDetail.push({
+        jasa: dataDetail[`jasa${x.key}`], 
+        qty: dataDetail[`qty${x.key}`], 
+        diskon: dataDetail[`diskon${x.key}`], 
+        harga: dataDetail[`harga${x.key}`], 
+        hargadiskon: dataDetail[`hargadiskon${x.key}`], 
+        total: dataDetail[`totol${x.key}`]
+      })
+    )) 
+
+    console.log(arrayDetail)
   }
 
   onKeyDown(keyName, e, handle) {

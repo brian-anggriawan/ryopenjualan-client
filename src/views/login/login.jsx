@@ -3,19 +3,38 @@ import './main.css';
 import './util.css';
 import image from 'assets/img/img-01.png';
 import { Button } from 'reactstrap';
+import { msgok , msgerror } from 'app';
 
 
 class login extends Component {
     constructor(){
         super()
-        this.state ={}
+        this.state ={
+            name: '',
+            pass:''
+        }
         this.Login = this.Login.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     
 
     Login(){
-        let path = '/admin/dashboard';
-        this.props.history.push(path);
+        let { name , pass} = this.state;
+
+        if (name === 'admin' && pass ==='admin') {
+            localStorage.setItem('userKasir' , JSON.stringify([{ 'login': true}]));
+            msgok('Berhasil Login' , '/admin/dashboard')   
+        }else{
+            msgerror('Username Dan Password Salah')
+        }
+    }
+
+    handleChange(e , name){
+        if (name === 'name') {
+            this.setState({ name: e.target.value})
+        }else{
+            this.setState({ pass : e.target.value}) 
+        }
     }
 
     render() {
@@ -33,7 +52,7 @@ class login extends Component {
                         </span>
     
                         <div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                            <input className="input100" type="text" name="email" placeholder="Email"/>
+                            <input className="input100" type="text" name="username" placeholder="Username" onChange={(e)=> this.handleChange(e , 'name')}/>
                             <span className="focus-input100"></span>
                             <span className="symbol-input100">
                                 <i className="fa fa-envelope" aria-hidden="true"></i>
@@ -41,7 +60,7 @@ class login extends Component {
                         </div>
     
                         <div className="wrap-input100 validate-input" data-validate = "Password is required">
-                            <input className="input100" type="password" name="pass" placeholder="Password"/>
+                            <input className="input100" type="password" name="pass" placeholder="Password" onChange={(e)=> this.handleChange(e , 'pass')}/>
                             <span className="focus-input100"></span>
                             <span className="symbol-input100">
                                 <i className="fa fa-lock" aria-hidden="true"></i>
@@ -54,8 +73,7 @@ class login extends Component {
                             </Button>
                         </div>
                         <div className="text-center p-t-136">
-                            <p>
-                                Create your Account
+                            <p> 
                                 <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
                             </p>
                         </div>

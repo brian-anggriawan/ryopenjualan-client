@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink , Link } from "react-router-dom";
-import { Nav , Collapse } from "reactstrap";
+import { Nav , Collapse} from "reactstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 import routes from '../../routes';
 

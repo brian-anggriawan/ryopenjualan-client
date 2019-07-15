@@ -12,6 +12,7 @@ import satuan from 'views/satuan/list_satuan';
 import kategori from 'views/kategori_produk/list_kategoriproduk';
 import Setupkasir from 'views/Setup_kasir/list_kasir';
 import Userlevel from 'views/user_level/list_user_level';
+import Auth from 'Auth';
 
 
 var dashRoutes = [
@@ -19,7 +20,7 @@ var dashRoutes = [
     path: "/dashboard",
     name: "Dashboard",
     icon: "design_app",
-    component: Dashboard,
+    component: Auth(Dashboard),
     layout: "/admin",
     group: 'Dashboard'
   },
@@ -27,7 +28,7 @@ var dashRoutes = [
     path: "/pelanggan",
     name: "pelanggan",
     icon: "business_badge",
-    component: Pelanggan,
+    component: Auth(Pelanggan),
     layout: "/admin",
     group: 'setup'
   },
@@ -35,7 +36,7 @@ var dashRoutes = [
     path: "/supplier",
     name: "supplier",
     icon: "emoticons_satisfied",
-    component: Supplier,
+    component: Auth(Supplier),
     layout: "/admin",
     group: 'setup'
   },
@@ -43,7 +44,7 @@ var dashRoutes = [
     path: "/satuan",
     name: "Satuan",
     icon: "design-2_ruler-pencil",
-    component: satuan,
+    component: Auth(satuan),
     layout: "/admin",
     group: 'setup'
   },
@@ -51,7 +52,7 @@ var dashRoutes = [
     path: "/kategoriproduk",
     name: "Kategori Produk",
     icon: "shopping_tag-content",
-    component: kategori,
+    component: Auth(kategori),
     layout: "/admin",
     group: 'setup'
   },
@@ -59,7 +60,7 @@ var dashRoutes = [
     path: "/hargaproduk",
     name: "Harga Produk",
     icon: "business_money-coins",
-    component: Tarif,
+    component: Auth(Tarif),
     layout: "/admin",
     group: 'setup'
   },
@@ -67,7 +68,7 @@ var dashRoutes = [
     path: "/jenisbiaya",
     name: "Jenis Biaya",
     icon: "files_paper",
-    component: Jenisbiaya,
+    component: Auth(Jenisbiaya),
     layout: "/admin",
     group: 'setup'
   },
@@ -75,7 +76,7 @@ var dashRoutes = [
     path: "/petugas",
     name: "Petugas Desain",
     icon: "users_circle-08",
-    component: Petugas,
+    component: Auth(Petugas),
     layout: "/admin",
     group: 'setup'
   },
@@ -83,7 +84,7 @@ var dashRoutes = [
     path: "/setupkasir",
     name: "Setup Kasir",
     icon: "tech_laptop",
-    component: Setupkasir,
+    component: Auth(Setupkasir),
     layout: "/admin",
     group: 'setup'
   },
@@ -91,7 +92,7 @@ var dashRoutes = [
     path: "/penjualan",
     name: "Penjualan",
     icon: "shopping_box",
-    component: Penjualan,
+    component: Auth(Penjualan),
     layout: "/admin",
     group: 'transaksi'
   },
@@ -99,7 +100,7 @@ var dashRoutes = [
     path: "/pengeluaran",
     name: "Pengeluaran",
     icon: "shopping_cart-simple",
-    component: Pengeluaran,
+    component: Auth(Pengeluaran),
     layout: "/admin",
     group: 'transaksi'
   },
@@ -107,7 +108,7 @@ var dashRoutes = [
     path: "/userlogin",
     name: "User Login",
     icon: "users_single-02",
-    component: Userlogin,
+    component: Auth(Userlogin),
     layout: "/admin",
     group: 'config'
   },
@@ -115,7 +116,7 @@ var dashRoutes = [
     path: "/userlevel",
     name: "User Level",
     icon: "design_bullet-list-67",
-    component: Userlevel,
+    component: Auth(Userlevel),
     layout: "/admin",
     group: 'config'
   },
@@ -123,7 +124,7 @@ var dashRoutes = [
     path: "/useraccess",
     name: "User Access",
     icon: "sport_user-run",
-    component: Useraccess,
+    component: Auth(Useraccess),
     layout: "/admin",
     group: 'config'
   }

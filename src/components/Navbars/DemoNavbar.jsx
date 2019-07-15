@@ -10,6 +10,7 @@ import {
   DropdownItem,
   Container
 } from "reactstrap";
+import { msgok } from 'app';
 
 
 class Header extends React.Component {
@@ -75,8 +76,8 @@ class Header extends React.Component {
   }
 
   Logout(){
-    let path = '/login';
-    this.props.history.push(path);
+    localStorage.removeItem('userKasir');
+    msgok('Berhasil Logout' ,'/login')
   }
   render() {
     return (
