@@ -261,15 +261,15 @@ class Listpenjualan extends React.Component {
                   { label: "Zaki", value: 3 },
                 ] } name='desain' id='desain' className='select' placeholder={'Pilih Petugas Desain'} tabIndex='3'/>
               </FormGroup>
-              <Row>
+            </Form>
+             <Row>
                 <Col>
                   <Button color='success' type='button' style={{ width:'100%'}} id='save' tabIndex='0' onClick={this.save} hidden >Save</Button>
                 </Col>
                 <Col>
                   <Button color='danger' type='button'  style={{ width:'100%'}} id='cancel' tabIndex='0' onClick={this.cancel} hidden>Cancel</Button>
                 </Col>
-              </Row>
-            </Form>
+            </Row>
           </Col>
           <Col sm='9'>
             <Form id='detail' onSubmit={(e)=>  e.preventDefault()}>
