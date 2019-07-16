@@ -243,7 +243,7 @@ class Listpenjualan extends React.Component {
             <Form id='header' onSubmit={(e)=>  e.preventDefault()}>
               <FormGroup>
                 <Label for='nota'>Nota</Label>
-                <Input type='text' name='nota' id='nota' tabIndex='1' readOnly />
+                <Input type='text' name='nota' id='nota' readOnly tabIndex='1' />
               </FormGroup>
               <FormGroup id='groupmember' hidden>
                 <Label for='member'>Nama Member</Label>
@@ -263,10 +263,10 @@ class Listpenjualan extends React.Component {
               </FormGroup>
               <Row>
                 <Col>
-                  <Button color='success' style={{ width:'100%'}} id='save' onClick={this.save} hidden tabIndex='0'>Save</Button>
+                  <Button color='success' type='button' style={{ width:'100%'}} id='save' tabIndex='0' onClick={this.save} hidden >Save</Button>
                 </Col>
                 <Col>
-                  <Button color='danger' style={{ width:'100%'}} id='cancel' onClick={this.cancel} hidden tabIndex='0'>Cancel</Button>
+                  <Button color='danger' type='button'  style={{ width:'100%'}} id='cancel' tabIndex='0' onClick={this.cancel} hidden>Cancel</Button>
                 </Col>
               </Row>
             </Form>
