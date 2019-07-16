@@ -20,7 +20,7 @@ class Jenisbiaya extends React.Component {
                   { kategori: 'Offset' , id: 3},
                 ]
     return (
-      <Page title={'Kategori Produk'}>
+      <Page title={'Kategori Jasa'}>
         <Input type='text' placeholder='Kategor Produk' />
         <Button color='primary' size='sm' style={{ width: '100%'}} className='mb-4'>Simpan</Button>
         <Tabel
@@ -29,7 +29,7 @@ class Jenisbiaya extends React.Component {
           columns ={[
             {
                 dataField: 'kategori',
-                text: 'Kategori Produk'
+                text: 'Kategori Jasa'
             },
             {
               dataField: 'id',

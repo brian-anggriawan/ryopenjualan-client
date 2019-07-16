@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import './main.css';
-import './util.css';
 import image from 'assets/img/img-01.png';
 import { Button } from 'reactstrap';
 import { msgok , msgerror } from 'app';
+import './main.css';
+import './util.css';
 
 
 class login extends Component {
+    
     constructor(){
         super()
         this.state ={
@@ -15,6 +16,7 @@ class login extends Component {
         }
         this.Login = this.Login.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        
     }
     
 

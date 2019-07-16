@@ -7,10 +7,10 @@ export default class form_jasa extends Component {
     render() {
         return (
             <div>
-                <Modal title={'Form Produk'}>
+                <Modal title={'Form Jasa'}>
                     <Form>
                         <FormGroup>
-                            <Label for='produk'>Nama Produk</Label>
+                            <Label for='produk'>Nama Jasa</Label>
                             <Input type='text' name='produk' id='produk' />
                         </FormGroup>
                         <FormGroup>

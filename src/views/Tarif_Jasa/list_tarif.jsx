@@ -38,7 +38,7 @@ class Listtarif extends React.Component {
       }
     ]
     return (
-      <Page title={'Harga Produk'}>
+      <Page title={'Harga Jasa'}>
         <Form />
         <Tabel
           data ={data}
@@ -46,7 +46,7 @@ class Listtarif extends React.Component {
           columns ={[
             {
                 dataField: 'produk',
-                text: 'Produk'
+                text: 'Jasa'
             },
             {
                 dataField: 'kategori',

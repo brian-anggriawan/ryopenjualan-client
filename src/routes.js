@@ -49,16 +49,16 @@ var dashRoutes = [
     group: 'setup'
   },
   {
-    path: "/kategoriproduk",
-    name: "Kategori Produk",
+    path: "/kategorijasa",
+    name: "Kategori Jasa",
     icon: "shopping_tag-content",
     component: Auth(kategori),
     layout: "/admin",
     group: 'setup'
   },
   {
-    path: "/hargaproduk",
-    name: "Harga Produk",
+    path: "/hargajasa",
+    name: "Harga Jasa",
     icon: "business_money-coins",
     component: Auth(Tarif),
     layout: "/admin",
