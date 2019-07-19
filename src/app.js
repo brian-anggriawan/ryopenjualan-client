@@ -1,4 +1,5 @@
 import sw from 'sweetalert2';
+import axios from 'axios';
 
 export let optionTable = {
     paginationSize: 5,
@@ -61,6 +62,36 @@ export let msgdialog = (msg)=>{
 /* Sweet Alert */
 
 /* API Back end */
+
+let urlServer = 'http://ababilsoft.com/ryoad/ryoad_api';
+
+export let apiGet = (url) =>{
+    return axios.get(`${urlServer}/${url}`)
+         .then( res =>{
+             return res.data.data
+         })
+}
+
+export let apiGet1 = (url , param1) =>{
+    return axios.get(`${urlServer}/${url}/${param1}`)
+        .then( res =>{
+            return res.data.data
+        })
+}
+
+export let apiPost = (url , data) =>{
+    return axios({ 
+        method: 'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        url: `${urlServer}/${url}`,
+        data: JSON.stringify(data)
+    }).then(res=>{
+        return res
+    })
+}
+
 
 
 /* API Back end */

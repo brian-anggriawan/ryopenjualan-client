@@ -19,8 +19,8 @@ class FixedPlugin extends Component {
     return (
       <div className="fixed-plugin">
         <div className={this.state.classes}>
-          <div onClick={this.handleClick}>
-            <i className="fa fa-cog fa-2x" />
+          <div style={{ cursor:'pointer'}} onClick={this.handleClick}>
+            <i className="fa fa-cog fa-2x"/>
           </div>
           <ul className="dropdown-menu show">
             <li className="header-title">Ganti Warna</li>
