@@ -20,21 +20,21 @@
     "react-bootstrap-table2-toolkit": "^2.0.1",
     "react-chartjs-2": "2.7.6",
     "react-dom": "16.8.6",
-    "react-dropdown-select": "^3.1.0",
+    "react-dropdown-select": "^3.2.0",
     "react-google-maps": "9.4.5",
     "react-hot-keys": "^2.0.0-beta.2",
     "react-hotkey": "^0.7.0",
     "react-icons": "^3.7.0",
     "react-notification-alert": "0.0.12",
-    "react-router": "5.0.0",
-    "react-router-dom": "5.0.0",
+    "react-router": "5.0.1",
+    "react-router-dom": "5.0.1",
     "react-scripts": "3.0.1",
     "react-select": "^3.0.4",
     "react-spinners": "^0.5.13",
-    "reactstrap": "8.0.0",
+    "reactstrap": "8.0.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3",
-    "sweetalert2": "^8.13.5"
+    "sweetalert2": "^8.14.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,11 +47,11 @@
     "map-sass": "node-sass src/assets/scss/now-ui-dashboard.scss src/assets/css/now-ui-dashboard.css --source-map true"
   },
   "optionalDependencies": {
-    "@types/googlemaps": "3.36.2",
+    "@types/googlemaps": "3.37.0",
     "@types/markerclustererplus": "2.1.33",
-    "@types/react": "16.8.19",
+    "@types/react": "16.8.23",
     "jquery": "^3.4.1",
-    "typescript": "3.5.1"
+    "typescript": "3.5.3"
   },
   "browserslist": {
     "production": [

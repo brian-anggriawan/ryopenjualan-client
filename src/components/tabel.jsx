@@ -20,7 +20,7 @@ class Table extends React.Component{
                 >
                     {
                     props => (
-                        <div style={{ overflowX: 'scroll' , overflowY:'hidden'}}>
+                        <div>
                             <div className='float-right'>
                                 <SearchBar { ...props.searchProps }  style={this.props.width}/>
                             </div>
