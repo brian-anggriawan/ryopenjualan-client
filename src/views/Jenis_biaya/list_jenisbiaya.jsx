@@ -55,8 +55,7 @@ class Jenisbiaya extends React.Component {
     }
   }
 
-  delete(id){
-    
+  delete(id){ 
     msgdialog('Hapus')
       .then(res =>{
         if (res) {
