@@ -7,8 +7,8 @@ export default class ButtonAction extends Component {
         let { edit , hapus } = this.props;
         return (
             <div>
-                <Button color='info' size='sm' className='mr-2' onClick={()=> edit()}><IoMdCreate /></Button>
-                <Button color='danger' size='sm' onClick={()=> hapus()}><IoMdTrash /></Button>
+                <Button color='info' size='sm' className='mr-2' onClick={edit}><IoMdCreate /></Button>
+                <Button color='danger' size='sm' onClick={hapus}><IoMdTrash /></Button>
             </div>
         )
     }

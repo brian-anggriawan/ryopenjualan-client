@@ -37,6 +37,14 @@ export let msgerror = (msg) =>{
     })
 }
 
+export let msggagal = ()=>{
+    sw.fire({
+        type: 'error',
+        title: 'Oops...',
+        text: 'Gagal'
+        }) 
+}
+
 export let msgok =(msg , url)=>{
     sw.fire({
         type: "success",
@@ -46,6 +54,7 @@ export let msgok =(msg , url)=>{
         window.location.href = url
     })
 }
+
 
 export let msgdialog = (msg)=>{
    return sw.fire({
@@ -80,18 +89,16 @@ export let apiGet1 = (url , param1) =>{
 }
 
 export let apiPost = (url , data) =>{
-    return axios({ 
+
+    return axios({
         method: 'POST',
-        headers:{
-            'Content-Type':'application/json'
-        },
         url: `${urlServer}/${url}`,
         data: JSON.stringify(data)
-    }).then(res=>{
-        return res
+    })
+    .then(res =>{
+        return res.data.result
     })
 }
-
 
 
 /* API Back end */
