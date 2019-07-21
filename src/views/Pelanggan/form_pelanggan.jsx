@@ -1,63 +1,131 @@
 import React, { Component } from 'react';
-import Modal from 'layouts/form_modal_with_button';
-import { Input , Form , FormGroup , Label  } from 'reactstrap';
-import Select from 'components/Select/select';
+import Modal from 'layouts/form_modal';
+import { Input , FormGroup , Label  } from 'reactstrap';
+import Select from 'react-select';
+import { apiPost } from 'app';
+import serialize from 'form-serialize';
 
 export default class form_pelanggan extends Component {
     constructor(){
         super()
-        this.state ={}
+        this.state={
 
-        this.test = this.test.bind(this);
+        }
+        this.save = this.save.bind(this);
     }
 
-
-    test(e){
-
-        let charCode = e.keyCode;
-        if ( charCode === 13 )
-        {
-            e.keyCode = 9;
-            return e.keyCode;
-       }
-
-    }
+    save(){
+        let data =  serialize(document.getElementById('pelanggan') ,{hash: true});
+ 
+        if(this.props.flag === 1){
+            data.id = this.props.edit.id;
+            apiPost('pelanggan/edit' ,data)
+            .then(res =>{
+              if (res) {
+                this.props.getData();
+              }
+            })
+        }else{
+            apiPost('pelanggan/tambah' ,data)
+            .then(res =>{
+              if (res) {
+                this.props.getData();
+              }
+            })
+        }
+     }
 
     render() {
+        let { mode , modal ,edit , flag} = this.props;
+
         return (
             <div>
-                <Modal title={'Form Pelanggan'}>
-                    <Form id='pelanggan'>
-                        <FormGroup>
-                            <Label for='name'>Nama</Label>
-                            <Input type='text' name='nama' id='1' onKeyDown={this.test} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='alamat'>alamat</Label>
-                            <Input type='text' name='alamat' id='2' />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='biaya'>Level Harga</Label>
-                            <Select onKeyDown={(e)=>this.test(e , 3)}  data={[
-                                {
-                                value:'1',
-                                text: 'Ecer'
-                                },
-                                {
-                                value:'2',
-                                text: 'Murah'
-                                },
-                                {
-                                value:'3',
-                                text: 'Lebih Murah'
-                                },
-                                {
-                                value:'4',
-                                text: 'Paling Murah'
-                                }
-                            ]} name={'biaya'} id={'biaya'}/>
-                        </FormGroup>
-                    </Form>
+                <Modal title={'Form Pelanggan'} mode={mode} modal={modal} idform={'pelanggan'} action={this.save}>
+                    {
+                        flag === 1 ?
+                        <div> 
+                            <FormGroup>
+                                <Label for='kode_pelanggan'>Kode Pelanggan</Label>
+                                <Input type='text' name='kode_pelanggan' defaultValue={edit.kode_pelanggan}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='nnama_pelangganame'>Nama</Label>
+                                <Input type='text' name='nama_pelanggan' defaultValue={edit.nama_pelanggan} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='alamat'>alamat</Label>
+                                <Input type='text' name='alamat' defaultValue={edit.alamat} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='level_harga'>Level Harga</Label>
+                                <Select options={[
+                                    {
+                                    value:'1',
+                                    label: 'Ecer'
+                                    },
+                                    {
+                                    value:'2',
+                                    label: 'Murah'
+                                    }
+                                ]} name='level_harga' className='select' defaultValue={{  value: edit.level_harga, label: edit.nama_level }} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='jenis_pelanggan'>Jenis</Label>
+                                <Select options={[
+                                    {
+                                    value:'Member',
+                                    label: 'Member'
+                                    },
+                                    {
+                                    value:'Umum',
+                                    label: 'Member'
+                                    }
+                                ]} name='jenis_pelanggan' className='select' defaultValue={{  value: edit.jenis_pelanggan, label: edit.jenis_pelanggan }}/>
+                            </FormGroup>
+                        </div>
+
+                        :
+                        <div>
+                            <FormGroup>
+                                <Label for='kode_pelanggan'>Kode Pelanggan</Label>
+                                <Input type='text' name='kode_pelanggan'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='nama_pelanggan'>Nama</Label>
+                                <Input type='text' name='nama_pelanggan'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='alamat'>alamat</Label>
+                                <Input type='text' name='alamat' />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='level_harga'>Level Harga</Label>
+                                <Select options={[
+                                    {
+                                    value:'1',
+                                    label: 'Ecer'
+                                    },
+                                    {
+                                    value:'2',
+                                    label: 'Murah'
+                                    }
+                                ]} name='level_harga' className='select'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='jenis_pelanggan'>Jenis</Label>
+                                <Select options={[
+                                    {
+                                    value:'Member',
+                                    label: 'Member'
+                                    },
+                                    {
+                                    value:'Umum',
+                                    label: 'Member'
+                                    }
+                                ]} name='jenis_pelanggan' className='select'/>
+                            </FormGroup>
+                        </div>
+                    }
                 </Modal>
             </div>
         )
