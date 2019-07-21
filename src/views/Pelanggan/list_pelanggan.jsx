@@ -31,7 +31,7 @@ class Listpelanggan extends React.Component {
 
   
   getData(){
-    this.setState({ modal: false });
+    this.setState({ modal: false , loading: true });
     let cek = (angka) =>{
       if (angka === 1) {
         return 'Ecer'
