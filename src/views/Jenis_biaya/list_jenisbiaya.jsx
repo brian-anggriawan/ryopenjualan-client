@@ -41,6 +41,7 @@ class Jenisbiaya extends React.Component {
     if (edit) {
       apiPost('jenis_biaya/edit' ,{ id:id , kelompok_acc: input })
         .then(res =>{
+          console.log(res)
           if (res) {
             this.getData();
           }
