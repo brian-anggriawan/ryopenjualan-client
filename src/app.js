@@ -12,6 +12,10 @@ export let optionTable = {
     showTotal: true
 };
 
+export let inputRupiah = (id , nilai)=>{
+    return document.getElementById(id).value = formatRupiah(nilai ,'');
+}
+
 export let formatRupiah = (angka, prefix)=>{
     var number_string = angka.replace(/[^,\d]/g, '').toString(),
     split   		= number_string.split(','),
@@ -77,7 +81,6 @@ let urlServer = 'http://ababilsoft.com/ryoad/ryoad_api';
 export let apiGet = (url) =>{
     return axios.get(`${urlServer}/${url}`)
          .then( res =>{
-             console.log(res)
              return res.data.data
          })
 }

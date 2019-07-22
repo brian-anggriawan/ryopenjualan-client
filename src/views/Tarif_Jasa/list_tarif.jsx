@@ -4,7 +4,7 @@ import Form from './form_jasa';
 import Tabel from 'components/tabel';
 import ButtonAction from 'components/ButtonAction';
 import Loading from 'components/Loading';
-import { apiGet , apiPost , msgdialog } from 'app';
+import { apiGet , apiPost , msgdialog , formatRupiah } from 'app';
 
 class Listtarif extends React.Component {
   constructor(){
@@ -32,7 +32,6 @@ class Listtarif extends React.Component {
     this.setState({ modal: false , loading: true });
     apiGet('harga_jasa/result_harga_jasa')
     .then(res =>{
-      console.log(res)
       this.setState({ data: res , loading: false });
     })
   }
@@ -71,6 +70,10 @@ class Listtarif extends React.Component {
     this.mode();
   }
 
+  formatuang(nilai){
+    return formatRupiah(nilai,'')
+  }
+
   render() {
     let { data , loading, modal, edit , flag } = this.state;
 
@@ -106,14 +109,17 @@ class Listtarif extends React.Component {
             },
             {
               dataField: 'hpp',
+              formatter: this.formatuang,
               text: 'HPP'
             },
             {
               dataField: 'harga_jual1',
+              formatter: this.formatuang,
               text: 'Harga 1'
             },
             {
               dataField: 'harga_jual2',
+              formatter: this.formatuang,
               text: 'Harga 2'
             },
             {
