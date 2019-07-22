@@ -16,6 +16,11 @@ export let inputRupiah = (id , nilai)=>{
     return document.getElementById(id).value = formatRupiah(nilai ,'');
 }
 
+export let rupiahToNumber = (nilai) =>{
+    let hasil = nilai.replace('Rp. ','').replace('.','');
+    return hasil;
+}
+
 export let formatRupiah = (angka, prefix)=>{
     var number_string = angka.replace(/[^,\d]/g, '').toString(),
     split   		= number_string.split(','),
