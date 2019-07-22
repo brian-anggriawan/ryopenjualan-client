@@ -77,6 +77,7 @@ let urlServer = 'http://ababilsoft.com/ryoad/ryoad_api';
 export let apiGet = (url) =>{
     return axios.get(`${urlServer}/${url}`)
          .then( res =>{
+             console.log(res)
              return res.data.data
          })
 }

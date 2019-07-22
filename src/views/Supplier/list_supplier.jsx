@@ -18,9 +18,10 @@ class Listsupplier extends React.Component {
     }
     this.mode = this.mode.bind(this);
     this.tambah = this.tambah.bind(this);
-    //this.edit = this.edit.bind(this);
+    this.edit = this.edit.bind(this);
     this.delete = this.delete.bind(this);
     this.button = this.button.bind(this);
+    this.getData = this.getData.bind(this);
   }
 
   mode(){
@@ -35,7 +36,7 @@ class Listsupplier extends React.Component {
     })
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.getData();
   }
 
@@ -63,6 +64,12 @@ class Listsupplier extends React.Component {
     this.setState({ flag: 0 })
   }
 
+  edit(id){
+    let data = this.state.data.filter( x => x.id === id)[0];
+    this.setState({ edit: data , flag: 1 });
+    this.mode();
+  }
+
   render() {
     let { data , loading, modal, edit , flag } = this.state;
 
@@ -76,11 +83,15 @@ class Listsupplier extends React.Component {
     return (
       <Page title={'Supplier'}>
         <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
-        <Form mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} />
+        <Form mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} count={data.length} />
         <Tabel
           data ={data}
           keyField = {'id'}
           columns ={[
+            {
+              dataField: 'kode_supplier',
+              text: 'Kode Supplier'
+            },
             {
                 dataField: 'nama_supplier',
                 text: 'Nama Supplier'
