@@ -4,6 +4,7 @@ import Form from './form_jasa';
 import Tabel from 'components/tabel';
 import ButtonAction from 'components/ButtonAction';
 import Loading from 'components/Loading';
+import { Button } from 'reactstrap';
 import { apiGet , apiPost , msgdialog , formatRupiah } from 'app';
 
 class Listtarif extends React.Component {
@@ -11,6 +12,8 @@ class Listtarif extends React.Component {
     super()
     this.state = {
       data: [],
+      satuan:[],
+      jenis:[],
       loading: true,
       modal: false,
       flag:0,
@@ -38,6 +41,20 @@ class Listtarif extends React.Component {
 
   componentDidMount(){
     this.getData();
+
+     /* data satuan */
+     apiGet('satuan/result_data_satuan')
+     .then(res =>{
+       this.setState({ satuan: res})
+     })
+    /* data satuan */
+
+    /* data jenis */
+        apiGet('kategori_jasa/result_data_kategori_jasa')
+          .then(res =>{
+            this.setState({ jenis: res })
+          })
+    /* data jenis */
   }
 
   delete(id){ 
@@ -75,7 +92,7 @@ class Listtarif extends React.Component {
   }
 
   render() {
-    let { data , loading, modal, edit , flag } = this.state;
+    let { data , loading, modal, edit , flag , satuan , jenis} = this.state;
 
     if (loading){
       return(
@@ -86,7 +103,8 @@ class Listtarif extends React.Component {
     }
     return (
       <Page title={'Harga Jasa'}>
-        <Form mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} count={data.length} />
+        <Form mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} count={data.length} satuan={satuan} jenis={jenis} />
+        <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
         <Tabel
           data ={data}
           keyField = {'id'}

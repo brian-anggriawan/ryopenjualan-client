@@ -1,71 +1,135 @@
 import React, { Component } from 'react';
-import Modal from 'layouts/form_modal_with_button';
-import { Input , Form , FormGroup , Label } from 'reactstrap';
-import Select from 'components/Select/select';
-import { inputRupiah , rupiahToNumber } from 'app';
+import Modal from 'layouts/form_modal';
+import { Input , FormGroup , Label } from 'reactstrap';
+import Select from 'react-select';
+import { inputRupiah , rupiahToNumber , formatRupiah } from 'app';
+import { apiPost } from 'app';
+import serialize from 'form-serialize';
 
 export default class form_jasa extends Component {
+    constructor(){
+        super()
+        this.state={}
+
+        this.save = this.save.bind(this);
+    }
 
     save(){
-        let data = rupiahToNumber (document.getElementById('harga1').value);
-        console.log(data);
+        let data =  serialize(document.getElementById('pelanggan') ,{hash: true});
+        let proses = {
+            harga_jual1: rupiahToNumber(data.harga_jual1),
+            harga_jual2: rupiahToNumber(data.harga_jual2) ,
+            hpp: rupiahToNumber(data.hpp),
+            jenis: data.jenis,
+            kode_jasa: data.kode_jasa,
+            nama_jasa: data.nama_jasa,
+            satuan: data.satuan
+        }
+ 
+        if(this.props.flag === 1){
+            proses.id = this.props.edit.id;
+            apiPost('harga_jasa/edit' ,proses)
+            .then(res =>{
+              if (res) {
+                this.props.getData();
+              }
+            })
+        }else{
+            apiPost('harga_jasa/tambah' ,proses)
+            .then(res =>{
+              if (res) {
+                this.props.getData();
+              }
+            })
+        }
     }
     render() {
+        let { modal , mode ,edit , flag , count , satuan , jenis } = this.props;
+
         return (
             <div>
-                <Modal title={'Form Jasa'} action={this.save}>
-                    <Form>
-                        <FormGroup>
-                            <Label for='produk'>Nama Jasa</Label>
-                            <Input type='text' name='produk' id='produk' />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='kategori'>Kategori Produk</Label>
-                            <Select  data={[
-                                {
-                                value:'1',
-                                text: 'A1'
-                                },
-                                {
-                                value:'2',
-                                text: 'A2'
-                                },
-                                {
-                                value:'3',
-                                text: 'A3'
-                                }
-                            ]} name='kategori' id='kategori'/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='satuan'>Satuan</Label>
-                            <Select  data={[
-                                {
-                                value:'1',
-                                text: 'PCS'
-                                },
-                                {
-                                value:'2',
-                                text: 'M3'
-                                },
-                                {
-                                value:'3',
-                                text: 'Pack'
-                                }
-                            ]} name='satuan' id='satuan'/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='hpp'>Harga Pokok</Label>
-                            <Input type='text' name='hpp' id='hpp' onKeyUp={(e)=> inputRupiah('hpp',e.target.value) }/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='harga1'>Harga Jual 1</Label>
-                            <Input type='text' className='uang' name='harga1' id='harga1' onKeyUp={(e)=> inputRupiah('harga1',e.target.value) }/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for='hpp'>Harga Jual 2</Label>
-                            <Input type='text' name='harga2' id='harga2' onKeyUp={(e)=> inputRupiah('harga2',e.target.value) }/>
-                        </FormGroup>
-                    </Form>
+                <Modal title={'Form Jasa'} modal={modal} mode={mode} idform={'pelanggan'} action={this.save}>
+                    {
+                        flag === 1 ? 
+                        <div>
+                            <FormGroup>
+                                <Label for='kode_jasa'>Kode Jasa</Label>
+                                <Input type='text' name='kode_jasa' readOnly defaultValue={edit.kode_jasa}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='nama_jasa'>Nama Jasa</Label>
+                                <Input type='text' name='nama_jasa' defaultValue={edit.nama_jasa}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='jenis'>Jenis</Label>
+                                <Select className='select' defaultValue={{  value: edit.jenis , label: edit.jenis }}  options={ jenis.map( x =>({
+                                    value: x.jenis,
+                                    label: x.jenis
+                                }))} 
+                                name='jenis'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='satuan'>Satuan</Label>
+                                <Select className='select' defaultValue={{  value: edit.satuan , label: edit.satuan }}  options={ satuan.map( x =>({
+                                    value: x.satuan,
+                                    label: x.satuan
+                                }))} 
+                                name='satuan'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='hpp'>Harga Pokok</Label>
+                                <Input type='text' name='hpp' id='hpp' onKeyUp={(e)=> inputRupiah('hpp',e.target.value) } defaultValue={formatRupiah(edit.hpp ,'')}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='harga_jual1'>Harga Jual 1</Label>
+                                <Input type='text' name='harga_jual1' id='harga_jual1' onKeyUp={(e)=> inputRupiah('harga_jual1',e.target.value) } defaultValue={formatRupiah(edit.harga_jual1,'')}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='harga_jual2'>Harga Jual 2</Label>
+                                <Input type='text' name='harga_jual2' id='harga_jual2' onKeyUp={(e)=> inputRupiah('harga_jual2',e.target.value) } defaultValue={formatRupiah(edit.harga_jual2,'')}/>
+                            </FormGroup>
+                        </div>
+                        :
+                        <div>
+                            <FormGroup>
+                                <Label for='kode_jasa'>Kode Jasa</Label>
+                                <Input type='text' name='kode_jasa' readOnly defaultValue={`J-0000${count+1}`}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='nama_jasa'>Nama Jasa</Label>
+                                <Input type='text' name='nama_jasa'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='jenis'>Jenis</Label>
+                                <Select className='select'  options={ jenis.map( x =>({
+                                    value: x.jenis,
+                                    label: x.jenis
+                                }))} 
+                                name='jenis'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='satuan'>Satuan</Label>
+                                <Select className='select'  options={ satuan.map( x =>({
+                                    value: x.satuan,
+                                    label: x.satuan
+                                }))} 
+                                name='satuan'/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='hpp'>Harga Pokok</Label>
+                                <Input type='text' name='hpp' id='hpp' onKeyUp={(e)=> inputRupiah('hpp',e.target.value) }/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='harga_jual1'>Harga Jual 1</Label>
+                                <Input type='text' name='harga_jual1' id='harga_jual1' onKeyUp={(e)=> inputRupiah('harga_jual1',e.target.value) }/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='harga_jual2'>Harga Jual 2</Label>
+                                <Input type='text' name='harga_jual2' id='harga_jual2' onKeyUp={(e)=> inputRupiah('harga_jual2',e.target.value) }/>
+                            </FormGroup>
+                        </div>
+                    }
+                        
                 </Modal>
             </div>
         )

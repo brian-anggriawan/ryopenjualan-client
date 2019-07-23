@@ -1,7 +1,19 @@
+SETUP
+
 1.Menu Satuan
 2.Menu Jenis biaya
 3.Menu Kategori Jasa
-4.Menu User Level
-5.Menu Pelanggan
-6.Menu Supplier
-7.Menu Tarif Jasa
+4.Menu Pelanggan
+5.Menu Supplier
+6.Menu Tarif Jasa
+7.Menu Petugas Desain
+
+TRANSAKSI
+
+1.Menu Penjualan belum final
+
+
+CONFIG
+
+1.Menu User Level
+2.Menu User Login

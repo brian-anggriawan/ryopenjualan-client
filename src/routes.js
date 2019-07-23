@@ -10,7 +10,7 @@ import Userlogin from 'views/user_login/list_user_login';
 import Useraccess from 'views/user_access/list_user_access';
 import satuan from 'views/satuan/list_satuan';
 import kategori from 'views/kategori_produk/list_kategoriproduk';
-import Setupkasir from 'views/Setup_kasir/list_kasir';
+//import Setupkasir from 'views/Setup_kasir/list_kasir';
 import Userlevel from 'views/user_level/list_user_level';
 import Auth from 'Auth';
 
@@ -79,7 +79,7 @@ var dashRoutes = [
     component: Auth(Petugas),
     layout: "/admin",
     group: 'setup'
-  },
+  },/*
   {
     path: "/setupkasir",
     name: "Setup Kasir",
@@ -87,7 +87,7 @@ var dashRoutes = [
     component: Auth(Setupkasir),
     layout: "/admin",
     group: 'setup'
-  },
+  },*/
   {
     path: "/penjualan",
     name: "Penjualan",

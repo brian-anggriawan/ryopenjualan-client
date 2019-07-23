@@ -16,8 +16,21 @@ export let inputRupiah = (id , nilai)=>{
     return document.getElementById(id).value = formatRupiah(nilai ,'');
 }
 
-export let rupiahToNumber = (nilai) =>{
-    let hasil = nilai.replace('Rp. ','').replace('.','');
+export let inputPersen = (id , nilai)=>{
+    return document.getElementById(id).value = formatPersen(nilai)
+}
+
+export let formatPersen = (nilai = '0') =>{
+    let proses = persenToNumber(nilai);
+    return `${proses}%`
+}
+
+export let persenToNumber = (nilai ='0')=>{
+    return nilai.replace('%','');
+}
+
+export let rupiahToNumber = (nilai = '0') =>{
+    let hasil = nilai.replace('Rp. ','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','');
     return hasil;
 }
 
