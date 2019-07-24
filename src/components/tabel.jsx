@@ -24,7 +24,7 @@ class Table extends React.Component{
                             <div className='float-right'>
                                 <SearchBar { ...props.searchProps }  style={this.props.width}/>
                             </div>
-                            <div>
+                            <div className="table-responsive">
                                 <BootstrapTable pagination ={paginationFactory(optionTable)}
                                     { ...props.baseProps }
                                     striped

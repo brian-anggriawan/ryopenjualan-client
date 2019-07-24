@@ -122,6 +122,18 @@ export let apiPost = (url , data) =>{
     })
 }
 
+export let apiPostGet = (url , data) =>{
+
+    return axios({
+        method: 'POST',
+        url: `${urlServer}/${url}`,
+        data: JSON.stringify(data)
+    })
+    .then(res =>{
+        return res.data
+    })
+}
+
 
 /* API Back end */
 
