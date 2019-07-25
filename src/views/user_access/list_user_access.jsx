@@ -4,9 +4,11 @@ import { Button , Row ,Col} from 'reactstrap';
 import Tabel from 'components/tabel';
 import { IoMdTrash } from 'react-icons/io';
 import List from './list_menu';
-import { apiGet , apiPostGet , msgdialog , apiPost } from 'app';
+import { apiGet , apiPostGet , msgdialog , apiPost ,msgerror} from 'app';
 import Select from 'react-select';
 import Loading from 'components/Loading';
+import menu from './menu';
+import _ from 'lodash';
 
 
 class Listuseraccess extends React.Component {
@@ -17,7 +19,8 @@ class Listuseraccess extends React.Component {
       userlevel:[],
       access:[],
       loading: false,
-      iduser:''
+      iduser:'',
+      dataMenu:[]
     }
 
     this.mode = this.mode.bind(this);
@@ -25,6 +28,7 @@ class Listuseraccess extends React.Component {
     this.button = this.button.bind(this);
     this.delete = this.delete.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.tambah = this.tambah.bind(this);
   }
 
   componentDidMount(){
@@ -81,6 +85,19 @@ class Listuseraccess extends React.Component {
       }) 
   }
 
+  tambah(){
+    let { iduser , access } = this.state;
+    if (iduser === '') {
+      msgerror('Belum Pilih User Access')
+    }else{
+      for( let i = 0; i < access.length; i++){     
+       _.remove(menu , x => x.path === access[i].path);
+      }
+      this.mode();
+     
+    }
+  }
+
   render() {
     let { userlevel , access ,loading , modal , iduser } = this.state;
     return (
@@ -98,7 +115,7 @@ class Listuseraccess extends React.Component {
             />
           </Col>
           <Col>
-            <Button color='success' onClick={this.mode}> Tambah</Button>
+            <Button color='success' onClick={this.tambah}> Tambah</Button>
           </Col>
         </Row>
         {

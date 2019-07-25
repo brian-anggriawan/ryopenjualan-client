@@ -47,7 +47,7 @@ class Listpengeluaran extends React.Component {
       .then(res =>{
         if (res) {
           this.setState({ loading: true });
-          apiPost('supplier/hapus' , { id: id })
+          apiPost('pengeluaran/hapus' , { id: id })
           .then( res =>{
             if (res) {
               this.getData();
@@ -90,7 +90,7 @@ class Listpengeluaran extends React.Component {
     return (
       <Page title={'Pengeluaran'}>
         <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
-        <Form  mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData}/>
+        <Form  mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} count={data.length}/>
          <Tabel
           data ={data}
           keyField = {'id'}
@@ -126,7 +126,7 @@ class Listpengeluaran extends React.Component {
             },
             {
               dataField: 'id',
-              formatter: this.action,
+              formatter: this.button,
               text: 'Action'
             }
           ]}                            

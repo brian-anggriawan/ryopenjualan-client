@@ -43,17 +43,19 @@ export default class list_menu extends Component {
                     }
                 })
         }else{
-            console.log('banyak')
-        }
-     
+            let count = data.length;
 
-        // if (count > 0) {
-        //     for(let i = 0; i < count; i++){
-        //         let filter = menu.filter(x => x.path ===  count === 1 ? data.data : data.data[i] );
-        //         console.log(filter)
-                
-        //     }   
-        // }
+            for (let i = 0; i < count; i++) {
+               let hasil = menu.filter(x => x.path === data[i])[0];
+               hasil.id_user = this.props.iduser
+
+               apiPost('list_menu/tambah',hasil);
+            }
+
+            setTimeout(()=>{
+                this.props.refresh();
+            } , 3000)
+        }
     }
 
     render() {
