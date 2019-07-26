@@ -3,6 +3,7 @@ import { NavLink , Link } from "react-router-dom";
 import { Nav , Collapse} from "reactstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 import routes from '../../routes';
+import { dataMenu } from 'app';
 
 import logo from "Ryo.jpg";
 
@@ -64,7 +65,7 @@ class Sidebar extends React.Component {
   }
 
   componentWillMount(){
-    this.setState({ menu: routes , dataMenu: JSON.parse(localStorage.getItem('menu'))});
+    this.setState({ menu: routes , dataMenu: dataMenu()});
   }
 
   componentDidMount() {
@@ -94,7 +95,6 @@ class Sidebar extends React.Component {
     let Auth = dataMenu || [{group:''}];
     let setup = Auth.filter(x => x.group === 'setup').length;
     let transaksi = Auth.filter(x => x.group === 'transaksi').length;
-    let report = Auth.filter(x => x.group === 'report').length;
     let config = Auth.filter(x => x.group === 'config').length;
 
     let listMenu = Auth.filter(x =>{
@@ -190,19 +190,15 @@ class Sidebar extends React.Component {
                     </Collapse>
               </li> :''
             }
-            {
-              report > 0 ?
               <li className='active'>
                 <NavLink
-                    className="nav-link text-dark"
-                    to='#'
+                     className="nav-link text-dark"
+                     to='/admin/report'
                   >
                     <i className={"now-ui-icons education_paper"} />
                     <p>Report</p>
                 </NavLink>
-              </li> : ''
-
-            }
+              </li> 
             {
               config > 0 ?
               <li className='active'>

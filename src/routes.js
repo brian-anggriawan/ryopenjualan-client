@@ -10,8 +10,8 @@ import Userlogin from 'views/user_login/list_user_login';
 import Useraccess from 'views/user_access/list_user_access';
 import satuan from 'views/satuan/list_satuan';
 import kategori from 'views/kategori_produk/list_kategoriproduk';
-//import Setupkasir from 'views/Setup_kasir/list_kasir';
 import Userlevel from 'views/user_level/list_user_level';
+import Report from 'views/Report/list_report';
 import Auth from 'Auth';
 
 
@@ -79,15 +79,7 @@ var dashRoutes = [
     component: Auth(Petugas),
     layout: "/admin",
     group: 'setup'
-  },/*
-  {
-    path: "/setupkasir",
-    name: "Setup Kasir",
-    icon: "tech_laptop",
-    component: Auth(Setupkasir),
-    layout: "/admin",
-    group: 'setup'
-  },*/
+  },
   {
     path: "/penjualan",
     name: "Penjualan",
@@ -103,6 +95,14 @@ var dashRoutes = [
     component: Auth(Pengeluaran),
     layout: "/admin",
     group: 'transaksi'
+  },
+  {
+    path: "/report",
+    name: "report",
+    icon: "shopping_cart-simple",
+    component: Auth(Report),
+    layout: "/admin",
+    group: 'report'
   },
   {
     path: "/userlogin",

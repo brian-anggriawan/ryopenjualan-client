@@ -94,6 +94,46 @@ let Menu = [
       component: 'Auth(Useraccess)',
       layout: "/admin",
       group: 'config'
+    },
+    {
+      path: "/report1",
+      name: "Laporan Pengeluaran Biaya",
+      group: 'report'
+    },
+    {
+      path: "/report2",
+      name: "Laporan Penjualan Detail",
+      group: 'report'
+    },
+    {
+      path: "/report3",
+      name: "Laporan Penjualan Jasa",
+      group: 'report'
+    },
+    {
+      path: "/report4",
+      name: "Laporan Penjualan Jenis",
+      group: 'report'
+    },
+    {
+      path: "/report5",
+      name: "Laporan Penjualan Pelanggan",
+      group: 'report'
+    },
+    {
+      path: "/report6",
+      name: "Laporan Penjualan Tanggal",
+      group: 'report'
+    },
+    {
+      path: "/report7",
+      name: "Rekap Nota Penjualan",
+      group: 'report'
+    },
+    {
+      path: "/report8",
+      name: "Rekap Pengeluaran",
+      group: 'report'
     }
   ];
   export default Menu;

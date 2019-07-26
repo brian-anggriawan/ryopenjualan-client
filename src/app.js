@@ -32,6 +32,9 @@ export let dataUser = () =>{
     return JSON.parse(localStorage.getItem('userKasir'))[0];
 }
 
+export let dataMenu = () =>{
+    return JSON.parse(localStorage.getItem('menu'));
+}
 export let inputRupiah = (id , nilai)=>{
     return document.getElementById(id).value = formatRupiah(nilai ,'');
 }
