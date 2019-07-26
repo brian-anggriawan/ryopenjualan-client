@@ -23,17 +23,23 @@ class login extends Component {
     Login(){
         let { name , pass} = this.state;
 
-        // apiPostGet('login/masuk',{ username: name , password: pass})
-        //     .then(res =>{
-        //         console.log(res)
-        //     })
-
-        if (name === 'admin' && pass ==='admin') {
-            localStorage.setItem('userKasir' , JSON.stringify([{ 'login': true}]));
-            msgok('Berhasil Login' , '/admin/dashboard')   
-        }else{
-            msgerror('Username Dan Password Salah')
-        }
+        apiPostGet('login/masuk',{ username: name , password: pass})
+            .then(res =>{
+                if (res.result === 'true') {
+                    localStorage.setItem('userKasir' , JSON.stringify([{ 
+                        'login': true , 
+                        'id_user': res.id_user,
+                        'username': res.username,
+                        'tingkatan': res.tingkatan
+                    }]));
+    
+                    localStorage.setItem('menu' , JSON.stringify(res.list_menu));
+                    msgok('Berhasil Login' , '/admin/dashboard')   
+                }else{
+                    msgerror('Username Dan Password Salah')
+                }
+               
+            })
     }
 
     handleChange(e , name){

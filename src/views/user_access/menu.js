@@ -1,13 +1,5 @@
 let Menu = [
     {
-      path: "/dashboard",
-      name: "Dashboard",
-      icon: "design_app",
-      component: 'Auth(Dashboard)',
-      layout: "/admin",
-      group: 'Dashboard'
-    },
-    {
       path: "/pelanggan",
       name: "pelanggan",
       icon: "business_badge",

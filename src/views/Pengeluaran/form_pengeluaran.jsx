@@ -3,7 +3,7 @@ import Modal from 'layouts/form_modal';
 import { Input , FormGroup , Label  } from 'reactstrap';
 import Select from 'react-select';
 import serialize from 'form-serialize';
-import { apiPost  , apiGet , inputRupiah ,formatRupiah , formatTanggal , rupiahToNumber} from 'app';
+import { apiPost  , apiGet , inputRupiah ,formatRupiah , formatTanggal , rupiahToNumber ,dataUser} from 'app';
 import dt from 'moment';
 
 export default class form_pengeluaran extends Component {
@@ -28,7 +28,7 @@ export default class form_pengeluaran extends Component {
      
             if(this.props.flag === 1){
                 data.id = this.props.edit.id;
-                data.operator = 'brian';
+                data.operator = dataUser().username;
                 data.jumlah = rupiahToNumber(data.jumlah);
                 data.tanggal = this.props.edit.tanggal;
                 apiPost('pengeluaran/edit' ,data)
@@ -39,7 +39,7 @@ export default class form_pengeluaran extends Component {
                 })
             }else{
                 data.tanggal = formatTanggal(new Date());
-                data.operator = 'brian';
+                data.operator = dataUser().username;
                 data.jumlah = rupiahToNumber(data.jumlah);
                 apiPost('pengeluaran/tambah' ,data)
                 .then(res =>{

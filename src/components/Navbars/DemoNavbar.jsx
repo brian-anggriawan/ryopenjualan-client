@@ -77,6 +77,7 @@ class Header extends React.Component {
 
   Logout(){
     localStorage.removeItem('userKasir');
+    localStorage.removeItem('menu');
     msgok('Berhasil Logout' ,'/login')
   }
   render() {

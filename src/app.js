@@ -12,9 +12,6 @@ export let optionTable = {
     showTotal: true
 };
 
-
-
-
 export let formatTanggal = (tanggal) =>{
    let dd = tanggal.getDate();
    let mm = tanggal.getMonth() + 1;
@@ -29,6 +26,10 @@ export let formatTanggal = (tanggal) =>{
   let today = dd + '-' + mm + '-' + yyyy;
   return today;
 
+}
+
+export let dataUser = () =>{
+    return JSON.parse(localStorage.getItem('userKasir'))[0];
 }
 
 export let inputRupiah = (id , nilai)=>{

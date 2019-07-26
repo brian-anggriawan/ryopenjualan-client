@@ -17,7 +17,8 @@ class Sidebar extends React.Component {
       transaksi: false,
       config: false,
       menu: [],
-      menuActive:''
+      menuActive:'',
+      dataMenu:[]
     }
     this.activeRoute.bind(this);
     this.setup = this.setup.bind(this);
@@ -63,7 +64,7 @@ class Sidebar extends React.Component {
   }
 
   componentWillMount(){
-    this.setState({ menu: routes})
+    this.setState({ menu: routes , dataMenu: JSON.parse(localStorage.getItem('menu'))});
   }
 
   componentDidMount() {
@@ -88,11 +89,19 @@ class Sidebar extends React.Component {
  
   render() {
 
-    let { menu , menuActive } = this.state;
+    let { menuActive , dataMenu } = this.state;
 
-    let listMenu = menu.filter(x =>{
+    let Auth = dataMenu || [{group:''}];
+    let setup = Auth.filter(x => x.group === 'setup').length;
+    let transaksi = Auth.filter(x => x.group === 'transaksi').length;
+    let report = Auth.filter(x => x.group === 'report').length;
+    let config = Auth.filter(x => x.group === 'config').length;
+
+    let listMenu = Auth.filter(x =>{
       return x.group.toLowerCase().includes(menuActive.toLocaleLowerCase());
     });
+
+
 
     return (
       <div className="sidebar" data-color={this.props.backgroundColor}>
@@ -127,7 +136,9 @@ class Sidebar extends React.Component {
                     <p>Dashboard</p>
                 </NavLink>
             </li>
-            <li className='active'>
+            {
+              setup > 0 ?
+              <li className='active'>
                 <NavLink
                     className="nav-link text-dark"
                     onClick={this.setup}
@@ -150,7 +161,10 @@ class Sidebar extends React.Component {
                         ))
                       }
                     </Collapse>
-              </li>
+              </li> :''
+            }
+            {
+              transaksi > 0 ?
               <li className='active'>
                 <NavLink
                     className="nav-link text-dark"
@@ -174,7 +188,10 @@ class Sidebar extends React.Component {
                         ))
                       }
                     </Collapse>
-              </li>
+              </li> :''
+            }
+            {
+              report > 0 ?
               <li className='active'>
                 <NavLink
                     className="nav-link text-dark"
@@ -183,7 +200,11 @@ class Sidebar extends React.Component {
                     <i className={"now-ui-icons education_paper"} />
                     <p>Report</p>
                 </NavLink>
-              </li>
+              </li> : ''
+
+            }
+            {
+              config > 0 ?
               <li className='active'>
                 <NavLink
                     className="nav-link text-dark"
@@ -207,7 +228,8 @@ class Sidebar extends React.Component {
                         ))
                       }
                     </Collapse>
-            </li>
+            </li> : ''
+            }    
           </Nav>
         </div>
       </div>
