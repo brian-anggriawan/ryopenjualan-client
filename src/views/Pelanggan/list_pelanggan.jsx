@@ -96,6 +96,7 @@ class Listpelanggan extends React.Component {
 
   render() {
     let { data , loading , modal , edit , flag} = this.state;
+
     if (loading){
       return(
         <Page title={'Pelanggan'}>
@@ -107,7 +108,7 @@ class Listpelanggan extends React.Component {
     return (
       <Page title={'Pelanggan'}>
         <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
-        <Form modal={modal} mode={this.mode} edit={edit} flag={flag} getData={this.getData} />
+        <Form modal={modal} mode={this.mode} edit={edit} flag={flag} getData={this.getData} count={data.length} />
         <Tabel
           data ={data}
           keyField = {'id'}

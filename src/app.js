@@ -12,6 +12,25 @@ export let optionTable = {
     showTotal: true
 };
 
+
+
+
+export let formatTanggal = (tanggal) =>{
+   let dd = tanggal.getDate();
+   let mm = tanggal.getMonth() + 1;
+   let yyyy = tanggal.getFullYear();
+
+   if (dd < 10) {
+    dd = '0' + dd;
+  } 
+  if (mm < 10) {
+    mm = '0' + mm;
+  } 
+  let today = dd + '-' + mm + '-' + yyyy;
+  return today;
+
+}
+
 export let inputRupiah = (id , nilai)=>{
     return document.getElementById(id).value = formatRupiah(nilai ,'');
 }

@@ -3,6 +3,7 @@ import Modal from 'layouts/form_modal';
 import { Input , FormGroup , Label } from 'reactstrap';
 import serialize from 'form-serialize';
 import { apiPost , inputPersen , persenToNumber , formatPersen } from 'app';
+import dt from 'moment';
 
 export default class form_petugas extends Component {
     constructor(){
@@ -40,6 +41,7 @@ export default class form_petugas extends Component {
      }
     render() {
         let { modal , mode ,edit , flag , count } = this.props;
+        let tanggal = dt(new Date()).format('l').replace('/','').replace('/','');
         return (
             <div>
                 <Modal title={'Form Petugas Desain'} modal={modal} mode={mode} idform={'petugas'} action={this.save}>
@@ -63,7 +65,7 @@ export default class form_petugas extends Component {
                         <div>
                             <FormGroup>
                                 <Label for='kode_petugas'>Kode Petugas</Label>
-                                <Input type='text' name='kode_petugas' readOnly defaultValue={`PTG-0000${count + 1}`}/>
+                                <Input type='text' name='kode_petugas' readOnly defaultValue={`PTG-${count+1}${tanggal}`}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='nama_petugas'>Nama</Label>

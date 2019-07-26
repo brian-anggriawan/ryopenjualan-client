@@ -34,7 +34,7 @@ export default class list_menu extends Component {
         let cek = typeof(data);
         if (cek === 'string') {
            let filter = menu.filter(x => x.path === data)[0];
-           filter.id_user = this.props.iduser
+           filter.id_user = this.props.user
 
            apiPost('list_menu/tambah',filter)
                 .then(res =>{
@@ -47,14 +47,17 @@ export default class list_menu extends Component {
 
             for (let i = 0; i < count; i++) {
                let hasil = menu.filter(x => x.path === data[i])[0];
-               hasil.id_user = this.props.iduser
+               hasil.id_user = this.props.user
 
                apiPost('list_menu/tambah',hasil);
-            }
 
-            setTimeout(()=>{
-                this.props.refresh();
-            } , 3000)
+               let cek = i +1;
+               if (cek === count) {
+                setTimeout(()=>{ 
+                    this.props.refresh();
+                }, 3000); 
+               }
+            }
         }
     }
 

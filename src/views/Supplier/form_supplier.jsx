@@ -3,6 +3,7 @@ import Modal from 'layouts/form_modal';
 import { Input , FormGroup , Label  } from 'reactstrap';
 import { apiPost } from 'app';
 import serialize from 'form-serialize';
+import dt from 'moment';
 
 export default class form_supplier extends Component {
     constructor(){
@@ -36,6 +37,7 @@ export default class form_supplier extends Component {
 
     render() {
         let { modal , mode ,edit , flag , count } = this.props;
+        let tanggal = dt(new Date()).format('l').replace('/','').replace('/','');
  
         return (
             <div>
@@ -60,7 +62,7 @@ export default class form_supplier extends Component {
                         <div>
                             <FormGroup>
                                 <Label for='kode_supplier'>Kode</Label>
-                                <Input type='text' name='kode_supplier' defaultValue={`SP-0000${count + 1}`} readOnly />
+                                <Input type='text' name='kode_supplier' defaultValue={`SPR-${count+1}${tanggal}`} readOnly />
                             </FormGroup>
                              <FormGroup>
                                 <Label for='nama_supplier'>Nama</Label>

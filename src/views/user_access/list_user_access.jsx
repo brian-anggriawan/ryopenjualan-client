@@ -19,8 +19,8 @@ class Listuseraccess extends React.Component {
       userlevel:[],
       access:[],
       loading: false,
-      iduser:'',
-      dataMenu:[]
+      dataMenu:[],
+      user:''
     }
 
     this.mode = this.mode.bind(this);
@@ -48,7 +48,7 @@ class Listuseraccess extends React.Component {
   }
 
   delete(id){
-    let { iduser } = this.state;
+    let { user } = this.state;
     msgdialog('Hapus')
       .then(res =>{
         if (res) {
@@ -56,7 +56,7 @@ class Listuseraccess extends React.Component {
           apiPost('list_menu/hapus' , { id: id })
           .then( res =>{
             if (res) {
-              apiPostGet('list_menu/row_list_menu' ,{ id_user: iduser})
+              apiPostGet('list_menu/row_list_menu' ,{ id_user: user})
                 .then(res =>{
                   this.setState({ access: res.data , loading: false })
                 })
@@ -70,45 +70,44 @@ class Listuseraccess extends React.Component {
     this.setState({ loading : true});
     apiPostGet('list_menu/row_list_menu' ,{ id_user: e.value})
       .then(res =>{
-        this.setState({ access: res.data , loading: false , iduser: e.value})
+        this.setState({ access: res.data , loading: false , user: e.value})
       })
   }
 
   refresh(){
-    let { iduser } = this.state;
+    let { user } = this.state;
     this.setState({ loading : true , modal: false});
 
     this.setState({ loading : true});
-    apiPostGet('list_menu/row_list_menu' ,{ id_user: iduser})
+    apiPostGet('list_menu/row_list_menu' ,{ id_user: user})
       .then(res =>{
-        this.setState({ access: res.data , loading: false , iduser: iduser})
+        this.setState({ access: res.data , loading: false , user: user})
       }) 
   }
 
   tambah(){
-    let { iduser , access } = this.state;
-    if (iduser === '') {
+    let { access , user } = this.state;
+    if (user === '') {
       msgerror('Belum Pilih User Access')
     }else{
       for( let i = 0; i < access.length; i++){     
        _.remove(menu , x => x.path === access[i].path);
       }
       this.mode();
-     
     }
   }
 
   render() {
-    let { userlevel , access ,loading , modal , iduser } = this.state;
+    let { userlevel , access ,loading , modal , user } = this.state;
     return (
       <Page title={'User Access'}>
-        <List mode={this.mode} modal={modal} iduser={iduser} refresh={this.refresh}/>
+        <List mode={this.mode} modal={modal} user={user} refresh={this.refresh}/>
         <Row className='mb-3'>
           <Col className='mt-3'>
             <Select 
               className='select'
               options ={ userlevel.map(x =>({
-                value: x.id,
+                value: x.user_level,
                 label: x.user_level
               }))}
               onChange={this.handleChane}

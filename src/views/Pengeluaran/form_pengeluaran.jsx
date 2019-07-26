@@ -3,10 +3,8 @@ import Modal from 'layouts/form_modal';
 import { Input , FormGroup , Label  } from 'reactstrap';
 import Select from 'react-select';
 import serialize from 'form-serialize';
-import { apiPost  , apiGet , inputRupiah ,formatRupiah } from 'app';
+import { apiPost  , apiGet , inputRupiah ,formatRupiah , formatTanggal , rupiahToNumber} from 'app';
 import dt from 'moment';
-import Datetime from 'react-datetime';
-
 
 export default class form_pengeluaran extends Component {
     constructor(){
@@ -22,23 +20,28 @@ export default class form_pengeluaran extends Component {
         apiGet('jenis_biaya/result_data_jenis_biaya')
         .then(res =>{
           this.setState({ jenis:  res });
-        })     
-         
+        })  
     }
     
     save(){
-        let data =  serialize(document.getElementById('pelanggan') ,{hash: true});
+        let data =  serialize(document.getElementById('pengeluaran') ,{hash: true});
      
             if(this.props.flag === 1){
                 data.id = this.props.edit.id;
-                apiPost('supplier/edit' ,data)
+                data.operator = 'brian';
+                data.jumlah = rupiahToNumber(data.jumlah);
+                data.tanggal = this.props.edit.tanggal;
+                apiPost('pengeluaran/edit' ,data)
                 .then(res =>{
                   if (res) {
                     this.props.getData();
                   }
                 })
             }else{
-                apiPost('supplier/tambah' ,data)
+                data.tanggal = formatTanggal(new Date());
+                data.operator = 'brian';
+                data.jumlah = rupiahToNumber(data.jumlah);
+                apiPost('pengeluaran/tambah' ,data)
                 .then(res =>{
                   if (res) {
                     this.props.getData();
@@ -47,10 +50,12 @@ export default class form_pengeluaran extends Component {
             }
     }
 
+
     render() {
         let { modal , mode ,edit , flag , count } = this.props;
         let { jenis } = this.state;
-        let tanggal = dt(new Date()).format('l').replace('/','').replace('/','');
+        let tanggal = dt(new Date()).format('L').replace('/','').replace('/','');
+
         return (
             <div>
                 <Modal title={'Form Pengeluaran Biaya'} modal={modal} mode={mode} idform={'pengeluaran'} action={this.save}>
@@ -62,19 +67,12 @@ export default class form_pengeluaran extends Component {
                                 <Input type='text' name='kode_pengeluaran' readOnly defaultValue={edit.kode_pengeluaran} />
                             </FormGroup>
                             <FormGroup>
-                                <Label for='tanggal'>Tanggal</Label>
-                                <Datetime
-                                    inputProps={{placeholder:"Datetime Picker Here"}}
-                                    defaultValue={edit.tanggal} 
-                                />
-                            </FormGroup>
-                            <FormGroup>
                                 <Label for='nama_acc'>Jenis Biaya</Label>
                                 <Select className='select'  options={jenis.map(x => ({
-                                    value: x.id,
+                                    value: x.kelompok_acc,
                                     label: x.kelompok_acc
                                 }))}
-                                name='nama_acc' defaultValue={{ value: edit.kode_acc , label: edit.nama_acc}}/>
+                                name='nama_acc' defaultValue={{ value: edit.nama_acc , label: edit.nama_acc}}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='keterangan'>Keterangan</Label>
@@ -82,7 +80,7 @@ export default class form_pengeluaran extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for='jumlah'>Nominal</Label>
-                                <Input type='text' name='jumlah' id='jumlah' onKeyPress={(e)=> inputRupiah('jumlah' , e.target.value)} defaultValue={formatRupiah(edit.jumlah,'')}/>
+                                <Input type='text' name='jumlah' id='jumlah' onKeyUp={(e)=> inputRupiah('jumlah' , e.target.value)} defaultValue={formatRupiah(edit.jumlah,'')}/>
                             </FormGroup>
                         </div>
                         :
@@ -92,13 +90,9 @@ export default class form_pengeluaran extends Component {
                                 <Input type='text' name='kode_pengeluaran' readOnly defaultValue={`JB-${count+1}${tanggal}`} />
                             </FormGroup>
                             <FormGroup>
-                                <Label for='tanggal'>Tanggal</Label>
-                                <Input type='date' name='tanggal' id='tanggal' />
-                            </FormGroup>
-                            <FormGroup>
                                 <Label for='nama_acc'>Jenis Biaya</Label>
                                 <Select className='select'  options={jenis.map(x => ({
-                                    value: x.id,
+                                    value: x.kelompok_acc,
                                     label: x.kelompok_acc
                                 }))}
                                 name='nama_acc'/>
@@ -109,7 +103,7 @@ export default class form_pengeluaran extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for='jumlah'>Nominal</Label>
-                                <Input type='text' name='jumlah' id='jumlah' onKeyPress={(e)=> inputRupiah('jumlah' , e.target.value)}/>
+                                <Input type='text' name='jumlah' id='jumlah' onKeyUp={(e)=> inputRupiah('jumlah' , e.target.value)}/>
                             </FormGroup>
                         </div>
                         

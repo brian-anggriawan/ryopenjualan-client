@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { inputRupiah , rupiahToNumber , formatRupiah } from 'app';
 import { apiPost } from 'app';
 import serialize from 'form-serialize';
+import dt from 'moment';
 
 export default class form_jasa extends Component {
     constructor(){
@@ -45,6 +46,7 @@ export default class form_jasa extends Component {
     }
     render() {
         let { modal , mode ,edit , flag , count , satuan , jenis } = this.props;
+        let tanggal = dt(new Date()).format('l').replace('/','').replace('/','');
 
         return (
             <div>
@@ -93,7 +95,7 @@ export default class form_jasa extends Component {
                         <div>
                             <FormGroup>
                                 <Label for='kode_jasa'>Kode Jasa</Label>
-                                <Input type='text' name='kode_jasa' readOnly defaultValue={`J-0000${count+1}`}/>
+                                <Input type='text' name='kode_jasa' readOnly defaultValue={`HJ-${count+1}${tanggal}`}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='nama_jasa'>Nama Jasa</Label>
