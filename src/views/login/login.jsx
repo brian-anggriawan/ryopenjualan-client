@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import image from 'assets/img/img-01.png';
 import { Button } from 'reactstrap';
-import { msgok , msgerror } from 'app';
+import { msgok , msgerror , apiPostGet } from 'app';
 import './main.css';
 import './util.css';
 
@@ -22,6 +22,11 @@ class login extends Component {
 
     Login(){
         let { name , pass} = this.state;
+
+        // apiPostGet('login/masuk',{ username: name , password: pass})
+        //     .then(res =>{
+        //         console.log(res)
+        //     })
 
         if (name === 'admin' && pass ==='admin') {
             localStorage.setItem('userKasir' , JSON.stringify([{ 'login': true}]));

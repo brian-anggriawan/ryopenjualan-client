@@ -36,6 +36,11 @@ class Listuseraccess extends React.Component {
       .then(res =>{
         this.setState({ userlevel : res});
       })
+
+      apiPostGet('login/masuk',{ username: 'brian' , password: '1234'})
+            .then(res =>{
+                console.log(res)
+            })
   }
 
   button(id){
