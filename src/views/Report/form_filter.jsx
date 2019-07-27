@@ -142,10 +142,21 @@ export default class form_filter extends Component {
                     </div>
                     :filter === 1 ?
                     <div>
-                        <FormGroup>
-                            <Label>Bulanan</Label>
-                            <Bulanan onchange={(e)=> this.handleChange(e , 'bulan')}  />
-                        </FormGroup>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    <Label>Bulan</Label>
+                                    <Bulanan onchange={(e)=> this.handleChange(e , 'bulan')}  />
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Label>Tahun</Label>
+                                    <Tahunan onchange={(e)=> this.handleChange(e , 'tahun')} />
+                                </FormGroup>
+                            
+                            </Col>
+                        </Row>
                     </div>
                     :filter === 2 ?
                     <div>
