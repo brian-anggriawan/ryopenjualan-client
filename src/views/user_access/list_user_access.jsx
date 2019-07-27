@@ -19,7 +19,8 @@ class Listuseraccess extends React.Component {
       access:[],
       loading: false,
       dataMenu:[],
-      user:''
+      user:'',
+      loading2: false
     }
 
     this.mode = this.mode.bind(this);
@@ -28,6 +29,7 @@ class Listuseraccess extends React.Component {
     this.delete = this.delete.bind(this);
     this.refresh = this.refresh.bind(this);
     this.tambah = this.tambah.bind(this);
+    this.prosesSave = this.prosesSave.bind(this);
   }
 
   componentDidMount(){
@@ -80,8 +82,14 @@ class Listuseraccess extends React.Component {
     this.setState({ loading : true});
     apiPostGet('list_menu/row_list_menu' ,{ id_user: user})
       .then(res =>{
-        this.setState({ access: res.data , loading: false , user: user})
+        if (res) {
+          this.setState({ access: res.data , loading: false , user: user , loading2: false}); 
+        }
       }) 
+  }
+
+  prosesSave(){
+    this.setState({ loading2: !this.state.loading2});
   }
 
   tambah(){
@@ -90,7 +98,7 @@ class Listuseraccess extends React.Component {
     let i = 0;
 
     if (user === '') {
-      msgerror('Belum Pilih User Access')
+      msgerror('Belum Pilih User Access');
     }else{
       if (access.length > 0) {
         for(i = 0; i < proses.length; i++){
@@ -103,17 +111,21 @@ class Listuseraccess extends React.Component {
             }
           }
         }
+      }else{
+        for(let i = 0; i < proses.length; i++){
+          proses[i].cek = false;
+        }
       }
-      this.setState({ dataMenu: proses.filter(x => x.cek === false) });
+      this.setState({ dataMenu: proses.filter(x => x.cek !== true) });
       this.mode(); 
     }
   }
 
   render() {
-    let { userlevel , access ,loading , modal , user , dataMenu } = this.state;
+    let { userlevel , access ,loading , modal , user , dataMenu , loading2 } = this.state;
     return (
       <Page title={'User Access'}>
-        <List mode={this.mode} modal={modal} user={user} refresh={this.refresh} dataMenu={dataMenu}/>
+        <List mode={this.mode} modal={modal} user={user} refresh={this.refresh} dataMenu={dataMenu} loading={loading2} proses={this.prosesSave}/>
         <Row className='mb-3'>
           <Col className='mt-3'>
             <Select 

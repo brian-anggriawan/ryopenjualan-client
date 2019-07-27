@@ -4,6 +4,7 @@ import Tabel from 'components/tabel';
 import { Button , Form  , Input} from 'reactstrap';
 import serialize from 'form-serialize';
 import { apiPost } from 'app';
+import Loading from 'components/Loading';
 
 export default class list_menu extends Component {
     constructor(){
@@ -44,6 +45,7 @@ export default class list_menu extends Component {
                 })
         }else{
             let count = data.length;
+            this.props.proses();
 
             for (let i = 0; i < count; i++) {
                let hasil = dataMenu.filter(x => x.path === data[i])[0];
@@ -53,41 +55,45 @@ export default class list_menu extends Component {
 
                let cek = i +1;
                if (cek === count) {
-                setTimeout(()=>{ 
-                    this.props.refresh();
-                }, 3000); 
+                this.props.refresh();
                }
             }
         }
     }
 
     render() {
-        let { modal , mode , dataMenu } = this.props;
+        let { modal , mode , dataMenu , Loading2 } = this.props;
         return (
             <Modal title={'List Menu'} mode={mode} modal={modal}>
-                <Button color='success' type='button' onClick={this.save}>Tambah Menu</Button>
-                <Form id='menu'>
-                    <Tabel
-                        data ={dataMenu}
-                        keyField = {'path'}
-                        columns ={[
-                            {
-                                dataField: 'name',
-                                text: 'Menu'
-                            },
-                            {
-                                dataField: 'group',
-                                text: 'Group Menu'
-                            },
-                            {
-                                dataField: 'path',
-                                formatter: this.action,
-                                text: 'Action'
-                            }
-                        ]}                            
-                            width={{ width:'300px'}}
-                    />
-                </Form>
+                {
+                    Loading2  ? <Loading active={Loading2} /> 
+                    :
+                    <div>
+                    <Button color='success' type='button' onClick={this.save}>Tambah Menu</Button>
+                        <Form id='menu'>
+                            <Tabel
+                                data ={dataMenu}
+                                keyField = {'path'}
+                                columns ={[
+                                    {
+                                        dataField: 'name',
+                                        text: 'Menu'
+                                    },
+                                    {
+                                        dataField: 'group',
+                                        text: 'Group Menu'
+                                    },
+                                    {
+                                        dataField: 'path',
+                                        formatter: this.action,
+                                        text: 'Action'
+                                    }
+                                ]}                            
+                                    width={{ width:'300px'}}
+                            />
+                        </Form>
+                    </div>
+                }
             </Modal>
         )
     }
