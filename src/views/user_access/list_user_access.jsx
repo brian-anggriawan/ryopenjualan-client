@@ -77,13 +77,14 @@ class Listuseraccess extends React.Component {
 
   refresh(){
     let { user } = this.state;
-    this.setState({ loading : true , modal: false});
+    this.setState({ loading : true });
 
-    this.setState({ loading : true});
     apiPostGet('list_menu/row_list_menu' ,{ id_user: user})
       .then(res =>{
         if (res) {
-          this.setState({ access: res.data , loading: false , user: user , loading2: false}); 
+          setTimeout(()=>{
+            this.setState({ access: res.data , loading: false , user: user , loading2: false ,modal: false}); 
+          } , 5000)
         }
       }) 
   }

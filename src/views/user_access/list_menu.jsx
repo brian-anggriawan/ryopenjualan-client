@@ -62,11 +62,11 @@ export default class list_menu extends Component {
     }
 
     render() {
-        let { modal , mode , dataMenu , Loading2 } = this.props;
+        let { modal , mode , dataMenu , loading } = this.props;
         return (
             <Modal title={'List Menu'} mode={mode} modal={modal}>
                 {
-                    Loading2  ? <Loading active={Loading2} /> 
+                    loading ? <Loading active={loading} /> 
                     :
                     <div>
                     <Button color='success' type='button' onClick={this.save}>Tambah Menu</Button>
