@@ -12,6 +12,22 @@ export let optionTable = {
     showTotal: true
 };
 
+export let getDate =()=>{
+   return formatTanggal(new Date())
+}
+
+export let getMounth = () =>{
+    let tanggal = new Date();
+    let result = tanggal.getMonth() + 1;
+    return result.toString() ;
+}
+
+export let getYears = () =>{
+    let tanggal = new Date();
+    return tanggal.getFullYear().toString();
+}
+
+
 export let formatTanggal = (tanggal) =>{
    let dd = tanggal.getDate();
    let mm = tanggal.getMonth() + 1;
