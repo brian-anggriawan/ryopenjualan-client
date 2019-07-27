@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Modal from'layouts/list_modal';
 import Tabel from 'components/tabel';
 import { Button , Form  , Input} from 'reactstrap';
-import menu from './menu';
 import serialize from 'form-serialize';
 import { apiPost } from 'app';
 
@@ -32,8 +31,9 @@ export default class list_menu extends Component {
     save(){
         let data = serialize(document.getElementById('menu') , {hash: true}).data;
         let cek = typeof(data);
+        let { dataMenu } = this.props;
         if (cek === 'string') {
-           let filter = menu.filter(x => x.path === data)[0];
+           let filter = dataMenu.filter(x => x.path === data)[0];
            filter.id_user = this.props.user
 
            apiPost('list_menu/tambah',filter)
@@ -46,7 +46,7 @@ export default class list_menu extends Component {
             let count = data.length;
 
             for (let i = 0; i < count; i++) {
-               let hasil = menu.filter(x => x.path === data[i])[0];
+               let hasil = dataMenu.filter(x => x.path === data[i])[0];
                hasil.id_user = this.props.user
 
                apiPost('list_menu/tambah',hasil);
@@ -62,13 +62,13 @@ export default class list_menu extends Component {
     }
 
     render() {
-        let { modal , mode } = this.props;
+        let { modal , mode , dataMenu } = this.props;
         return (
             <Modal title={'List Menu'} mode={mode} modal={modal}>
                 <Button color='success' type='button' onClick={this.save}>Tambah Menu</Button>
                 <Form id='menu'>
                     <Tabel
-                        data ={menu}
+                        data ={dataMenu}
                         keyField = {'path'}
                         columns ={[
                             {

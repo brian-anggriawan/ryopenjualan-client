@@ -8,7 +8,6 @@ import { apiGet , apiPostGet , msgdialog , apiPost ,msgerror} from 'app';
 import Select from 'react-select';
 import Loading from 'components/Loading';
 import menu from './menu';
-import _ from 'lodash';
 
 
 class Listuseraccess extends React.Component {
@@ -87,21 +86,34 @@ class Listuseraccess extends React.Component {
 
   tambah(){
     let { access , user } = this.state;
+    let proses = menu;
+    let i = 0;
+
     if (user === '') {
       msgerror('Belum Pilih User Access')
     }else{
-      for( let i = 0; i < access.length; i++){     
-       _.remove(menu , x => x.path === access[i].path);
+      if (access.length > 0) {
+        for(i = 0; i < proses.length; i++){
+          for(let b = 0; b < access.length; b++){
+            if (proses[i].path === access[b].path) {
+                proses[i].cek = true
+                break;
+            }else{
+              proses[i].cek = false;
+            }
+          }
+        }
       }
-      this.mode();
+      this.setState({ dataMenu: proses.filter(x => x.cek === false) });
+      this.mode(); 
     }
   }
 
   render() {
-    let { userlevel , access ,loading , modal , user } = this.state;
+    let { userlevel , access ,loading , modal , user , dataMenu } = this.state;
     return (
       <Page title={'User Access'}>
-        <List mode={this.mode} modal={modal} user={user} refresh={this.refresh}/>
+        <List mode={this.mode} modal={modal} user={user} refresh={this.refresh} dataMenu={dataMenu}/>
         <Row className='mb-3'>
           <Col className='mt-3'>
             <Select 
