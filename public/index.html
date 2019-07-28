@@ -45,7 +45,7 @@
             next;
 
         if (e.keyCode === 13 ) {
-            focusable = form.find('input,a,select,textarea,button').filter(':visible:not([readonly]):not([disabled])');
+            focusable = form.find('input,a,select,textarea').filter(':visible:not([readonly]):not([disabled])');
             next = focusable.eq(focusable.index(this)+1);
 
             if (next.length) {
