@@ -1,14 +1,13 @@
 import React from "react";
 import Page from 'layouts/Page';
 import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
-//import Serialize from 'form-serialize';
-import { formatRupiah , msgdialog } from 'app';
+import Serialize from 'form-serialize';
+import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber  } from 'app';
 import { IoMdTrash } from 'react-icons/io';
 import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
 import { UncontrolledTooltip } from 'reactstrap';
 import Select from 'react-select';
-import { apiGet } from "app";
 import Member from './list_member';
 import Bayar from './form_pembayaran';
 import Jasa from './list_jasa';
@@ -19,23 +18,20 @@ class Listpenjualan extends React.Component {
     super()
     this.state = {
       row:[],
-      qty: 0,
       petugas:[],
       modal: false,
       member:[],
       jasa:[],
-      kodePelanggan:'',
       modal2: false,
       modal3 : false,
       header:[],
       detail:[],
       idInputJasa:'',
-      pickJasa:[]
+      total:0
     }
     this.add = this.add.bind(this);
     this.cancel = this.cancel.bind(this);
     this.setQty = this.setQty.bind(this);
-    this.setHarga = this.setHarga.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
     this.addRow = this.addRow.bind(this);
@@ -46,19 +42,31 @@ class Listpenjualan extends React.Component {
     this.mode2 = this.mode2.bind(this);
     this.mode3 = this.mode3.bind(this);
     this.setJasa = this.setJasa.bind(this);
+    this.hitungTotalHarga = this.hitungTotalHarga.bind(this);
  
   }
 
   setJasa(data){
     let { idInputJasa } = this.state;
-    this.setState({ pickJasa: data});
-    document.getElementById(idInputJasa).value = data.nama_jasa;
+    document.getElementById(`kode${idInputJasa}`).value = data.kode_jasa;
+    document.getElementById(`jasa${idInputJasa}`).value = data.nama_jasa;
+    document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
+
+    let cek = document.getElementById('kode_pelanggan').value.length;
+    if (cek > 0) {
+      document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
+    }else{
+      document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1,'');
+    }
+
   }
 
   setMember(kode , nama , alamat){
-    this.setState({ kodePelanggan: kode });
     document.getElementById('nama_pelanggan').value = nama;
+    document.getElementById('kode_pelanggan').value = kode;
     document.getElementById('alamat').value = alamat;
+    document.getElementById('nama_pelanggan').readOnly = true;
+    document.getElementById('alamat').readOnly = true;
 
   }
 
@@ -90,9 +98,18 @@ class Listpenjualan extends React.Component {
       })
   }
 
-  addRowInTable(e , id){
+  addRowInTable(e , id , value){
     let index = this.state.row.findIndex( x => x.key === id) + 1;
     let count = this.state.row.length;
+
+    let qty = qtyToNumber(document.getElementById(`qty${id}`).value);
+    let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
+    let nilaiDiskon = ((value / 100) * harga);
+    let hargaDiskon  = harga - nilaiDiskon;
+   
+    document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. ');
+    document.getElementById(`total${id}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');  
+    this.hitungTotalHarga();  
 
     if (e.keyCode === 13 && index === count) {
       this.addRow();
@@ -128,18 +145,20 @@ class Listpenjualan extends React.Component {
               <td>
                 <Row>
                   <Col sm='8'>
+                    <Input type='text' name={`kode${id}`} id={`kode${id}`} tabIndex={0} hidden/>
                     <Input type='text' name={`jasa${id}`} id={`jasa${id}`} tabIndex={index + 1}/>
+                    <Input type='text' name={`satuan${id}`} id={`satuan${id}`} tabIndex={0} hidden/>
                   </Col>
                   <Col sm='3'>
-                    <Button size='sm' color='success' onClick={()=> this.mode3(`jasa${id}`)}>+</Button>
+                    <Button size='sm' color='success' onClick={()=> this.mode3(`${id}`)}>+</Button>
                   </Col>
                 </Row>
               </td>
               <td>
-                <Input type='number' name={`qty${id}`} id={`qty${id}`} onChange={this.setQty} tabIndex={index + 2}/>
+                <Input type='text' name={`qty${id}`} id={`qty${id}`} onKeyUp={(e)=> this.setQty(id,e.target.value)} tabIndex={index + 2}/>
               </td>
               <td>
-                <Input onKeyUp={(e)=> this.addRowInTable(e , id)} type='number' name={`diskon${id}`} id={`diskon${id}`} onChange={this.setHarga} tabIndex={index + 3} />
+                <Input onKeyUp={(e)=> this.addRowInTable(e , id , e.target.value)} type='number' name={`diskon${id}`} id={`diskon${id}`}  tabIndex={index + 3} />
               </td>
               <td>
                 <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
@@ -159,22 +178,32 @@ class Listpenjualan extends React.Component {
      this.setState({ row : copy})
   }
 
-  setQty(e){
-    this.setState({ qty : e.target.value })
-  }
-
-  setHarga(e){
-    let { qty } = this.state;
-
-    let index = e.target.name.replace('diskon','');
-    let value = e.target.value;
-    let harga = '100000';
-    let nilaiDiskon = ((value / 100) * harga);
+  setQty(id , value){
+    inputQty(`qty${id}` , value);
+    let diskon = document.getElementById(`diskon${id}`).value || 0;
+    let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
+    let nilaiDiskon = ((diskon / 100) * harga);
     let hargaDiskon  = harga - nilaiDiskon;
-    document.getElementById(`harga${index}`).value = formatRupiah(harga , 'Rp. ');
-    document.getElementById(`hargadiskon${index}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. ');
-    document.getElementById(`total${index}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');
+    let qty = qtyToNumber(value);
+   
+    document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. ');
+    document.getElementById(`total${id}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');
+    this.hitungTotalHarga();
   }
+
+  hitungTotalHarga(){
+    let detail = document.getElementById('detail');
+    let dataDetail = Serialize( detail , { hash : true });
+    let nilai = 0
+    for( let i = 0; i < this.state.row.length; i++){
+      
+      let cek = rupiahToNumber(dataDetail[`total${this.state.row[i].key}`]);      
+      nilai += parseInt(cek);
+      
+    }
+    this.setState({ total: nilai });
+  }
+
 
   cancel(){
     msgdialog('Membatalkan')
@@ -239,11 +268,13 @@ class Listpenjualan extends React.Component {
   deleteRow(id){
     this.setState({
       row: this.state.row.filter( x => x.key !== id) 
-    })
+    },()=>{
+      this.hitungTotalHarga();
+    }) 
   }
 
   render() {
-    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa} = this.state;
+    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total} = this.state;
     return (
       <Hotkeys 
         keyName="shift+a ,shift+s ,f5"
@@ -307,9 +338,13 @@ class Listpenjualan extends React.Component {
               </FormGroup>
             </Col>
             <Col>
-              <FormGroup id='no_telepon'>
+              <FormGroup>
                 <Label for='no_telepon'>No Telp</Label>
                 <Input type='number' name='no_telepon' tabIndex='4'/>
+              </FormGroup>
+              <FormGroup>
+                <Label for='kode_pelanggan'>Kode Pelanggan</Label>
+                <Input type='text' name='kode_pelanggan' id='kode_pelanggan' tabIndex='5' readOnly/>
               </FormGroup>
             </Col>
           </Row>
@@ -336,10 +371,10 @@ class Listpenjualan extends React.Component {
                   }
                 </tbody> 
               </Table>
-              
               </Form>
             </Col>
         </Row>
+        <h3>{`Total Harga : ${formatRupiah(total.toString(),'')}`}</h3>
         <Row>
           <Col>
               <Button color='success' size='sm' type='button' style={{ width:'100%'}} id='save' tabIndex='0' onClick={this.save} hidden >Save</Button>

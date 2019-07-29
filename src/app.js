@@ -55,6 +55,10 @@ export let inputRupiah = (id , nilai)=>{
     return document.getElementById(id).value = formatRupiah(nilai ,'');
 }
 
+export let inputQty = (id , nilai)=>{
+    return document.getElementById(id).value = formatRibuan(nilai);
+}
+
 export let inputPersen = (id , nilai)=>{
     return document.getElementById(id).value = formatPersen(nilai)
 }
@@ -71,6 +75,27 @@ export let persenToNumber = (nilai ='0')=>{
 export let rupiahToNumber = (nilai = '0') =>{
     let hasil = nilai.replace('Rp. ','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','');
     return hasil;
+}
+
+export let qtyToNumber = (nilai ='0')=>{
+    let hasil = nilai.replace('.','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','').replace('.','');
+    return hasil;
+}
+
+export let formatRibuan = (angka)=>{
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+    split   		= number_string.split(','),
+    sisa     		= split[0].length % 3,
+    rupiah     		= split[0].substr(0, sisa),
+    ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+
+    if(ribuan){
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    return rupiah
 }
 
 export let formatRupiah = (angka, prefix)=>{
