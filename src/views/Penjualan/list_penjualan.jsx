@@ -106,8 +106,9 @@ class Listpenjualan extends React.Component {
 
     let qty = qtyToNumber(document.getElementById(`qty${id}`).value);
     let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
-    let nilaiDiskon = ((value / 100) * harga);
-    let hargaDiskon  = harga - nilaiDiskon;
+    let nilaiDiskon = qtyToNumber(((value / 100) * harga).toString());
+    let hargaDiskon  = harga - parseInt(nilaiDiskon);
+
    
     document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. ');
     document.getElementById(`total${id}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');  
