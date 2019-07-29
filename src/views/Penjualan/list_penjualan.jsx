@@ -2,7 +2,7 @@ import React from "react";
 import Page from 'layouts/Page';
 import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
 import Serialize from 'form-serialize';
-import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber  } from 'app';
+import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber , dataUser  } from 'app';
 import { IoMdTrash } from 'react-icons/io';
 import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
@@ -43,6 +43,7 @@ class Listpenjualan extends React.Component {
     this.mode3 = this.mode3.bind(this);
     this.setJasa = this.setJasa.bind(this);
     this.hitungTotalHarga = this.hitungTotalHarga.bind(this);
+    this.clearAll = this.clearAll.bind(this);
  
   }
 
@@ -51,6 +52,7 @@ class Listpenjualan extends React.Component {
     document.getElementById(`kode${idInputJasa}`).value = data.kode_jasa;
     document.getElementById(`jasa${idInputJasa}`).value = data.nama_jasa;
     document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
+    document.getElementById(`jenis${idInputJasa}`).value = data.jenis;
 
     let cek = document.getElementById('kode_pelanggan').value.length;
     if (cek > 0) {
@@ -119,10 +121,10 @@ class Listpenjualan extends React.Component {
   add(){
     apiGet('/penjualan/get_no_nota')
       .then(res  =>{
-        document.getElementById('nota').value = res;
+        document.getElementById('id_penjualan').value = res;
       });
         document.getElementById('header').hidden = false;
-        document.getElementById('nota').focus();
+        document.getElementById('id_penjualan').focus();
         document.getElementById('save').hidden = false;
         document.getElementById('cancel').hidden = false;
         document.getElementById('addrow').hidden = false;
@@ -148,6 +150,7 @@ class Listpenjualan extends React.Component {
                     <Input type='text' name={`kode${id}`} id={`kode${id}`} tabIndex={0} hidden/>
                     <Input type='text' name={`jasa${id}`} id={`jasa${id}`} tabIndex={index + 1}/>
                     <Input type='text' name={`satuan${id}`} id={`satuan${id}`} tabIndex={0} hidden/>
+                    <Input type='text' name={`jenis${id}`} id={`jenis${id}`} tabIndex={0} hidden />
                   </Col>
                   <Col sm='3'>
                     <Button size='sm' color='success' onClick={()=> this.mode3(`${id}`)}>+</Button>
@@ -204,51 +207,57 @@ class Listpenjualan extends React.Component {
     this.setState({ total: nilai });
   }
 
+  clearAll(){
+    this.setState({ row: [] , modal: false , modal2: false , modal3: false , header:[] , detail:[] , idinput:'' , total: 0 });
+    document.getElementById('id_penjualan').value = '';
+    document.getElementById('header').hidden = true;
+    document.getElementById('save').hidden = true;
+    document.getElementById('cancel').hidden = true;
+    document.getElementById('addrow').hidden = true;
+    document.getElementById('tambahnota').hidden = false;
+  }
 
   cancel(){
     msgdialog('Membatalkan')
       .then(res =>{
         if (res){
-          this.setState({ row: []});
-          document.getElementById('nota').value = '';
-          document.getElementById('header').hidden = true;
-          document.getElementById('save').hidden = true;
-          document.getElementById('cancel').hidden = true;
-          document.getElementById('addrow').hidden = true;
-          document.getElementById('tambahnota').hidden = false;
+          this.clearAll();
         }
       })
   }
 
   save(){
-    // msgdialog('Simpan')
-    //   .then(res =>{
-    //     if (res) {
-    //       let header = document.getElementById('header');
-    //       let detail = document.getElementById('detail');
-    //       let dataHeader = Serialize( header , { hash : true });
-    //       let dataDetail = Serialize( detail , { hash : true });
+          let header = document.getElementById('header');
+          let detail = document.getElementById('detail');
+          let dataHeader = Serialize( header , { hash : true });
+          let dataDetail = Serialize( detail , { hash : true });
 
-    //       console.log(dataHeader);
-    //       console.log(dataDetail);
+          dataHeader.operator = dataUser().username;
+          dataHeader.total_harga = this.state.total;
+          let cek = dataHeader.kode_petugas || 0;
 
-    //       let arrayDetail = [];
+          if (cek !== 0) {
+            dataHeader.petugas_design = this.state.petugas.filter(x => x.kode_petugas === dataHeader.kode_petugas_design)[0].nama_petugas
+          }
 
-    //       this.state.row.map(x => (
-    //         arrayDetail.push({
-    //           jasa: dataDetail[`jasa${x.key}`], 
-    //           qty: dataDetail[`qty${x.key}`], 
-    //           diskon: dataDetail[`diskon${x.key}`], 
-    //           harga: dataDetail[`harga${x.key}`], 
-    //           hargadiskon: dataDetail[`hargadiskon${x.key}`], 
-    //           total: dataDetail[`totol${x.key}`]
-    //         })
-    //       ))  
+          let arrayDetail = [];
 
-    //     console.log(arrayDetail)
-    //     }
-    //   })
-    this.mode2();
+          this.state.row.map(x => (
+            arrayDetail.push({
+              id_penjualan: dataHeader.id_penjualan,
+              kode_jasa: dataDetail[`kode${x.key}`] || '', 
+              nama_jasa: dataDetail[`jasa${x.key}`] || '', 
+              satuan: dataDetail[`satuan${x.key}`] || '', 
+              harga: rupiahToNumber(dataDetail[`harga${x.key}`] || '0'), 
+              diskon: dataDetail[`diskon${x.key}`] || '0', 
+              harga_diskon: rupiahToNumber(dataDetail[`hargadiskon${x.key}`] || '0'), 
+              qty: qtyToNumber(dataDetail[`qty${x.key}`] || '0'), 
+              total_harga: rupiahToNumber(dataDetail[`total${x.key}`] || '0'),
+              jenis_jasa: dataDetail[`jenis${x.key}`] || '',
+            })
+          ))
+        this.setState({ detail: arrayDetail , header: dataHeader });
+        this.mode2();
   }
 
   onKeyDown(keyName, e, handle) {
@@ -274,7 +283,7 @@ class Listpenjualan extends React.Component {
   }
 
   render() {
-    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total} = this.state;
+    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail} = this.state;
     return (
       <Hotkeys 
         keyName="shift+a ,shift+s ,f5"
@@ -282,7 +291,7 @@ class Listpenjualan extends React.Component {
       >
       <Page title={'Penjualan'}>
         <Member modal={modal} mode={this.mode} member={ member } setMember={this.setMember} />
-        <Bayar modal={modal2} mode={this.mode2} />
+        <Bayar modal={modal2} mode={this.mode2} header={header} detail={detail} clear={this.clearAll} />
         <Jasa modal={modal3} mode={this.mode3} jasa={jasa} idinput={idInputJasa} setJasa={this.setJasa}  />
         <Row>
           <Col sm='3'>
@@ -308,16 +317,16 @@ class Listpenjualan extends React.Component {
         <Row>
             <Col>
               <FormGroup>
-                <Label for='no_nota'>Nota</Label>
-                <Input type='text' name='nota_nota' id='nota'  readOnly tabIndex='0' />
+                <Label for='id_penjualan'>Nota</Label>
+                <Input type='text' name='id_penjualan' id='id_penjualan'  readOnly tabIndex='0' />
               </FormGroup>
-              <FormGroup id='petugas_design'>
-                <Label for='petugas_design'>Petugas Design</Label>
+              <FormGroup id='kode_petugas_design'>
+                <Label for='kode_petugas_design'>Petugas Design</Label>
                 <Select options={petugas.map(x => ({
                   value: x.kode_petugas,
                   label: x.nama_petugas
                 }))}
-                name='petugas_design' className='select' id='petugas_design' tabIndex='1'/>
+                name='kode_petugas_design' className='select' id='kode_petugas_design' tabIndex='1'/>
               </FormGroup>
             </Col>
             <Col>
