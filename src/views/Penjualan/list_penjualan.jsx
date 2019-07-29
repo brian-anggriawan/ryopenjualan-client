@@ -121,10 +121,10 @@ class Listpenjualan extends React.Component {
   add(){
     apiGet('/penjualan/get_no_nota')
       .then(res  =>{
-        document.getElementById('id_penjualan').value = res;
+        document.getElementById('no_nota').value = res;
       });
         document.getElementById('header').hidden = false;
-        document.getElementById('id_penjualan').focus();
+        document.getElementById('no_nota').focus();
         document.getElementById('save').hidden = false;
         document.getElementById('cancel').hidden = false;
         document.getElementById('addrow').hidden = false;
@@ -209,12 +209,14 @@ class Listpenjualan extends React.Component {
 
   clearAll(){
     this.setState({ row: [] , modal: false , modal2: false , modal3: false , header:[] , detail:[] , idinput:'' , total: 0 });
-    document.getElementById('id_penjualan').value = '';
+    document.getElementById('no_nota').value = '';
     document.getElementById('header').hidden = true;
     document.getElementById('save').hidden = true;
     document.getElementById('cancel').hidden = true;
     document.getElementById('addrow').hidden = true;
     document.getElementById('tambahnota').hidden = false;
+    document.getElementById('header').reset();
+    document.getElementById('detail').reset();
   }
 
   cancel(){
@@ -234,17 +236,17 @@ class Listpenjualan extends React.Component {
 
           dataHeader.operator = dataUser().username;
           dataHeader.total_harga = this.state.total;
-          let cek = dataHeader.kode_petugas || 0;
+          let cek = dataHeader.kode_petugas_design || 0;
 
           if (cek !== 0) {
-            dataHeader.petugas_design = this.state.petugas.filter(x => x.kode_petugas === dataHeader.kode_petugas_design)[0].nama_petugas
+            dataHeader.petugas_design = this.state.petugas.filter(x => x.kode_petugas === dataHeader.kode_petugas_design)[0].nama_petugas;
           }
 
           let arrayDetail = [];
 
           this.state.row.map(x => (
             arrayDetail.push({
-              id_penjualan: dataHeader.id_penjualan,
+              id_penjualan: dataHeader.no_nota,
               kode_jasa: dataDetail[`kode${x.key}`] || '', 
               nama_jasa: dataDetail[`jasa${x.key}`] || '', 
               satuan: dataDetail[`satuan${x.key}`] || '', 
@@ -256,7 +258,7 @@ class Listpenjualan extends React.Component {
               jenis_jasa: dataDetail[`jenis${x.key}`] || '',
             })
           ))
-        this.setState({ detail: arrayDetail , header: dataHeader });
+        this.setState({ detail: arrayDetail.filter(x => x.kode_jasa !== '') , header: dataHeader });
         this.mode2();
   }
 
@@ -317,8 +319,8 @@ class Listpenjualan extends React.Component {
         <Row>
             <Col>
               <FormGroup>
-                <Label for='id_penjualan'>Nota</Label>
-                <Input type='text' name='id_penjualan' id='id_penjualan'  readOnly tabIndex='0' />
+                <Label for='no_nota'>Nota</Label>
+                <Input type='text' name='no_nota' id='no_nota'  readOnly tabIndex='0' />
               </FormGroup>
               <FormGroup id='kode_petugas_design'>
                 <Label for='kode_petugas_design'>Petugas Design</Label>
@@ -386,7 +388,7 @@ class Listpenjualan extends React.Component {
         <h3>{`Total Harga : ${formatRupiah(total.toString(),'')}`}</h3>
         <Row>
           <Col>
-              <Button color='success' size='sm' type='button' style={{ width:'100%'}} id='save' tabIndex='0' onClick={this.save} hidden >Save</Button>
+              <Button color='success' size='sm' type='button' style={{ width:'100%'}} id='save' tabIndex='0' onClick={this.save} hidden >Proses</Button>
           </Col>
           <Col>
               <Button color='danger' size='sm' type='button'  style={{ width:'100%'}} id='cancel' tabIndex='0' onClick={this.cancel} hidden>Cancel</Button>

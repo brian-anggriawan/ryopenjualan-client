@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormGroup , Label , Input ,Button , Form } from 'reactstrap';
 import Serialize from 'form-serialize';
 import Select from 'react-select';
-import { inputRupiah , rupiahToNumber ,formatRupiah } from 'app';
+import { inputRupiah , rupiahToNumber ,formatRupiah , apiPostPenjualan , urlServer} from 'app';
 
 export default class form_pembayaran extends Component {
     constructor(){
@@ -28,11 +28,16 @@ export default class form_pembayaran extends Component {
         let data = Serialize(document.getElementById('pembayaran') ,{ hash: true });
         header.cara_bayar = data.cara_bayar;
         header.no_rekening = data.no_rekening || 0;
-        header.bayar = data.bayar;
-        header.bayar = rupiahToNumber(data.kembali);
+        header.bayar = rupiahToNumber(data.bayar);
+        header.kembali = rupiahToNumber(data.kembali);
         header.detail = detail;
-        console.log(header);
-        clear();
+        apiPostPenjualan('penjualan/tambah' , header)
+            .then(res =>{
+                if (res.result === 'true') {
+                    window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
+                    clear();   
+                }      
+            })
     }
 
     bayar(value){
@@ -43,8 +48,10 @@ export default class form_pembayaran extends Component {
     }
 
     render() {
-        let { modal , mode } = this.props;
+        let { modal , mode , header } = this.props;
         let { flagnorek } = this.state;
+
+        let total_harga = formatRupiah((header.total_harga || '0').toString(),'');
         return (
             <Modal modal={modal} mode={mode} title={'Pembayaran'}>
                 <Form id='pembayaran'>
@@ -80,12 +87,16 @@ export default class form_pembayaran extends Component {
 
                     }   
                     <FormGroup>
-                        <Label for='bayar'>Bayar</Label>
+                        <Label for='bayar'>Bayar</Label> 
                         <Input type='text' name='bayar' id='bayar' tabIndex='4' onKeyUp={(e)=> this.bayar(e.target.value)}/>
                     </FormGroup>
                     <FormGroup>
+                        <Label for='total_harga'>Total Harga</Label>
+                        <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='5' readOnly/>
+                    </FormGroup>
+                    <FormGroup>
                         <Label for='kembali'>Kembalian</Label>
-                        <Input type='text' name='kembali' id='kembali' tabIndex='5' readOnly/>
+                        <Input type='text' name='kembali' id='kembali' tabIndex='6' readOnly/>
                     </FormGroup>
                     <hr />
                     <Button type='button' color='success' tabIndex='6' onClick={this.simpan} size='sm' style={{ width: '100%'}}>Bayar</Button>

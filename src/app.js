@@ -158,7 +158,7 @@ export let msgdialog = (msg)=>{
 
 /* API Back end */
 
-let urlServer = 'http://ababilsoft.com/ryoad/ryoad_api';
+export let urlServer = 'http://ababilsoft.com/ryoad/ryoad_api';
 
 export let apiGet = (url) =>{
     return axios.get(`${urlServer}/${url}`)
@@ -183,6 +183,18 @@ export let apiPost = (url , data) =>{
     })
     .then(res =>{
         return res.data.result
+    })
+}
+
+export let apiPostPenjualan = (url , data) =>{
+
+    return axios({
+        method: 'POST',
+        url: `${urlServer}/${url}`,
+        data: JSON.stringify(data)
+    })
+    .then(res =>{
+        return res.data
     })
 }
 
