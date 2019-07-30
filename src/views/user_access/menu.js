@@ -98,42 +98,66 @@ let Menu = [
     {
       path: "/report1",
       name: "Laporan Pengeluaran Biaya",
-      group: 'report'
+      group: 'report',
+      component:'Laporan_pengeluaran_biaya',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report2",
       name: "Laporan Penjualan Detail",
-      group: 'report'
+      group: 'report',
+      component:'Laporan_penjualan_detail',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report3",
       name: "Laporan Penjualan Jasa",
-      group: 'report'
+      group: 'report',
+      component:'Laporan_penjualan_jasa',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report4",
       name: "Laporan Penjualan Jenis",
-      group: 'report'
+      group: 'report',
+      component:'Laporan_penjualan_jenis',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report5",
       name: "Laporan Penjualan Pelanggan",
-      group: 'report'
+      group: 'report',
+      component:'Laporan_penjualan_pelanggan',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report6",
       name: "Laporan Penjualan Tanggal",
-      group: 'report'
+      group: 'report',
+      component:'Laporan_penjualan_tanggal',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report7",
       name: "Rekap Nota Penjualan",
-      group: 'report'
+      group: 'report',
+      component:'Rekap_nota_penjualan',
+      icon: "sport_user-run",
+      layout: "/admin",
     },
     {
       path: "/report8",
       name: "Rekap Pengeluaran",
-      group: 'report'
+      group: 'report',
+      component:'Rekap_pengeluaran',
+      icon: "sport_user-run",
+      layout: "/admin",
     }
   ];
   export default Menu;

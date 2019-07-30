@@ -12,7 +12,8 @@ export default class list_report extends Component {
             report:[],
             filter:'',
             modal: false,
-            title:''
+            title:'',
+            url:''
         }
         this.mode = this.mode.bind(this);
         this.Show = this.show.bind(this);
@@ -27,20 +28,20 @@ export default class list_report extends Component {
     mode(){
         this.setState({ modal: !this.state.modal });
     }
-    show(title){
-        this.setState({ title: title });
+    show(title , url){
+        this.setState({ title: title , url: url });
         this.mode();
     }
 
     render() {
-        let { report , filter , modal , title } =  this.state;
+        let { report , filter , modal , title , url } =  this.state;
         let list = report.filter( x =>{
             return  x.name.toLowerCase().includes(filter.toLocaleLowerCase());
         })
         return (
             <Page title={'List Report'}>
                 <Input type='text' placeholder='Cari Laporan' className='mb-4' onChange={(e)=> this.setState({ filter: e.target.value })} />
-                <Form modal={modal} mode={this.mode} title={title} filter={0} />
+                <Form modal={modal} mode={this.mode} title={title} filter={'tanggal'} url={url} />
                 <hr />
                 <div id='list'>
                     {
@@ -48,7 +49,7 @@ export default class list_report extends Component {
                             <Card id='card' key={x.id}>
                                 <CardBody >
                                     <CardTitle id='title'>{x.name}</CardTitle>
-                                    <Button color='primary' type='button' onClick={()=> this.show(x.name)} size='sm'>Show Report</Button>
+                                    <Button color='primary' type='button' onClick={()=> this.show(x.name , x.component)} size='sm'>Show Report</Button>
                                 </CardBody>
                             </Card>
                         ))

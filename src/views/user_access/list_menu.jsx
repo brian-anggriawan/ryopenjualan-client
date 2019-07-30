@@ -36,6 +36,7 @@ export default class list_menu extends Component {
         if (cek === 'string') {
            let filter = dataMenu.filter(x => x.path === data)[0];
            filter.id_user = this.props.user
+         
 
            apiPost('list_menu/tambah',filter)
                 .then(res =>{

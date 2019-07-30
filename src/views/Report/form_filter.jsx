@@ -12,8 +12,9 @@ import {
     Form,
     Button
   } from "reactstrap";
-import { getDate , getMounth , getYears , formatTanggal } from 'app';
-import Serialize from 'form-serialize';
+import { getDate , getMounth , getYears , formatTanggal , apiPostPenjualan } from 'app';
+import jspdf from 'jspdf';
+import { Preview, print } from 'react-html2pdf';
 
 
 let Harian = ({ onchange })=>{
@@ -49,9 +50,41 @@ export default class form_filter extends Component {
     }
 
     print(){
-        let data = Serialize(document.getElementById('report') , {hash: true});
+        let { filter , tanggal1 , tanggal2 , bulan , tahun } = this.state;
+        let { url } = this.props;
+        let data ={};
 
-        console.log(data);
+        switch(filter){
+            case 'tanggal':
+                data.filter = 'tanggal';
+                data.dari_tanggal = tanggal1;
+                data.sampai_tanggal = tanggal2;
+                break;
+            case 'bulan':
+                data.filter = 'bulan';
+                data.filter_bulan = bulan;
+                data.filter_tahun_bulan = tahun;
+                break;
+            case 'tahun':
+                data.filter = 'tahun';
+                data.filter_tahun = tahun;
+                break;
+            default: console.log('');
+        }
+
+        apiPostPenjualan(`/${url}/print_laporan` , data)
+                .then(res =>{
+                    // let doc = new jspdf('p', 'pt', 'letter');
+                    // doc.fromHTML(res);
+                    // window.open(doc.output('bloburl'));
+                    print('a', 'jsx-template');
+                    return (<Preview id={'jsx-template'} >
+                                {res}
+                                
+                            </Preview>)
+
+                   
+                })
     }
 
     handleChange(e , state){
@@ -74,7 +107,7 @@ export default class form_filter extends Component {
     }
 
     render() {
-        let { title , modal , mode} = this.props;
+        let { title , modal , mode } = this.props;
         let { filter } = this.state;
 
         return (
@@ -86,10 +119,10 @@ export default class form_filter extends Component {
                             <Label check>
                             <Input
                                 defaultChecked
-                                defaultValue="Harian"
-                                name="cek"
+                                defaultValue="tanggal"
+                                name="filter"
                                 type="radio"
-                                onChange={()=> this.set(0)}
+                                onChange={()=> this.set('tanggal')}
                             />
                             Harian <span className="form-check-sign" />
                             </Label>
@@ -99,10 +132,10 @@ export default class form_filter extends Component {
                         <FormGroup check className="form-check-radio">
                             <Label check>
                             <Input
-                                defaultValue="bulanan"
-                                name="cek"
+                                defaultValue="bulan"
+                                name="filter"
                                 type="radio"
-                                onChange={()=> this.set(1)}
+                                onChange={()=> this.set('bulan')}
                             />
                             Bulanan <span className="form-check-sign" />
                             </Label>
@@ -112,10 +145,10 @@ export default class form_filter extends Component {
                         <FormGroup check className="form-check-radio">
                             <Label check>
                             <Input
-                                defaultValue="tahunan"
-                                name="cek"
+                                defaultValue="tahun"
+                                name="filter"
                                 type="radio"
-                                onChange={()=> this.set(2)}
+                                onChange={()=> this.set('tahun')}
                             />
                             Tahunan <span className="form-check-sign" />
                             </Label>
@@ -123,7 +156,7 @@ export default class form_filter extends Component {
                     </Col>
                 </Row>
                 {
-                    filter === 0 ?
+                    filter === 'tanggal' ?
                     <div>
                         <Row>
                             <Col>
@@ -140,7 +173,7 @@ export default class form_filter extends Component {
                             </Col>
                         </Row>
                     </div>
-                    :filter === 1 ?
+                    :filter === 'bulan' ?
                     <div>
                         <Row>
                             <Col>
@@ -158,7 +191,7 @@ export default class form_filter extends Component {
                             </Col>
                         </Row>
                     </div>
-                    :filter === 2 ?
+                    :filter === 'tahun' ?
                     <div>
                         <FormGroup>
                             <Label>Tahunan</Label>
