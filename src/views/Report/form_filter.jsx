@@ -13,8 +13,6 @@ import {
     Button
   } from "reactstrap";
 import { getDate , getMounth , getYears , formatTanggal , apiPostPenjualan } from 'app';
-import jspdf from 'jspdf';
-import { Preview, print } from 'react-html2pdf';
 
 
 let Harian = ({ onchange })=>{
@@ -74,15 +72,8 @@ export default class form_filter extends Component {
 
         apiPostPenjualan(`/${url}/print_laporan` , data)
                 .then(res =>{
-                    // let doc = new jspdf('p', 'pt', 'letter');
-                    // doc.fromHTML(res);
-                    // window.open(doc.output('bloburl'));
-                    print('a', 'jsx-template');
-                    return (<Preview id={'jsx-template'} >
-                                {res}
-                                
-                            </Preview>)
-
+                        let  myWindow = window.open("", "MsgWindow", "width=4000,height=4000");
+                        myWindow.document.write(res);   
                    
                 })
     }

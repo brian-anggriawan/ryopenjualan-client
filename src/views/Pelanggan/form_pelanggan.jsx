@@ -75,12 +75,12 @@ export default class form_pelanggan extends Component {
                                 <Label for='jenis_pelanggan'>Jenis</Label>
                                 <Select options={[
                                     {
-                                    value:'Member',
-                                    label: 'Member'
+                                    value:'MEMBER',
+                                    label: 'MEMBER'
                                     },
                                     {
-                                    value:'Umum',
-                                    label: 'Member'
+                                    value:'UMUM',
+                                    label: 'UMUM'
                                     }
                                 ]} name='jenis_pelanggan' className='select' defaultValue={{  value: edit.jenis_pelanggan, label: edit.jenis_pelanggan }}/>
                             </FormGroup>
@@ -117,12 +117,12 @@ export default class form_pelanggan extends Component {
                                 <Label for='jenis_pelanggan'>Jenis</Label>
                                 <Select options={[
                                     {
-                                    value:'Member',
-                                    label: 'Member'
+                                    value:'MEMBER',
+                                    label: 'MEMBER'
                                     },
                                     {
-                                    value:'Umum',
-                                    label: 'Member'
+                                    value:'UMUM',
+                                    label: 'UMUM'
                                     }
                                 ]} name='jenis_pelanggan' className='select'/>
                             </FormGroup>

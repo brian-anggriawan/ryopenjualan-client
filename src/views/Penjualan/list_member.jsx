@@ -16,7 +16,7 @@ export default class list_member extends Component {
         let { setMember , member , mode} = this.props;
 
         let data = member.filter( x => x.id  === id)[0];
-        setMember(data.kode_pelanggan , data.nama_pelanggan , data.alamat);
+        setMember(data.kode_pelanggan , data.nama_pelanggan , data.alamat,data.jenis_pelanggan);
         mode();
     }
 
@@ -42,6 +42,10 @@ export default class list_member extends Component {
                     {
                         dataField: 'alamat',
                         text: 'Alamat'
+                    },
+                    {
+                        dataField: 'jenis_pelanggan',
+                        text: 'Jenis'
                     },
                     {
                         dataField: 'id',
