@@ -64,6 +64,14 @@ let Menu = [
       group: 'transaksi'
     },
     {
+      path: "/hutang",
+      name: "hutang",
+      icon: "business_money-coins",
+      component: 'Auth(Hutang)',
+      layout: "/admin",
+      group: 'transaksi'
+    },
+    {
       path: "/pengeluaran",
       name: "Pengeluaran",
       icon: "shopping_cart-simple",

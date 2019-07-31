@@ -13,6 +13,7 @@ import kategori from 'views/kategori_produk/list_kategoriproduk';
 import Userlevel from 'views/user_level/list_user_level';
 import Report from 'views/Report/list_report';
 import Auth from 'Auth';
+import Hutang from 'views/hutang/list_hutang';
 
 
 var dashRoutes = [
@@ -85,6 +86,14 @@ var dashRoutes = [
     name: "Penjualan",
     icon: "shopping_box",
     component: Auth(Penjualan),
+    layout: "/admin",
+    group: 'transaksi'
+  },
+  {
+    path: "/hutang",
+    name: "hutang",
+    icon: "business_money-coins",
+    component: Auth(Hutang),
     layout: "/admin",
     group: 'transaksi'
   },
