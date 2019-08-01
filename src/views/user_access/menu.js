@@ -166,6 +166,14 @@ let Menu = [
       component:'Rekap_pengeluaran',
       icon: "sport_user-run",
       layout: "/admin",
+    },
+    {
+      path: "/report9",
+      name: "Rekap Nota Penjualan Belum Lunas",
+      group: 'report',
+      component:'Rekap_nota_penjualan_belum_lunas',
+      icon: "sport_user-run",
+      layout: "/admin",
     }
   ];
   export default Menu;

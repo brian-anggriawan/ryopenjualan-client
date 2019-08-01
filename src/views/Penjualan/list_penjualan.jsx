@@ -2,7 +2,7 @@ import React from "react";
 import Page from 'layouts/Page';
 import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
 import Serialize from 'form-serialize';
-import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber , dataUser , formatPersen , persenToNumber , inputPersen } from 'app';
+import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber , dataUser , persenToNumber } from 'app';
 import { IoMdTrash } from 'react-icons/io';
 import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
@@ -53,17 +53,22 @@ class Listpenjualan extends React.Component {
     document.getElementById(`jasa${idInputJasa}`).value = data.nama_jasa;
     document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
     document.getElementById(`jenis${idInputJasa}`).value = data.jenis;
-    document.getElementById(`qty${idInputJasa}`).value = '0';
-    document.getElementById(`diskon${idInputJasa}`).value = formatPersen('0');
+    document.getElementById(`qty${idInputJasa}`).value = '1';
+    document.getElementById(`diskon${idInputJasa}`).value = 0;
     document.getElementById(`qty${idInputJasa}`).focus();
-
     let cek = document.getElementById('kode_pelanggan').value;
 
     if (cek === '00') {
       document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
+      document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
+      document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
     }else{
       document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual2,'');
+      document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
+      document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
     }
+
+    this.hitungTotalHarga();
 
   }
 
@@ -112,11 +117,9 @@ class Listpenjualan extends React.Component {
     let count = this.state.row.length;
     let diskon  = persenToNumber(value);
 
-    inputPersen(`diskon${id}` ,diskon);
-
     let qty = qtyToNumber(document.getElementById(`qty${id}`).value);
     let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
-    let nilaiDiskon = qtyToNumber(((diskon / 100) * harga).toString());
+    let nilaiDiskon = ((diskon / 100) * harga).toString();
     let hargaDiskon  = harga - parseInt(nilaiDiskon);
 
    
@@ -172,7 +175,7 @@ class Listpenjualan extends React.Component {
                 <Input type='text' name={`qty${id}`} id={`qty${id}`} onKeyUp={(e)=> this.setQty(id,e.target.value)} tabIndex={index + 2}/>
               </td>
               <td>
-                <Input onKeyUp={(e)=> this.addRowInTable(e , id , e.target.value)} type='text' name={`diskon${id}`} id={`diskon${id}`}  tabIndex={index + 3} />
+                <Input onKeyUp={(e)=> this.addRowInTable(e , id , e.target.value)} type='number' name={`diskon${id}`} id={`diskon${id}`}  tabIndex={index + 3} />
               </td>
               <td>
                 <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
@@ -194,7 +197,7 @@ class Listpenjualan extends React.Component {
 
   setQty(id , value){
     inputQty(`qty${id}` , value);
-    let diskon = persenToNumber(document.getElementById(`diskon${id}`).value || '0');
+    let diskon = document.getElementById(`diskon${id}`).value || 0;
     let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
     let nilaiDiskon = ((parseInt(diskon) / 100) * harga);
     let hargaDiskon  = harga - nilaiDiskon;
@@ -262,7 +265,7 @@ class Listpenjualan extends React.Component {
               nama_jasa: dataDetail[`jasa${x.key}`] || '', 
               satuan: dataDetail[`satuan${x.key}`] || '', 
               harga: rupiahToNumber(dataDetail[`harga${x.key}`] || '0'), 
-              diskon: persenToNumber(dataDetail[`diskon${x.key}`] || '0'), 
+              diskon: dataDetail[`diskon${x.key}`] || 0, 
               harga_diskon: rupiahToNumber(dataDetail[`hargadiskon${x.key}`] || '0'), 
               qty: qtyToNumber(dataDetail[`qty${x.key}`] || '0'), 
               total_harga: rupiahToNumber(dataDetail[`total${x.key}`] || '0'),

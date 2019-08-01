@@ -50,6 +50,13 @@ export default class form_pembayaran extends Component {
         return document.getElementById('kembali').value = formatRupiah((rupiahToNumber(value) - total_harga).toString(),'');
     }
 
+    kredit(value){
+        inputRupiah('bayar',value);
+        let total_harga = this.props.header.total_harga || 0;
+
+        return document.getElementById('kembali').value = formatRupiah((total_harga - rupiahToNumber(value)).toString(),'');
+    }
+
 
     render() {
         let { modal , mode , header } = this.props;
@@ -95,11 +102,15 @@ export default class form_pembayaran extends Component {
                         <div>
                             <FormGroup>
                                 <Label for='bayar'>Bayar</Label> 
-                                <Input type='text' name='bayar' id='bayar' tabIndex='4' onKeyUp={(e)=> inputRupiah('bayar' ,e.target.value)}/>
+                                <Input type='text' name='bayar' id='bayar' tabIndex='4' onKeyUp={(e)=> this.kredit(e.target.value)}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='total_harga'>Total Harga</Label>
                                 <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='5' readOnly/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for='kembali'>Sisa Bayar</Label>
+                                <Input type='text' name='kembali' id='kembali' tabIndex='6' readOnly/>
                             </FormGroup>
                         </div>
                         :
