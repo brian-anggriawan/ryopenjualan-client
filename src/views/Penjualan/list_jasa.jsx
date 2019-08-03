@@ -36,6 +36,7 @@ export default class list_jasa extends Component {
                  <Tabel
                     data ={jasa}
                     keyField = {'id'}
+                    proses={()=> ''}
                     columns ={[
                     {
                         dataField: 'kode_jasa',

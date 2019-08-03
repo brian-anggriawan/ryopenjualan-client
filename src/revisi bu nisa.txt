@@ -1,0 +1,26 @@
+1. Menu Penjualan
+	v diskon muncul jika owner yang login
+	v untuk kredit dp hanya bisa 50 % kecuali owner
+	v sistem pembayaran -> lunas , kredit
+	v metode pembayaran -> transfer , edc , cash
+	v tambah inputan tanggal dan jam pengambilan dan nota
+	diskon bisa presentase atau nilai
+	v mengurangi penggunaan mouse semua harus pakai keayboard
+	v di nota tambah nama pembuat nota
+
+2. Rekap pengeluaran 
+	tambah keterangan untuk pengeluaran
+
+3. Menu Pengeluaran
+	dalam satu transaksi keterangan bisa lebih sari satu
+
+4. Menu tarif jasa
+	Owner bisa hapus semua dan impot dari excel
+
+5. tambah menu setup jenis bahan
+	input , update , delete
+
+6. tambah menu oprator
+	memilih nota bisa lebih dari satu
+	pilih keterangan dan jenis bahan
+	

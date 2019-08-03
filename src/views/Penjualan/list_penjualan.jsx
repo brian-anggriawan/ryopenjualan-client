@@ -44,6 +44,8 @@ class Listpenjualan extends React.Component {
     this.setJasa = this.setJasa.bind(this);
     this.hitungTotalHarga = this.hitungTotalHarga.bind(this);
     this.clearAll = this.clearAll.bind(this);
+    this.pickMember = this.pickMember.bind(this);
+    this.pickJasa = this.pickJasa.bind(this);
  
   }
 
@@ -54,17 +56,20 @@ class Listpenjualan extends React.Component {
     document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
     document.getElementById(`jenis${idInputJasa}`).value = data.jenis;
     document.getElementById(`qty${idInputJasa}`).value = '1';
-    document.getElementById(`diskon${idInputJasa}`).value = 0;
     document.getElementById(`qty${idInputJasa}`).focus();
     let cek = document.getElementById('kode_pelanggan').value;
 
     if (cek === '00') {
-      document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
-      document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
+      document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');  
+      if (dataUser().tingkatan === 'Owner') {
+        document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
+      }
       document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
     }else{
       document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual2,'');
-      document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
+      if (dataUser().tingkatan === 'Owner') {
+        document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
+      }
       document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
     }
 
@@ -76,12 +81,6 @@ class Listpenjualan extends React.Component {
     document.getElementById('nama_pelanggan').value = nama;
     document.getElementById('kode_pelanggan').value = kode;
     document.getElementById('alamat').value = alamat;
-
-    if (jenis.toLowerCase() === 'member') {
-      document.getElementById('nama_pelanggan').readOnly = true;
-    }else{
-      document.getElementById('nama_pelanggan').readOnly = false;
-    }
   }
 
   mode(){
@@ -96,6 +95,12 @@ class Listpenjualan extends React.Component {
     this.setState({ modal3: !this.state.modal3 , idInputJasa: id });
   }
 
+  pickJasa(e ,id){
+    if (e.keyCode === 17) {
+      this.mode3(id)
+    }
+  }
+
   componentDidMount(){
     apiGet('/penjualan/result_data_petugas')
       .then(res  =>{
@@ -107,8 +112,7 @@ class Listpenjualan extends React.Component {
       })
     apiGet('/penjualan/result_data_jasa')
       .then(res =>{
-        this.setState({jasa: res });
-        
+        this.setState({jasa: res }); 
       })
   }
 
@@ -156,23 +160,17 @@ class Listpenjualan extends React.Component {
    
     let copy = [ ...this.state.row];
 
+    dataUser().tingkatan === 'Owner' ?
     copy.push( 
       <tr key={id}>
               <td>
-                <Row>
-                  <Col sm='8'>
-                    <Input type='text' name={`kode${id}`} id={`kode${id}`} tabIndex={0} hidden/>
-                    <Input type='text' name={`jasa${id}`} id={`jasa${id}`} tabIndex={index + 1}/>
-                    <Input type='text' name={`satuan${id}`} id={`satuan${id}`} tabIndex={0} hidden/>
-                    <Input type='text' name={`jenis${id}`} id={`jenis${id}`} tabIndex={0} hidden />
-                  </Col>
-                  <Col sm='3'>
-                    <Button size='sm' color='success' onClick={()=> this.mode3(`${id}`)}>+</Button>
-                  </Col>
-                </Row>
+                <Input type='text' name={`kode${id}`} id={`kode${id}`} tabIndex={0} hidden/>
+                <Input type='text' name={`jasa${id}`} id={`jasa${id}`} placeholder='Tekan ctrl untk pilih jasa' onKeyUp={(e)=> this.pickJasa(e , id)} tabIndex={index + 1}/>
+                <Input type='text' name={`satuan${id}`} id={`satuan${id}`} tabIndex={0} hidden/>
+                <Input type='text' name={`jenis${id}`} id={`jenis${id}`} tabIndex={0} hidden />
               </td>
               <td>
-                <Input type='text' name={`qty${id}`} id={`qty${id}`} onKeyUp={(e)=> this.setQty(id,e.target.value)} tabIndex={index + 2}/>
+                <Input type='text' name={`qty${id}`} id={`qty${id}`} onKeyUp={(e)=> this.setQty(e ,id,e.target.value)} tabIndex={index + 2}/>
               </td>
               <td>
                 <Input onKeyUp={(e)=> this.addRowInTable(e , id , e.target.value)} type='number' name={`diskon${id}`} id={`diskon${id}`}  tabIndex={index + 3} />
@@ -190,20 +188,58 @@ class Listpenjualan extends React.Component {
                 <Button color='danger' size='sm' onClick={()=> this.deleteRow(id)} tabIndex='0'><IoMdTrash /></Button>
               </td>
             </tr>
-     );
+     )
 
+     :
+      
+     copy.push( 
+      <tr key={id}>
+              <td>
+                <Input type='text' name={`kode${id}`} id={`kode${id}`} tabIndex={0} hidden/>
+                <Input type='text' name={`jasa${id}`} id={`jasa${id}`} placeholder='Tekan ctrl untk pilih jasa'  onKeyUp={(e)=> this.pickJasa(e , id)} tabIndex={index + 1}/>
+                <Input type='text' name={`satuan${id}`} id={`satuan${id}`} tabIndex={0} hidden/>
+                <Input type='text' name={`jenis${id}`} id={`jenis${id}`} tabIndex={0} hidden />
+              </td>
+              <td>
+                <Input type='text' name={`qty${id}`} id={`qty${id}`} onKeyUp={(e)=> this.setQty(e ,id,e.target.value)} tabIndex={index + 2}/>
+              </td>
+              <td>
+                <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
+              </td>
+              <td>
+                <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
+              </td>
+              <td>
+                <Button color='danger' size='sm' onClick={()=> this.deleteRow(id)} tabIndex='0'><IoMdTrash /></Button>
+              </td>
+            </tr>
+     )
      this.setState({ row : copy})
   }
 
-  setQty(id , value){
+  setQty(e ,id , value){
     inputQty(`qty${id}` , value);
-    let diskon = document.getElementById(`diskon${id}`).value || 0;
+    let diskon;
+    if (dataUser().tingkatan === 'Owner') {
+      diskon = document.getElementById(`diskon${id}`).value || 0; 
+    }else{
+      diskon = 0;
+    }
     let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
     let nilaiDiskon = ((parseInt(diskon) / 100) * harga);
     let hargaDiskon  = harga - nilaiDiskon;
     let qty = qtyToNumber(value);
-   
-    document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. ');
+    
+    if (dataUser().tingkatan === 'Owner') {
+      document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. '); 
+    }else{
+      let index = this.state.row.findIndex( x => x.key === id) + 1;
+      let count = this.state.row.length;
+
+      if (e.keyCode === 13 && index === count) {
+        this.addRow();
+      }
+    }
     document.getElementById(`total${id}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');
     this.hitungTotalHarga();
   }
@@ -298,6 +334,12 @@ class Listpenjualan extends React.Component {
     }) 
   }
 
+  pickMember(e){
+    if (e.keyCode === 17) {
+      this.mode();
+    }
+  }
+
   render() {
     let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail} = this.state;
     return (
@@ -346,17 +388,10 @@ class Listpenjualan extends React.Component {
               </FormGroup>
             </Col>
             <Col>
-                <Row>
-                  <Col sm='9'>
-                    <FormGroup >
-                      <Label for='nama_pelanggan'>Nama Pelanggan</Label>
-                      <Input type='text' name='nama_pelanggan' id='nama_pelanggan' tabIndex='2'/>
-                    </FormGroup>
-                  </Col>
-                  <Col sm='3'>
-                    <Button type='submit' className='mt-4' onClick={this.mode} color='info' tabIndex='0'>Pilih</Button>
-                  </Col>
-                </Row>
+                <FormGroup >
+                  <Label for='nama_pelanggan'>Nama Pelanggan</Label>
+                  <Input type='text' name='nama_pelanggan' placeholder='Tekan ctrl unutk pilih member' id='nama_pelanggan' onKeyUp={(e)=> this.pickMember(e)} tabIndex='2'/>
+                </FormGroup>
               <FormGroup>
                 <Label for='alamat'>Alamat</Label>
                 <Input type='text' name='alamat' id='alamat' tabIndex='3' />
@@ -380,15 +415,27 @@ class Listpenjualan extends React.Component {
               <Form id='detail' onSubmit={(e)=>  e.preventDefault()}>
               <Table responsive>
                 <thead>
-                    <tr>
-                      <th style={{width: '35%' , fontSize:'20px'}}>Jasa</th>
-                      <th style={{width: '10%' , fontSize:'20px'}}>QTY</th>
-                      <th style={{width: '10%' , fontSize:'20px'}}>Diskon</th>
-                      <th style={{ fontSize: '20px'}}>Harga</th>
-                      <th style={{ fontSize: '20px'}}>Harga Diskon</th>
-                      <th style={{ fontSize: '20px'}}>Total</th>
-                      <th style={{ fontSize: '20px'}}>Hapus</th>
-                    </tr>
+                    
+                      {
+                        dataUser().tingkatan === 'Owner' ? 
+                        <tr>
+                          <th style={{width: '35%' , fontSize:'20px'}}>Jasa</th>
+                          <th style={{width: '10%' , fontSize:'20px'}}>QTY</th>
+                          <th style={{width: '10%' , fontSize:'20px'}}>Diskon</th>
+                          <th style={{ fontSize: '20px'}}>Harga</th>
+                          <th style={{ fontSize: '20px'}}>Harga Diskon</th>
+                          <th style={{ fontSize: '20px'}}>Total</th>
+                          <th style={{ fontSize: '20px'}}>Hapus</th>
+                        </tr>
+                        :
+                        <tr>
+                          <th style={{width: '35%' , fontSize:'20px'}}>Jasa</th>
+                          <th style={{width: '10%' , fontSize:'20px'}}>QTY</th>
+                          <th style={{ fontSize: '20px'}}>Harga</th>
+                          <th style={{ fontSize: '20px'}}>Total</th>
+                          <th style={{ fontSize: '20px'}}>Hapus</th>
+                        </tr>
+                      }
                 </thead>
                 <tbody>
                   {

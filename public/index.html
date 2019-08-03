@@ -38,7 +38,7 @@
       
     <div id="root"></div>
     <script language="javascript" type="text/javascript">
-      $('body').on('keydown', 'input, select, textarea', function(e) {
+      $('body').on('keypress', 'input, select, textarea', function(e) {
         let self = $(this),
             form = self.parents('form:eq(0)'),
             focusable,

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormGroup , Label , Input ,Button , Form } from 'reactstrap';
 import Serialize from 'form-serialize';
 import Select from 'react-select';
-import { inputRupiah , rupiahToNumber ,formatRupiah , apiPostPenjualan , urlServer} from 'app';
+import { inputRupiah , rupiahToNumber ,formatRupiah , apiPostPenjualan , urlServer , msgerror} from 'app';
 
 export default class form_pembayaran extends Component {
     constructor(){
@@ -12,35 +12,73 @@ export default class form_pembayaran extends Component {
             flagnorek: false,
             kredit: false
         }
-        this.handleChange = this.handleChange.bind(this);
         this.simpan = this.simpan.bind(this);
+        this.cara = this.cara.bind(this);
+        this.metode = this.metode.bind(this);
     }
 
-    handleChange(e){
+    cara(e){
+        if (e.value === 'KREDIT') {
+            this.setState({ flagnorek: false , kredit: true  }); 
+        }else{
+            this.setState({ flagnorek: false , kredit: false }) 
+        }
+    }
+
+    metode(e){
         if (e.value === 'TRANSFER' || e.value === 'EDC') {
             this.setState({ flagnorek: true , kredit: false });
-        }else if(e.value ==='KREDIT'){
-            this.setState({ flagnorek: false , kredit: true  });
         }else{
-            this.setState({ flagnorek: false , kredit: false })
+            this.setState({ flagnorek: false , kredit: false })   
         }
     }
 
     simpan(){
         let { header , detail , clear } = this.props;
         let data = Serialize(document.getElementById('pembayaran') ,{ hash: true });
-        header.cara_bayar = data.cara_bayar;
-        header.no_rekening = data.no_rekening || 0;
-        header.bayar = rupiahToNumber(data.bayar || '0');
-        header.kembali = rupiahToNumber(data.kembali || '0');
-        header.detail = detail;
-        apiPostPenjualan('penjualan/tambah' , header)
-            .then(res =>{
-                if (res.result === 'true') {
-                    window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
-                    clear();   
-                }      
-            })
+        let cek  = data.cara_bayar;
+
+        if (cek === 'KREDIT') {
+            let bayar = parseInt(rupiahToNumber(data.bayar || '0'));
+            let proses = (50 / 100) * header.total_harga;
+            
+            if (proses > bayar ) {
+                msgerror('Diskon Hanya Boleh Minimal 50%')
+            }else{
+                header.cara_bayar = data.cara_bayar || '0';
+                header.no_rekening = data.no_rekening || 0;
+                header.bayar = rupiahToNumber(data.bayar || '0');
+                header.kembali = rupiahToNumber(data.kembali || '0');
+                header.tanggal_pengambilan = data.tanggal_pengambilan || '0';
+                header.jam_pengambilan = data.jam_pengambilan || '00:00';
+                header.metode_pembayaran = data.metode_pembayaran || '0'
+                header.detail = detail;
+                apiPostPenjualan('penjualan/tambah' , header)
+                    .then(res =>{
+                        if (res.result === 'true') {
+                            window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
+                            clear();   
+                        }      
+                    })
+            }
+        }else{
+            header.cara_bayar = data.cara_bayar || '0';
+            header.no_rekening = data.no_rekening || 0;
+            header.bayar = rupiahToNumber(data.bayar || '0');
+            header.kembali = rupiahToNumber(data.kembali || '0');
+            header.tanggal_pengambilan = data.tanggal_pengambilan || '0';
+            header.jam_pengambilan = data.jam_pengambilan || '00:00';
+            header.metode_pembayaran = data.metode_pembayaran || '0'
+            header.detail = detail;
+            apiPostPenjualan('penjualan/tambah' , header)
+                .then(res =>{
+                    if (res.result === 'true') {
+                        window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
+                        clear();   
+                    }      
+                })
+        }
+        
     }
 
     bayar(value){
@@ -67,6 +105,14 @@ export default class form_pembayaran extends Component {
             <Modal modal={modal} mode={mode} title={'Pembayaran'}>
                 <Form id='pembayaran'>
                     <FormGroup>
+                        <Label>Tanggal Pengambilan</Label>
+                        <Input type='date' name='tanggal_pengambilan'  tabIndex='1'/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Jam Pengambilan</Label>
+                        <Input type='time' name='jam' tabIndex='2'/>
+                    </FormGroup>
+                    <FormGroup>
                         <Label for='cara_bayar'>Pembayaran</Label>
                         <Select 
                             options={[
@@ -77,6 +123,17 @@ export default class form_pembayaran extends Component {
                                 {
                                     label: 'KREDIT',
                                     value:'KREDIT'
+                                }
+                            ]}
+                        name='cara_bayar' id='cara_bayar' tabIndex= '3' onChange={this.cara} className='select'/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for='metode_pembayaran'>Metode Pembayaran</Label>
+                        <Select 
+                            options={[
+                                {
+                                    label: 'CASH',
+                                    value:'CASH'
                                 },
                                 {
                                     label: 'TRANSFER',
@@ -87,13 +144,13 @@ export default class form_pembayaran extends Component {
                                     value:'EDC'
                                 }
                             ]}
-                        name='cara_bayar' id='cara_bayar' tabIndex= '1' onChange={this.handleChange} className='select'/>
+                        name='metode_pembayaran' id='metode_pembayaran' tabIndex= '4' onChange={this.metode} className='select'/>
                     </FormGroup>
                     {
                         flagnorek ? 
                         <FormGroup>
                             <Label for='no_rekening'>No Rekning</Label>
-                            <Input type='number' name='no_rekening' tabIndex='2'/>
+                            <Input type='number' name='no_rekening' tabIndex='5'/>
                         </FormGroup> : ''
 
                     }
@@ -102,30 +159,30 @@ export default class form_pembayaran extends Component {
                         <div>
                             <FormGroup>
                                 <Label for='bayar'>Bayar</Label> 
-                                <Input type='text' name='bayar' id='bayar' tabIndex='4' onKeyUp={(e)=> this.kredit(e.target.value)}/>
+                                <Input type='text' name='bayar' id='bayar' tabIndex='6' onKeyUp={(e)=> this.kredit(e.target.value)}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='total_harga'>Total Harga</Label>
-                                <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='5' readOnly/>
+                                <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='7' readOnly/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='kembali'>Sisa Bayar</Label>
-                                <Input type='text' name='kembali' id='kembali' tabIndex='6' readOnly/>
+                                <Input type='text' name='kembali' id='kembali' tabIndex='8' readOnly/>
                             </FormGroup>
                         </div>
                         :
                         <div>
                             <FormGroup>
                                 <Label for='bayar'>Bayar</Label> 
-                                <Input type='text' name='bayar' id='bayar' tabIndex='4' onKeyUp={(e)=> this.bayar(e.target.value)}/>
+                                <Input type='text' name='bayar' id='bayar' tabIndex='6' onKeyUp={(e)=> this.bayar(e.target.value)}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='total_harga'>Total Harga</Label>
-                                <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='5' readOnly/>
+                                <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='7' readOnly/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='kembali'>Kembalian</Label>
-                                <Input type='text' name='kembali' id='kembali' tabIndex='6' readOnly/>
+                                <Input type='text' name='kembali' id='kembali' tabIndex='8' readOnly/>
                             </FormGroup>
                         </div>
                     }  
