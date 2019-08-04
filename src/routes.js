@@ -14,6 +14,10 @@ import Userlevel from 'views/user_level/list_user_level';
 import Report from 'views/Report/list_report';
 import Auth from 'Auth';
 import Hutang from 'views/hutang/list_hutang';
+import Jenisbahan from 'views/jenis_bahan/jenis_bahan';
+import DataPenjualan from 'views/data_penjualan/list_penjualan';
+import Produksi from 'views/proses_produksi/list_proses_produksi';
+import Retur from 'views/retur/retur';
 
 
 var dashRoutes = [
@@ -82,10 +86,42 @@ var dashRoutes = [
     group: 'setup'
   },
   {
+    path: "/jenisbahan",
+    name: "Jenis Bahan",
+    icon: "shopping_basket",
+    component: Auth(Jenisbahan),
+    layout: "/admin",
+    group: 'setup'
+  },
+  {
     path: "/penjualan",
     name: "Penjualan",
     icon: "shopping_box",
     component: Auth(Penjualan),
+    layout: "/admin",
+    group: 'transaksi'
+  },
+  {
+    path: "/datapenjualan",
+    name: "Data Penjualan",
+    icon: "education_paper",
+    component: Auth(DataPenjualan),
+    layout: "/admin",
+    group: 'transaksi'
+  },
+  {
+    path: "/retur",
+    name: "Retur",
+    icon: "arrows-1_refresh-69",
+    component: Auth(Retur),
+    layout: "/admin",
+    group: 'transaksi'
+  },
+  {
+    path: "/prosesproduksi",
+    name: "Proses Produksi",
+    icon: "ui-2_settings-90",
+    component: Auth(Produksi),
     layout: "/admin",
     group: 'transaksi'
   },

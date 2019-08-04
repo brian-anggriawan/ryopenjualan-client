@@ -22,6 +22,7 @@ class formModal extends React.Component{
                 isOpen = {modal}
                 toggle = {mode}
                 size='lg'
+                autoFocus={false}
             >
                 <div className='modal-header'>
                     <h5 className='modal-title'>

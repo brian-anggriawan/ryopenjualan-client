@@ -49,8 +49,7 @@ export default class form_pembayaran extends Component {
                 header.no_rekening = data.no_rekening || 0;
                 header.bayar = rupiahToNumber(data.bayar || '0');
                 header.kembali = rupiahToNumber(data.kembali || '0');
-                header.tanggal_ambil = data.tanggal_ambil || '0';
-                header.jam_ambil = data.jam_ambil || '00:00';
+                header.tanggal_jam_ambil = data.tanggal_ambil || '0';
                 header.metode_pembayaran = data.metode_pembayaran || '0'
                 header.detail = detail;
                 apiPostPenjualan('penjualan/tambah' , header)
@@ -66,8 +65,7 @@ export default class form_pembayaran extends Component {
             header.no_rekening = data.no_rekening || 0;
             header.bayar = rupiahToNumber(data.bayar || '0');
             header.kembali = rupiahToNumber(data.kembali || '0');
-            header.tanggal_ambil = data.tanggal_ambil || '0';
-            header.jam_ambil = data.jam_ambil || '00:00';
+            header.tanggal_jam_ambil = data.tanggal_ambil || '0';
             header.metode_pembayaran = data.metode_pembayaran || '0'
             header.detail = detail;
             apiPostPenjualan('penjualan/tambah' , header)
@@ -97,7 +95,7 @@ export default class form_pembayaran extends Component {
 
 
     render() {
-        let { modal , mode , header } = this.props;
+        let { modal , mode , header  } = this.props;
         let { flagnorek , kredit } = this.state;
 
         let total_harga = formatRupiah((header.total_harga || '0').toString(),'');
@@ -106,11 +104,7 @@ export default class form_pembayaran extends Component {
                 <Form id='pembayaran'>
                     <FormGroup>
                         <Label>Tanggal Pengambilan</Label>
-                        <Input type='date' name='tanggal_ambil'  tabIndex='1'/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label>Jam Pengambilan</Label>
-                        <Input type='time' name='jam_ambil' tabIndex='2'/>
+                        <Input autoFocus={true} type='text' name='tanggal_ambil'  tabIndex='1'/>
                     </FormGroup>
                     <FormGroup>
                         <Label for='cara_bayar'>Pembayaran</Label>

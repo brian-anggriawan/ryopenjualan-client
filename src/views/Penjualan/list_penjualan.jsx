@@ -28,6 +28,7 @@ class Listpenjualan extends React.Component {
       detail:[],
       idInputJasa:'',
       total:0
+
     }
     this.add = this.add.bind(this);
     this.cancel = this.cancel.bind(this);
@@ -84,15 +85,15 @@ class Listpenjualan extends React.Component {
   }
 
   mode(){
-    this.setState({ modal: !this.state.modal});
+    this.setState({ modal: !this.state.modal });
   }
 
   mode2(){
-    this.setState({ modal2: !this.state.modal2 });
+    this.setState({ modal2: !this.state.modal2  });
   }
 
   mode3(id){
-    this.setState({ modal3: !this.state.modal3 , idInputJasa: id });
+    this.setState({ modal3: !this.state.modal3 , idInputJasa: id  });
   }
 
   pickJasa(e ,id){
@@ -345,11 +346,11 @@ class Listpenjualan extends React.Component {
     return (
       <Hotkeys 
         keyName="shift+a ,shift+s ,f5"
-        onKeyDown={this.onKeyDown}
+        onKeyUp={this.onKeyDown}
       >
       <Page title={'Penjualan'}>
         <Member modal={modal} mode={this.mode} member={ member } setMember={this.setMember} />
-        <Bayar modal={modal2} mode={this.mode2} header={header} detail={detail} clear={this.clearAll} />
+        <Bayar modal={modal2} mode={this.mode2} header={header} detail={detail} clear={this.clearAll}  />
         <Jasa modal={modal3} mode={this.mode3} jasa={jasa} idinput={idInputJasa} setJasa={this.setJasa}  />
         <Row>
           <Col sm='3'>
