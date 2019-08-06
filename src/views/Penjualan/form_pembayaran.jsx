@@ -10,7 +10,8 @@ export default class form_pembayaran extends Component {
         super()
         this.state ={
             flagnorek: false,
-            kredit: false
+            kredit: false,
+            text:''
         }
         this.simpan = this.simpan.bind(this);
         this.cara = this.cara.bind(this);
@@ -28,6 +29,11 @@ export default class form_pembayaran extends Component {
     metode(e){
         if (e.value === 'TRANSFER' || e.value === 'EDC') {
             this.setState({ flagnorek: true , kredit: false });
+            if (e.value === 'TRANSFER') {
+                this.setState({ text: 'No Rekening'})
+            }else{
+                this.setState({ text: 'No Kartu'})
+            }
         }else{
             this.setState({ flagnorek: false , kredit: false })   
         }
@@ -95,8 +101,8 @@ export default class form_pembayaran extends Component {
 
 
     render() {
-        let { modal , mode , header  } = this.props;
-        let { flagnorek , kredit } = this.state;
+        let { modal , mode , header } = this.props;
+        let { flagnorek , kredit ,text } = this.state;
 
         let total_harga = formatRupiah((header.total_harga || '0').toString(),'');
         return (
@@ -143,7 +149,7 @@ export default class form_pembayaran extends Component {
                     {
                         flagnorek ? 
                         <FormGroup>
-                            <Label for='no_rekening'>No Rekning</Label>
+                            <Label for='no_rekening'>{text}</Label>
                             <Input type='number' name='no_rekening' tabIndex='5'/>
                         </FormGroup> : ''
 

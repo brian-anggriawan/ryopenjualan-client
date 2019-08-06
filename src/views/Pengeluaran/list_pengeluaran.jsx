@@ -2,9 +2,8 @@ import React from "react";
 import Page from 'layouts/Page';
 import Form from './form_pengeluaran';
 import Tabel from 'components/tabel';
-import ButtonAction from 'components/ButtonAction';
 import Loading from 'components/Loading';
-import { apiGet , apiPost , msgdialog } from 'app';
+import { apiGet } from 'app';
 import { Button } from 'reactstrap';
 import { formatRupiah } from 'app';
 
@@ -14,15 +13,10 @@ class Listpengeluaran extends React.Component {
     this.state = {
       data: [],
       loading: true,
-      modal: false,
-      flag:0,
-      edit:[]
+      modal: false
     }
     this.mode = this.mode.bind(this);
     this.tambah = this.tambah.bind(this);
-    this.edit = this.edit.bind(this);
-    this.delete = this.delete.bind(this);
-    this.button = this.button.bind(this);
     this.getData = this.getData.bind(this);
   }
 
@@ -42,34 +36,9 @@ class Listpengeluaran extends React.Component {
     this.getData();
   }
 
-  delete(id){ 
-    msgdialog('Hapus')
-      .then(res =>{
-        if (res) {
-          this.setState({ loading: true });
-          apiPost('pengeluaran/hapus' , { id: id })
-          .then( res =>{
-            if (res) {
-              this.getData();
-            }
-          })
-        }
-      })
-  }
-
-  button(id){
-    return <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
-  }
-
   tambah(){
     this.mode();
     this.setState({ flag: 0 })
-  }
-
-  edit(id){
-    let data = this.state.data.filter( x => x.id === id)[0];
-    this.setState({ edit: data , flag: 1 });
-    this.mode();
   }
 
   nominal(nilai){
@@ -77,7 +46,7 @@ class Listpengeluaran extends React.Component {
   }
 
   render() {
-    let { data , loading, modal, edit , flag } = this.state;
+    let { data , loading, modal } = this.state;
 
     if (loading){
       return(
@@ -90,15 +59,11 @@ class Listpengeluaran extends React.Component {
     return (
       <Page title={'Pengeluaran'}>
         <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
-        <Form  mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} count={data.length}/>
+        <Form  mode={this.mode} modal={modal}  getData={this.getData} />
          <Tabel
           data ={data}
           keyField = {'id'}
           columns ={[
-            {
-              dataField: 'kode_pengeluaran',
-              text: 'Kode'
-            },
             {
                 dataField: 'tanggal',
                 text: 'Tanggal'
@@ -123,11 +88,6 @@ class Listpengeluaran extends React.Component {
               dataField: 'jumlah',
               formatter: this.nominal,
               text: 'Jumlah'
-            },
-            {
-              dataField: 'id',
-              formatter: this.button,
-              text: 'Action'
             }
           ]}                            
             width={{ width:'300px'}}

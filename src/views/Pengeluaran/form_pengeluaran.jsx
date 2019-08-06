@@ -1,113 +1,142 @@
 import React, { Component } from 'react';
-import Modal from 'layouts/form_modal';
-import { Input , FormGroup , Label  } from 'reactstrap';
+import Modal from 'layouts/list_modal';
+import { Input , FormGroup , Label , Form ,Button , Table  } from 'reactstrap';
 import Select from 'react-select';
 import serialize from 'form-serialize';
 import { apiPost  , apiGet , inputRupiah ,formatRupiah , formatTanggal , rupiahToNumber ,dataUser} from 'app';
-import dt from 'moment';
+import cuid from 'cuid';
 
 export default class form_pengeluaran extends Component {
     constructor(){
         super()
         this.state={
-            jenis:[]
+            jenis:[],
+            row:[],
+            total:0
         }
         
         this.save = this.save.bind(this);
+        this.addRow = this.addRow.bind(this);
+        this.dinamicRow = this.dinamicRow.bind(this);
+        this.hitungTotalHarga = this.hitungTotalHarga.bind(this);
     }
+
+    addRow(){
+        let { row } = this.state;
+        let id = cuid(10);
+        let tanggal = new Date();
+        let index = `${tanggal.getHours()}${tanggal.getMinutes()}${tanggal.getSeconds()}`;
+
+        let copy = [ ...row];
+            copy.push(
+                <tr key={id}>
+                    <td>
+                        <Input type='text' name={`keterangan${id}`} tabIndex={index + 1} />
+                    </td>
+                    <td>
+                        <Input type='text' name={`jumlah${id}`} id={`jumlah${id}`} tabIndex={index + 2 } onKeyUp={(e)=> this.dinamicRow(e.keyCode , id ,e.target.value)} />
+                    </td>
+                </tr>
+            )
+        this.setState({ row: copy });
+    }
+
+    dinamicRow(e ,id , value){
+        inputRupiah(`jumlah${id}`,value);
+        let index = this.state.row.findIndex( x => x.key === id) + 1;
+        let count = this.state.row.length;
+
+        if (e === 13 && index === count) {
+            this.addRow();
+        }
+
+        this.hitungTotalHarga();
+    }
+
+    hitungTotalHarga(){
+        let detail = document.getElementById('detail');
+        let dataDetail = serialize( detail , { hash : true });
+        let nilai = 0
+        for( let i = 0; i < this.state.row.length; i++){
+          
+          let cek = rupiahToNumber(dataDetail[`jumlah${this.state.row[i].key}`]);      
+          nilai += parseInt(cek);
+          
+        }
+        this.setState({ total: nilai });
+      }
 
     componentDidMount(){
         apiGet('jenis_biaya/result_data_jenis_biaya')
         .then(res =>{
           this.setState({ jenis:  res });
         })  
+        
+       this.addRow();
     }
     
     save(){
-        let data =  serialize(document.getElementById('pengeluaran') ,{hash: true});
-     
-            if(this.props.flag === 1){
-                data.id = this.props.edit.id;
-                data.operator = dataUser().username;
-                data.jumlah = rupiahToNumber(data.jumlah);
-                data.tanggal = this.props.edit.tanggal;
-                apiPost('pengeluaran/edit' ,data)
-                .then(res =>{
-                  if (res) {
+        let header =  serialize(document.getElementById('header') ,{hash: true});
+        let detail =  serialize(document.getElementById('detail') ,{hash: true});
+        let { row } = this.state;
+        let arrayDetail = [];
+        
+        row.map(x => (
+            arrayDetail.push({
+                tanggal:formatTanggal(new Date()),
+                kode_pengeluaran:'0',
+                operator: dataUser().username,
+                nama_acc:header.nama_acc,
+                keterangan: detail[`keterangan${x.key}`] || '',
+                jumlah: rupiahToNumber(detail[`jumlah${x.key}`] || '0'),
+            })
+        ))
+
+        let detail2 = arrayDetail.filter(x => x.keterangan !== '');
+        let hasil = {};
+        hasil.detail = detail2;
+
+        apiPost('pengeluaran/tambah' ,hasil)
+            .then(res =>{
+                if (res) {
                     this.props.getData();
-                  }
-                })
-            }else{
-                data.tanggal = formatTanggal(new Date());
-                data.operator = dataUser().username;
-                data.jumlah = rupiahToNumber(data.jumlah);
-                apiPost('pengeluaran/tambah' ,data)
-                .then(res =>{
-                  if (res) {
-                    this.props.getData();
-                  }
-                })
-            }
+                }
+        })  
     }
 
 
     render() {
-        let { modal , mode ,edit , flag , count } = this.props;
-        let { jenis } = this.state;
-        let tanggal = dt(new Date()).format('L').replace('/','').replace('/','');
+        let { modal , mode } = this.props;
+        let { jenis , row , total } = this.state;
 
         return (
             <div>
-                <Modal title={'Form Pengeluaran Biaya'} modal={modal} mode={mode} idform={'pengeluaran'} action={this.save}>
-                    {
-                        flag === 1 ?
-                        <div>
-                            <FormGroup>
-                            <Label for='kode_pengeluaran'>Kode Pengeluaran</Label>
-                                <Input type='text' name='kode_pengeluaran' readOnly defaultValue={edit.kode_pengeluaran} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for='nama_acc'>Jenis Biaya</Label>
-                                <Select className='select'  options={jenis.map(x => ({
-                                    value: x.kelompok_acc,
-                                    label: x.kelompok_acc
-                                }))}
-                                name='nama_acc' defaultValue={{ value: edit.nama_acc , label: edit.nama_acc}}/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for='keterangan'>Keterangan</Label>
-                                <Input type='text' name='keterangan' defaultValue={edit.keterangan}/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for='jumlah'>Nominal</Label>
-                                <Input type='text' name='jumlah' id='jumlah' onKeyUp={(e)=> inputRupiah('jumlah' , e.target.value)} defaultValue={formatRupiah(edit.jumlah,'')}/>
-                            </FormGroup>
-                        </div>
-                        :
-                        <div>
-                            <FormGroup>
-                            <Label for='kode_pengeluaran'>Kode Pengeluaran</Label>
-                                <Input type='text' name='kode_pengeluaran' readOnly defaultValue={`JB-${count+1}${tanggal}`} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for='nama_acc'>Jenis Biaya</Label>
-                                <Select className='select'  options={jenis.map(x => ({
-                                    value: x.kelompok_acc,
-                                    label: x.kelompok_acc
-                                }))}
-                                name='nama_acc'/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for='keterangan'>Keterangan</Label>
-                                <Input type='text' name='keterangan'/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for='jumlah'>Nominal</Label>
-                                <Input type='text' name='jumlah' id='jumlah' onKeyUp={(e)=> inputRupiah('jumlah' , e.target.value)}/>
-                            </FormGroup>
-                        </div>
-                        
-                    }
+                <Modal title={'Form Pengeluaran Biaya'} modal={modal} mode={mode} >
+                    <Form id='header'>
+                        <FormGroup>
+                            <Label for='nama_acc'>Jenis Biaya</Label>
+                            <Select autoFocus={true} className='select'  options={jenis.map(x => ({
+                                value: x.kelompok_acc,
+                                label: x.kelompok_acc
+                            }))}
+                            name='nama_acc'/>
+                        </FormGroup>
+                    </Form>
+                    <Form id='detail' className='mb-3'>
+                        <Table responsive style={{ width:'100%'}}>
+                            <thead>
+                                <tr>
+                                    <th>Keterangan</th>
+                                    <th>Nominal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { row }
+                            </tbody>
+                        </Table>
+                    </Form>
+                    <h3>{`Total : ${formatRupiah(total.toString(),'')}`}</h3>
+                    <Button style={{width: '100%'}} color='success' size='sm' onClick={this.save}>Simpan</Button>
                 </Modal>   
             </div>
         )

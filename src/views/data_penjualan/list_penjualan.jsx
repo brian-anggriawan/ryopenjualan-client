@@ -91,6 +91,14 @@ export default class list_penjualan extends Component {
                         text: 'Tanggal'
                     },
                     {
+                        dataField: 'jam',
+                        text: 'Jam'
+                    },
+                    {
+                        dataField: 'operator',
+                        text: 'Kasir'
+                    },
+                    {
                         dataField: 'nama_pelanggan',
                         text: 'Nama Pelanggan'
                     },
