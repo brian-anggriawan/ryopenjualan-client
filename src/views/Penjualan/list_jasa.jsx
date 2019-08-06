@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/list_modal';
 import Tabel from 'components/tabel_pick';
-import { Button , Input } from 'reactstrap';
+import {  Input } from 'reactstrap';
 import { formatRupiah } from 'app';
 
 export default class list_jasa extends Component {
 
     constructor(){
         super()
-        this.state = { value: ''}
+        this.state = { 
+            value: ''
+        }
 
-        this.action = this.action.bind(this);
         this.proses = this.proses.bind(this);
     }
 
@@ -20,10 +21,6 @@ export default class list_jasa extends Component {
         setJasa(data);
         this.setState({ value:''});
         mode();
-    }
-
-    action(id){
-        return <Button type='button' color='success' size='sm' onClick={()=> this.proses(id)}>Pilih</Button>
     }
 
     rupiah(nilai){
@@ -36,7 +33,12 @@ export default class list_jasa extends Component {
         let { value } = this.state;
 
         let filter = jasa.filter(x => {
-            return x.nama_jasa.toLowerCase().includes(value.toLowerCase())
+            if (x.nama_jasa.toLowerCase().includes(value.toLowerCase()) ) {
+                return x.nama_jasa.toLowerCase().includes(value.toLowerCase()) 
+            }else{
+                return x.jenis.toLowerCase().includes(value.toLowerCase()) 
+            }
+                
         });
 
         let pick = (e) =>{
@@ -44,16 +46,22 @@ export default class list_jasa extends Component {
                this.proses(filter[0].id)
            }
         }
+
+        const rowEvents = {
+            onClick: (e, row, rowIndex) => {
+              this.proses(row.id)
+            }
+          };
         
         return (
             <Modal title={'List Jasa'} mode={mode} modal={modal}>
                 <div className='mb-3'>
-                    <Input autoFocus={true} type='text' placeholder='Nama Jasa' onKeyUp={(e)=> pick(e.keyCode)} onChange={(e)=> this.setState({ value: e.target.value  })} value={value} />
+                    <Input autoFocus={true} type='text' placeholder='Search Nama Jasa Atau Jenis' onKeyUp={(e)=> pick(e.keyCode)} onChange={(e)=> this.setState({ value: e.target.value  })} value={value} />
                 </div>
                  <Tabel
                     data ={filter}
                     keyField = {'id'}
-                    proses={()=> ''}
+                    rowEvents={rowEvents}
                     columns ={[
                     {
                         dataField: 'kode_jasa',
@@ -80,11 +88,6 @@ export default class list_jasa extends Component {
                         dataField: 'harga_jual2',
                         formatter: this.rupiah,
                         text: 'Harga 2'
-                    },
-                    {
-                        dataField: 'id',
-                        formatter: this.action,
-                        text: 'Action'
                     }
                     ]}                            
                     width={{ width:'300px'}}

@@ -206,6 +206,38 @@ let Menu = [
       component:'Rekap_nota_penjualan_belum_lunas',
       icon: "sport_user-run",
       layout: "/admin",
+    },
+    {
+      path: "/report10",
+      name: "Laporan Penjualan Per Nota",
+      group: 'report',
+      component:'laporan_penjualan_nota',
+      icon: "sport_user-run",
+      layout: "/admin",
+    },
+    {
+      path: "/report11",
+      name: "Laporan Pelunasan",
+      group: 'report',
+      component:'laporan_pelunasan',
+      icon: "sport_user-run",
+      layout: "/admin",
+    },
+    {
+      path: "/report12",
+      name: "Laporan Jasa Desain",
+      group: 'report',
+      component:'laporan_jasa_desain',
+      icon: "sport_user-run",
+      layout: "/admin",
+    },
+    {
+      path: "/report13",
+      name: "Laporan Pengeluaran Biaya Detail",
+      group: 'report',
+      component:'Laporan_pengeluaran_biaya_detail',
+      icon: "sport_user-run",
+      layout: "/admin",
     }
   ];
   export default Menu;

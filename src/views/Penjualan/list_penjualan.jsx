@@ -2,7 +2,7 @@ import React from "react";
 import Page from 'layouts/Page';
 import { Input , Button , Row , Col , Form , FormGroup , Label , Table  } from 'reactstrap';
 import Serialize from 'form-serialize';
-import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber , dataUser , persenToNumber } from 'app';
+import { formatRupiah , msgdialog ,apiGet , inputQty , qtyToNumber ,rupiahToNumber , dataUser  } from 'app';
 import { IoMdTrash } from 'react-icons/io';
 import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
@@ -36,7 +36,6 @@ class Listpenjualan extends React.Component {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
     this.addRow = this.addRow.bind(this);
-    this.addRowInTable = this.addRowInTable.bind(this);
     this.save = this.save.bind(this);
     this.mode = this.mode.bind(this);
     this.setMember = this.setMember.bind(this);
@@ -57,20 +56,14 @@ class Listpenjualan extends React.Component {
     document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
     document.getElementById(`jenis${idInputJasa}`).value = data.jenis;
     document.getElementById(`qty${idInputJasa}`).value = '1';
-    document.getElementById(`qty${idInputJasa}`).focus();
+
     let cek = document.getElementById('kode_pelanggan').value;
 
     if (cek === '00') {
       document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');  
-      if (dataUser().tingkatan === 'Owner') {
-        document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
-      }
       document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
     }else{
       document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual2,'');
-      if (dataUser().tingkatan === 'Owner') {
-        document.getElementById(`hargadiskon${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
-      }
       document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
     }
 
@@ -117,26 +110,6 @@ class Listpenjualan extends React.Component {
       })
   }
 
-  addRowInTable(e , id , value){
-    let index = this.state.row.findIndex( x => x.key === id) + 1;
-    let count = this.state.row.length;
-    let diskon  = persenToNumber(value);
-
-    let qty = qtyToNumber(document.getElementById(`qty${id}`).value);
-    let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
-    let nilaiDiskon = ((diskon / 100) * harga).toString();
-    let hargaDiskon  = harga - parseInt(nilaiDiskon);
-
-   
-    document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. ');
-    document.getElementById(`total${id}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');  
-    this.hitungTotalHarga();  
-
-    if (e.keyCode === 13 && index === count) {
-      this.addRow();
-    }
-  }
-
   add(){
     apiGet('/penjualan/get_no_nota')
       .then(res  =>{
@@ -160,39 +133,6 @@ class Listpenjualan extends React.Component {
     let index = `${tanggal.getHours()}${tanggal.getMinutes()}${tanggal.getSeconds()}`;
    
     let copy = [ ...this.state.row];
-
-    dataUser().tingkatan === 'Owner' ?
-    copy.push( 
-      <tr key={id}>
-              <td>
-                <Input type='text' name={`kode${id}`} id={`kode${id}`} tabIndex={0} hidden/>
-                <Input type='text' name={`jasa${id}`} id={`jasa${id}`} placeholder='Tekan ctrl untk pilih jasa' onKeyUp={(e)=> this.pickJasa(e , id)} tabIndex={index + 1}/>
-                <Input type='text' name={`satuan${id}`} id={`satuan${id}`} tabIndex={0} hidden/>
-                <Input type='text' name={`jenis${id}`} id={`jenis${id}`} tabIndex={0} hidden />
-              </td>
-              <td>
-                <Input type='text' name={`qty${id}`} id={`qty${id}`} onKeyUp={(e)=> this.setQty(e ,id,e.target.value)} tabIndex={index + 2}/>
-              </td>
-              <td>
-                <Input onKeyUp={(e)=> this.addRowInTable(e , id , e.target.value)} type='number' name={`diskon${id}`} id={`diskon${id}`}  tabIndex={index + 3} />
-              </td>
-              <td>
-                <Input type='text' name={`harga${id}`} id={`harga${id}`} readOnly tabIndex='0' />
-              </td>
-              <td>
-                <Input type='text' name={`hargadiskon${id}`} id={`hargadiskon${id}`} readOnly tabIndex='0' />
-              </td>
-              <td>
-                <Input type='text' name={`total${id}`} id={`total${id}`} readOnly tabIndex='0'/>
-              </td>
-              <td>
-                <Button color='danger' size='sm' onClick={()=> this.deleteRow(id)} tabIndex='0'><IoMdTrash /></Button>
-              </td>
-            </tr>
-     )
-
-     :
-      
      copy.push( 
       <tr key={id}>
               <td>
@@ -220,28 +160,16 @@ class Listpenjualan extends React.Component {
 
   setQty(e ,id , value){
     inputQty(`qty${id}` , value);
-    let diskon;
-    if (dataUser().tingkatan === 'Owner') {
-      diskon = document.getElementById(`diskon${id}`).value || 0; 
-    }else{
-      diskon = 0;
-    }
     let harga = rupiahToNumber(document.getElementById(`harga${id}`).value);
-    let nilaiDiskon = ((parseInt(diskon) / 100) * harga);
-    let hargaDiskon  = harga - nilaiDiskon;
     let qty = qtyToNumber(value);
-    
-    if (dataUser().tingkatan === 'Owner') {
-      document.getElementById(`hargadiskon${id}`).value = formatRupiah((hargaDiskon).toString() , 'Rp. '); 
-    }else{
-      let index = this.state.row.findIndex( x => x.key === id) + 1;
-      let count = this.state.row.length;
+    let index = this.state.row.findIndex( x => x.key === id) + 1;
+    let count = this.state.row.length;
 
-      if (e.keyCode === 13 && index === count) {
-        this.addRow();
-      }
+    if (e.keyCode === 13 && index === count) {
+      this.addRow();
     }
-    document.getElementById(`total${id}`).value = formatRupiah((hargaDiskon * qty).toString(),'Rp. ');
+  
+    document.getElementById(`total${id}`).value = formatRupiah((harga * qty).toString(),'Rp. ');
     this.hitungTotalHarga();
   }
 
@@ -302,11 +230,9 @@ class Listpenjualan extends React.Component {
               nama_jasa: dataDetail[`jasa${x.key}`] || '', 
               satuan: dataDetail[`satuan${x.key}`] || '', 
               harga: rupiahToNumber(dataDetail[`harga${x.key}`] || '0'), 
-              diskon: dataDetail[`diskon${x.key}`] || 0, 
-              harga_diskon: rupiahToNumber(dataDetail[`hargadiskon${x.key}`] || '0'), 
               qty: qtyToNumber(dataDetail[`qty${x.key}`] || '0'), 
               total_harga: rupiahToNumber(dataDetail[`total${x.key}`] || '0'),
-              jenis_jasa: dataDetail[`jenis${x.key}`] || '',
+              jenis_jasa: dataDetail[`jenis${x.key}`] || ''
             })
           ))
         this.setState({ detail: arrayDetail.filter(x => x.kode_jasa !== '') , header: dataHeader });
@@ -416,27 +342,13 @@ class Listpenjualan extends React.Component {
               <Form id='detail' onSubmit={(e)=>  e.preventDefault()}>
               <Table responsive>
                 <thead>
-                    
-                      {
-                        dataUser().tingkatan === 'Owner' ? 
-                        <tr>
-                          <th style={{width: '35%' , fontSize:'20px'}}>Jasa</th>
-                          <th style={{width: '10%' , fontSize:'20px'}}>QTY</th>
-                          <th style={{width: '10%' , fontSize:'20px'}}>Diskon</th>
-                          <th style={{ fontSize: '20px'}}>Harga</th>
-                          <th style={{ fontSize: '20px'}}>Harga Diskon</th>
-                          <th style={{ fontSize: '20px'}}>Total</th>
-                          <th style={{ fontSize: '20px'}}>Hapus</th>
-                        </tr>
-                        :
-                        <tr>
-                          <th style={{width: '35%' , fontSize:'20px'}}>Jasa</th>
-                          <th style={{width: '10%' , fontSize:'20px'}}>QTY</th>
-                          <th style={{ fontSize: '20px'}}>Harga</th>
-                          <th style={{ fontSize: '20px'}}>Total</th>
-                          <th style={{ fontSize: '20px'}}>Hapus</th>
-                        </tr>
-                      }
+                  <tr>
+                      <th style={{width: '35%' , fontSize:'20px'}}>Jasa</th>
+                      <th style={{width: '10%' , fontSize:'20px'}}>QTY</th>
+                      <th style={{ fontSize: '20px'}}>Harga</th>
+                      <th style={{ fontSize: '20px'}}>Total</th>
+                      <th style={{ fontSize: '20px'}}>Hapus</th>
+                    </tr>
                 </thead>
                 <tbody>
                   {

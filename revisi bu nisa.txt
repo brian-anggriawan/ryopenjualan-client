@@ -1,26 +1,20 @@
-1. Menu Penjualan
-	v diskon muncul jika owner yang login
-	v untuk kredit dp hanya bisa 50 % kecuali owner
-	v sistem pembayaran -> lunas , kredit
-	v metode pembayaran -> transfer , edc , cash
-	v tambah inputan tanggal dan jam pengambilan dan nota
-	diskon bisa presentase atau nilai
-	v mengurangi penggunaan mouse semua harus pakai keayboard
-	v di nota tambah nama pembuat nota
+Menu Penjualan
+	v 1. Jika Owner bisa diskon kurang dari 50 %
+	v 2. List jasa di tampilkan 20 
+	v 3. List jasa tambah filter jenis
+	v 4. milih jasa sama member click row bukan tombol
+	v 5. diskon diganti di pembayaran dan bisa persen atau nominal
 
-2. Rekap pengeluaran 
-	tambah keterangan untuk pengeluaran
+Tambah Report
+	v 1. Report Penjualan
+	v 2. Rekap Penjualan Belum Lunas
+	v 3. Laporan Petugas Designer (Tambah Filter Nama Petugas Designer)
 
-3. Menu Pengeluaran
-	dalam satu transaksi keterangan bisa lebih sari satu
+Menu Hutang
+	1. Tambah List Lunas
 
-4. Menu tarif jasa
-	Owner bisa hapus semua dan impot dari excel
+Menu Operator 
+	1.Pilih Nota -> Tulis Area Cetak -> Terus isi detail jenis bahan
 
-5. tambah menu setup jenis bahan
-	input , update , delete
-
-6. tambah menu oprator
-	memilih nota bisa lebih dari satu
-	pilih keterangan dan jenis bahan
-	
+Menu Retur 
+	1. Pilih Nota Muncul Modal bisa Edit Dan Hapus

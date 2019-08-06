@@ -8,7 +8,9 @@ import { optionTable } from 'app';
 class Table extends React.Component{
 
     render(){
-        let { data , keyField , columns } = this.props;
+        let { data , keyField , columns ,rowEvents } = this.props;
+  
+        optionTable.sizePerPage = 20;
         return <ToolkitProvider
                     keyField={keyField}
                     data={ data }
@@ -21,6 +23,7 @@ class Table extends React.Component{
                                 <BootstrapTable pagination ={paginationFactory(optionTable)}
                                     { ...props.baseProps }
                                     striped
+                                    rowEvents={rowEvents}
                                 
                                 />   
                                 

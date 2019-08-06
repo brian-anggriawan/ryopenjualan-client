@@ -12,7 +12,8 @@ import {
     Form,
     Button
   } from "reactstrap";
-import { getDate , getMounth , getYears , formatTanggal , apiPostPenjualan } from 'app';
+import { getDate , getMounth , getYears , formatTanggal , apiPostPenjualan , apiGet } from 'app';
+import Select from 'react-select';
 
 
 let Harian = ({ onchange })=>{
@@ -35,7 +36,9 @@ export default class form_filter extends Component {
             tanggal1:getDate(),
             tanggal2:getDate(),
             bulan: getMounth(),
-            tahun: getYears()
+            tahun: getYears(),
+            petugas:[],
+            desain:''
         }
         this.set = this.set.bind(this);
         this.print = this.print.bind(this);
@@ -47,27 +50,57 @@ export default class form_filter extends Component {
         this.setState({ filter: value });
     }
 
+    componentDidMount(){
+        apiGet('/penjualan/result_data_petugas')
+        .then(res  =>{
+          this.setState({petugas: res });
+        })
+    }
+
     print(){
-        let { filter , tanggal1 , tanggal2 , bulan , tahun } = this.state;
+        let { filter , tanggal1 , tanggal2 , bulan , tahun , desain } = this.state;
         let { url } = this.props;
         let data ={};
 
-        switch(filter){
-            case 'tanggal':
-                data.filter = 'tanggal';
-                data.dari_tanggal = tanggal1;
-                data.sampai_tanggal = tanggal2;
-                break;
-            case 'bulan':
-                data.filter = 'bulan';
-                data.filter_bulan = bulan;
-                data.filter_tahun_bulan = tahun;
-                break;
-            case 'tahun':
-                data.filter = 'tahun';
-                data.filter_tahun = tahun;
-                break;
-            default: console.log('');
+        if (this.props.title === 'Laporan Jasa Desain') {
+            switch(filter){
+                case 'tanggal':
+                    data.filter = 'tanggal';
+                    data.dari_tanggal = tanggal1;
+                    data.sampai_tanggal = tanggal2;
+                    data.petugas_desain = desain;
+                    break;
+                case 'bulan':
+                    data.filter = 'bulan';
+                    data.filter_bulan = bulan < 10 ? `0${bulan}` : bulan;
+                    data.filter_tahun_bulan = tahun;
+                    data.petugas_desain = desain;
+                    break;
+                case 'tahun':
+                    data.filter = 'tahun';
+                    data.filter_tahun = tahun;
+                    data.petugas_desain = desain;
+                    break;
+                default: console.log('');
+            }  
+        }else{
+            switch(filter){
+                case 'tanggal':
+                    data.filter = 'tanggal';
+                    data.dari_tanggal = tanggal1;
+                    data.sampai_tanggal = tanggal2;
+                    break;
+                case 'bulan':
+                    data.filter = 'bulan';
+                    data.filter_bulan = bulan < 10 ? `0${bulan}` : bulan;
+                    data.filter_tahun_bulan = tahun;
+                    break;
+                case 'tahun':
+                    data.filter = 'tahun';
+                    data.filter_tahun = tahun;
+                    break;
+                default: console.log('');
+            }
         }
 
         apiPostPenjualan(`/${url}/print_laporan` , data)
@@ -99,7 +132,7 @@ export default class form_filter extends Component {
 
     render() {
         let { title , modal , mode } = this.props;
-        let { filter } = this.state;
+        let { filter , petugas } = this.state;
 
         return (
             <Modal title={title} modal={modal} mode={mode} >
@@ -189,6 +222,19 @@ export default class form_filter extends Component {
                             <Tahunan onchange={(e)=> this.handleChange(e , 'tahun')} />
                         </FormGroup>
                     </div>:''
+                }
+                {
+                    title === 'Laporan Jasa Desain' ?
+                    <FormGroup>
+                        <Label for='petugas_desain'>Petugas Design</Label>
+                        <Select options={petugas.map(x => ({
+                        value: x.kode_petugas,
+                        label: x.nama_petugas
+                        }))}
+                        name='petugas_desain' className='select' onchange={(e)=> this.setState({ desain: e.value})}/>
+                    </FormGroup>
+                    :''
+                    
                 }
                 </Form>
                 <Button style={{ width:'100%'}} color='primary' onClick={this.print}>

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormGroup , Label , Input ,Button , Form } from 'reactstrap';
 import Serialize from 'form-serialize';
 import Select from 'react-select';
-import { inputRupiah , rupiahToNumber ,formatRupiah , apiPostPenjualan , urlServer , msgerror} from 'app';
+import { inputRupiah , rupiahToNumber ,formatRupiah , apiPostPenjualan , urlServer , msgerror , dataUser} from 'app';
 
 export default class form_pembayaran extends Component {
     constructor(){
@@ -11,11 +11,14 @@ export default class form_pembayaran extends Component {
         this.state ={
             flagnorek: false,
             kredit: false,
-            text:''
+            text:'',
+            diskon: ''
         }
         this.simpan = this.simpan.bind(this);
         this.cara = this.cara.bind(this);
         this.metode = this.metode.bind(this);
+        this.hitungDiskon = this.hitungDiskon.bind(this);
+        this.metodDiskon = this.metodDiskon.bind(this)
     }
 
     cara(e){
@@ -41,6 +44,7 @@ export default class form_pembayaran extends Component {
 
     simpan(){
         let { header , detail , clear } = this.props;
+        let { diskon } = this.state;
         let data = Serialize(document.getElementById('pembayaran') ,{ hash: true });
         let cek  = data.cara_bayar;
 
@@ -48,7 +52,7 @@ export default class form_pembayaran extends Component {
             let bayar = parseInt(rupiahToNumber(data.bayar || '0'));
             let proses = (50 / 100) * header.total_harga;
             
-            if (proses > bayar ) {
+            if (proses > bayar && dataUser().tingkatan !== 'Owner' ) {
                 msgerror('Diskon Hanya Boleh Minimal 50%')
             }else{
                 header.cara_bayar = data.cara_bayar || '0';
@@ -56,7 +60,9 @@ export default class form_pembayaran extends Component {
                 header.bayar = rupiahToNumber(data.bayar || '0');
                 header.kembali = rupiahToNumber(data.kembali || '0');
                 header.tanggal_jam_ambil = data.tanggal_ambil || '0';
-                header.metode_pembayaran = data.metode_pembayaran || '0'
+                header.metode_pembayaran = data.metode_pembayaran || '0';
+                header.total_harga = rupiahToNumber(data.total_harga || '0');
+                header.diskon = diskon === 'Nominal' ? rupiahToNumber(data.diskon) : diskon === 'Persen' ? data.diskon : '0';
                 header.detail = detail;
                 apiPostPenjualan('penjualan/tambah' , header)
                     .then(res =>{
@@ -72,7 +78,9 @@ export default class form_pembayaran extends Component {
             header.bayar = rupiahToNumber(data.bayar || '0');
             header.kembali = rupiahToNumber(data.kembali || '0');
             header.tanggal_jam_ambil = data.tanggal_ambil || '0';
-            header.metode_pembayaran = data.metode_pembayaran || '0'
+            header.metode_pembayaran = data.metode_pembayaran || '0';
+            header.total_harga = rupiahToNumber(data.total_harga || '0');
+            header.diskon = diskon === 'Nominal' ? rupiahToNumber(data.diskon) : diskon === 'Persen' ? data.diskon : '0';
             header.detail = detail;
             apiPostPenjualan('penjualan/tambah' , header)
                 .then(res =>{
@@ -87,24 +95,46 @@ export default class form_pembayaran extends Component {
 
     bayar(value){
         inputRupiah('bayar' , value);
-        let total_harga = this.props.header.total_harga || 0;
+        let total = parseInt(rupiahToNumber(document.getElementById('total_harga').value || '0'));
         
-        return document.getElementById('kembali').value = formatRupiah((rupiahToNumber(value) - total_harga).toString(),'');
+        return document.getElementById('kembali').value = formatRupiah((rupiahToNumber(value) - total).toString(),'');
     }
 
     kredit(value){
         inputRupiah('bayar',value);
-        let total_harga = this.props.header.total_harga || 0;
+        let total = parseInt(rupiahToNumber(document.getElementById('total_harga').value || '0'));
 
-        return document.getElementById('kembali').value = formatRupiah((total_harga - rupiahToNumber(value)).toString(),'');
+        return document.getElementById('kembali').value = formatRupiah((total - rupiahToNumber(value)).toString(),'');
+    }
+
+    metodDiskon(e){
+        document.getElementById('total_harga').value = formatRupiah(this.props.header.total_harga.toString(),'');
+        if (e.value ==='Nominal') {
+           this.setState({ diskon: 'Nominal'}) 
+        }else{
+            this.setState({ diskon: 'Persen'})  
+        }
+    }
+
+    hitungDiskon(flag , value){
+        if (flag === 1) {
+            inputRupiah('nominal' , value);
+            let hasil = parseInt(rupiahToNumber(value)) - this.props.header.total_harga;
+            document.getElementById('total_harga').value = formatRupiah(hasil.toString() ,'');
+        }else{
+            let nilaiDiskon = ( value / 100) * this.props.header.total_harga;
+            let hasil = this.props.header.total_harga - nilaiDiskon;
+            document.getElementById('total_harga').value = formatRupiah(hasil.toString() ,'')
+        }
     }
 
 
     render() {
         let { modal , mode , header } = this.props;
-        let { flagnorek , kredit ,text } = this.state;
+        let { flagnorek , kredit ,text , diskon } = this.state;
 
         let total_harga = formatRupiah((header.total_harga || '0').toString(),'');
+        
         return (
             <Modal modal={modal} mode={mode} title={'Pembayaran'}>
                 <Form id='pembayaran'>
@@ -153,6 +183,38 @@ export default class form_pembayaran extends Component {
                             <Input type='number' name='no_rekening' tabIndex='5'/>
                         </FormGroup> : ''
 
+                    }
+                    {
+                        dataUser().tingkatan === 'Owner' ?
+                        <FormGroup>
+                            <Label for='type_diskon'>Metode Diskon</Label>
+                            <Select 
+                                options={[
+                                    {
+                                        label: 'Nominal',
+                                        value:'Nominal'
+                                    },
+                                    {
+                                        label: 'Persen',
+                                        value:'Persen'
+                                    }
+                                ]}
+                            name='type_diskon' tabIndex= '6' onChange={this.metodDiskon} className='select'/>
+                        </FormGroup>
+                        : ''
+                    }
+                    {
+                        diskon === 'Nominal' ?
+                        <FormGroup>
+                            <Label for='diskon'>Nominal</Label>
+                            <Input type='text' name='diskon' id='nominal' tabIndex='7' onKeyUp={(e)=>this.hitungDiskon(1 , e.target.value)} />
+                        </FormGroup>
+                        : diskon === 'Persen' ?
+                        <FormGroup>
+                            <Label for='diskon'>Persen</Label>
+                            <Input type='number' name='diskon' tabIndex='7' onKeyUp={(e)=> this.hitungDiskon(2 , e.target.value)} />
+                        </FormGroup>
+                        :''
                     }
                     {
                         kredit ?

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/list_modal';
 import Tabel from 'components/tabel_pick';
-import { Button , Input } from 'reactstrap';
+import { Input } from 'reactstrap';
 
 export default class list_member extends Component {
     constructor(){
         super()
         this.state = { value: ''}
 
-        this.action = this.action.bind(this);
         this.proses = this.proses.bind(this);    
     }
 
@@ -22,10 +21,6 @@ export default class list_member extends Component {
     }
     
 
-
-    action(id){
-        return <Button type='button' color='success' size='sm' onClick={()=> this.proses(id)}>Pilih</Button>
-    }
     render() {
         
         let { mode , modal , member } = this.props;
@@ -41,6 +36,12 @@ export default class list_member extends Component {
            }
         }
 
+        const rowEvents = {
+            onClick: (e, row, rowIndex) => {
+              this.proses(row.id)
+            }
+          };
+
         return (
             <Modal title={'List Member'} mode={mode} modal={modal}>
                 <div className='mb-3'>
@@ -49,8 +50,7 @@ export default class list_member extends Component {
                  <Tabel
                     data ={filter}
                     keyField = {'id'}
-                    field={'nama_pelanggan'}
-                    action={this.pick}
+                    rowEvents={rowEvents}
                     columns ={[
                     {
                         dataField: 'kode_pelanggan',
@@ -67,11 +67,6 @@ export default class list_member extends Component {
                     {
                         dataField: 'jenis_pelanggan',
                         text: 'Jenis'
-                    },
-                    {
-                        dataField: 'id',
-                        formatter: this.action,
-                        text: 'Action'
                     }
                     ]}                            
                 />
