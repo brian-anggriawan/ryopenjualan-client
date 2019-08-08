@@ -68,18 +68,18 @@ export default class form_filter extends Component {
                     data.filter = 'tanggal';
                     data.dari_tanggal = tanggal1;
                     data.sampai_tanggal = tanggal2;
-                    data.petugas_desain = desain;
+                    data.kode_desain = desain;
                     break;
                 case 'bulan':
                     data.filter = 'bulan';
                     data.filter_bulan = bulan < 10 ? `0${bulan}` : bulan;
                     data.filter_tahun_bulan = tahun;
-                    data.petugas_desain = desain;
+                    data.kode_desain = desain;
                     break;
                 case 'tahun':
                     data.filter = 'tahun';
                     data.filter_tahun = tahun;
-                    data.petugas_desain = desain;
+                    data.kode_desain = desain;
                     break;
                 default: console.log('');
             }  

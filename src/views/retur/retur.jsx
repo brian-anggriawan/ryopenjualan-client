@@ -8,6 +8,7 @@ import { apiPostGet , formatRupiah , inputQty , rupiahToNumber , qtyToNumber } f
 import cuid from 'cuid';
 import { IoMdTrash } from 'react-icons/io';
 import Serialize from 'form-serialize';
+import Loading from 'components/Loading';
 
 export default class retur extends Component {
     constructor(){
@@ -19,7 +20,12 @@ export default class retur extends Component {
             edit: false,
             row:[],
             total:0,
-            id_penjualan: ''
+            id_penjualan: '',
+            idInputJasa:'',
+            kode_pelanggan:'',
+            pembayaran: '',
+            detail:[],
+            loading: false
         }
         this.mode1 = this.mode1.bind(this);
         this.mode2 = this.mode2.bind(this);
@@ -31,21 +37,50 @@ export default class retur extends Component {
         this.setQty = this.setQty.bind(this);
         this.hitungTotalHarga = this.hitungTotalHarga.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
+        this.setJasa = this.setJasa.bind(this);
+        this.save = this.save.bind(this);
+        this.setLoading = this.setLoading.bind(this);
     }
 
     mode1(){
         this.setState({ modal1: !this.state.modal1 });
     }
 
-    mode2(){
-        this.setState({ modal2: !this.state.modal2 });
+    mode2(id){
+        this.setState({ modal2: !this.state.modal2  ,idInputJasa: id });
     }
 
     mode3(){
         this.setState({ modal3: !this.state.modal3 });
     }
 
-    getDetail(id , no_nota){
+    setLoading(){
+      this.setState({ loading: !this.state.loading });
+    }
+
+    setJasa(data){
+        let { idInputJasa , kode_pelanggan } = this.state;
+        document.getElementById(`kode${idInputJasa}`).value = data.kode_jasa;
+        document.getElementById(`jasa${idInputJasa}`).value = data.nama_jasa;
+        document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
+        document.getElementById(`jenis${idInputJasa}`).value = data.jenis;
+        document.getElementById(`qty${idInputJasa}`).value = '1';
+    
+        let cek = kode_pelanggan;
+    
+        if (cek === '00') {
+          document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');  
+          document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
+        }else{
+          document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual2,'');
+          document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual2 ,'');
+        }
+    
+        this.hitungTotalHarga();
+    
+      }
+
+    getDetail(id , no_nota , kode_pelanggan , status_hutang){
         document.getElementById('no_nota').value = no_nota;
         apiPostGet('retur/result_nota_detail' , { id_penjualan: id})
             .then(res =>{
@@ -80,7 +115,7 @@ export default class retur extends Component {
                      )
                 }
 
-                this.setState({ edit: true , id_penjualan: id , row: copy });
+                this.setState({ edit: true , id_penjualan: id , row: copy , pembayaran: status_hutang ,kode_pelanggan:kode_pelanggan });
                 this.hitungTotalHarga();
             })
     }
@@ -90,7 +125,11 @@ export default class retur extends Component {
             edit: false,
             total: 0,
             row:[],
-            id_penjualan:''
+            id_penjualan:'',
+            idInputJasa:'',
+            kode_pelanggan:'',
+            pembayaran:'',
+            detail:[]
         })
         document.getElementById('no_nota').value = '';
     }
@@ -128,7 +167,7 @@ export default class retur extends Component {
 
     pickJasa(e ,id){
         if (e.keyCode === 17) {
-          this.mode3(id)
+          this.mode2(id);
         }
     }
 
@@ -167,15 +206,34 @@ export default class retur extends Component {
           this.hitungTotalHarga();
         }) 
     }
+
+    save(){
+        let dataDetail = Serialize( document.getElementById('detail') , { hash : true });
+        let arrayDetail = [];
+
+        this.state.row.map(x => (
+          arrayDetail.push({
+            kode_jasa: dataDetail[`kode${x.key}`] || '', 
+            nama_jasa: dataDetail[`jasa${x.key}`] || '', 
+            satuan: dataDetail[`satuan${x.key}`] || '', 
+            harga: rupiahToNumber(dataDetail[`harga${x.key}`] || '0'), 
+            qty: qtyToNumber(dataDetail[`qty${x.key}`] || '0'), 
+            total_harga: rupiahToNumber(dataDetail[`total${x.key}`] || '0'),
+            jenis_jasa: dataDetail[`jenis${x.key}`] || ''
+          })
+        ))
+      this.setState({ detail: arrayDetail.filter(x => x.kode_jasa !== '')});
+      this.mode3();
+}
     
 
     render() {
-        let { modal1 , modal2 , modal3 , row , edit , total } = this.state;
+        let { modal1 , modal2 , modal3 , row , edit , total , detail , pembayaran , id_penjualan , loading  } = this.state;
         return (
             <Page title={'Retur Nota'}>
                 <Nota mode={this.mode1} modal={modal1} proses={this.getDetail} />
-                <Jasa mode={this.mode2} modal={modal2} />
-                <FormBayar mode={this.mode3} modal={modal3} />
+                <Jasa mode={this.mode2} modal={modal2} setJasa={this.setJasa} />
+                <FormBayar mode={this.mode3} modal={modal3} detail={detail} pembayaran={pembayaran} id_penjualan ={id_penjualan} total={total} clear={this.cancel} />
                 <Row>
                     <Col>
                         <Input type='text' id='no_nota' className='mt-2' name='no_nota' readOnly />
@@ -185,6 +243,8 @@ export default class retur extends Component {
                     </Col>
                 </Row>
                 {
+                  loading ? <Loading active={loading} />
+                  :
                     edit ? 
                     <Form id='detail'>
                         <Table>
@@ -206,15 +266,16 @@ export default class retur extends Component {
                         <h3>{`Total Harga : ${formatRupiah(total.toString(),'')}`}</h3>
                         <Row>
                             <Col>
-                                <Button color='success' size='sm' type='button' style={{ width:'100%'}} tabIndex='0'>Proses</Button>
+                                <Button color='success' size='sm' type='button' style={{ width:'100%'}} tabIndex='0' onClick={this.save}>Proses</Button>
                             </Col>
                             <Col>
                                 <Button color='danger' size='sm' type='button'  style={{ width:'100%'}}  tabIndex='0' onClick={this.cancel}>Cancel</Button>
                             </Col>
                         </Row>
                     </Form>
-                    : ''
+                :''
                 }
+                
             </Page>
         )
     }

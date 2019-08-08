@@ -16,7 +16,7 @@ export default class list_jasa extends Component {
     }
 
     proses(id){
-        let { setJasa , mode , jasa} = this.props;
+        let { setJasa , mode , jasa } = this.props;
         let data = jasa.filter(x => x.id === id)[0];
         setJasa(data);
         this.setState({ value:''});

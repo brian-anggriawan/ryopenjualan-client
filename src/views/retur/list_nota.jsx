@@ -28,8 +28,8 @@ export default class list_nota extends Component {
     proses(id){
         let { proses , mode } = this.props;
         let { nota } = this.state;
-        let nonota = nota.filter(x => x.id === id)[0].no_nota;
-        proses(id , nonota);
+        let data = nota.filter(x => x.id === id)[0];
+        proses(id , data.no_nota , data.kode_pelanggan , data.status_hutang);
         this.setState({ value:''});
         mode();
     }
@@ -37,12 +37,12 @@ export default class list_nota extends Component {
     render() {
         let { mode , modal } = this.props;
         let { nota , value } = this.state;
-
+ 
         let filter = nota.filter(x => {
-            return x.no_nota.toLowerCase().includes(value.toLowerCase());
+            let nota = x.no_nota || '';
+            return nota.toLowerCase().includes(value.toLowerCase());
         })
 
-        
         let pick = (e) =>{
             if (e === 13) {
                 this.proses(filter[0].id)
@@ -54,7 +54,6 @@ export default class list_nota extends Component {
                this.proses(row.id)
              }
            };
-
         return (
             <Modal title={'List Nota'} mode={mode} modal={modal}>
                 <Input className='mb-3' type='text' autoFocus={true} placeholder='Cari Nota Nota' onKeyUp={(e)=> pick(e.keyCode)} onChange={(e)=> this.setState({ value: e.target.value })} value={value} />
