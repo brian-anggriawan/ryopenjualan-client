@@ -55,44 +55,75 @@ export default class form_hutang extends Component {
     }
 
     render() {
-        let { modal , mode , title , dataBayar ,loading } = this.props;
+        let { modal , mode , title , dataBayar ,loading , flag } = this.props;
         return (
             <Modal modal={modal} mode={mode} title={title} >
-                <Form id='save'>
-                    <Input type='text' name='bayar' className='mb-3' id='bayar' onKeyUp={(e)=> inputRupiah('bayar' , e.target.value)} />
-                </Form>
-                <FormGroup className='ml-4'>
-                        <Input className="custom-control-input" type='checkbox' name='lunas' id='lunas' onChange={this.check} />
-                        <Label className="custom-control-label" htmlFor='lunas'>Lunas</Label>
-                </FormGroup>
-                <Button type='button' color='success' size='sm' style={{width: '100%'}} onClick={this.save}>Bayar</Button>
-                <hr />
                 {
-                    loading ? <Loading active={loading} />
-                    :
-                    <Tabel
-                        data ={[dataBayar]}
-                        keyField = {'id'}
-                        columns ={[
-                            {
-                                dataField: 'tanggal',
-                                text: 'Tanggal'
-                            },
-                            {
-                                dataField: 'bayar',
-                                text: 'Bayar',
-                                formatter: this.format
-                            },
-                            {
-                                dataField: 'sisa',
-                                text: 'Sisa',
-                                formatter: this.format
+                    flag === 1 ?
+                    <div>
+                         <Form id='save'>
+                            <Input type='text' name='bayar' className='mb-3' id='bayar' onKeyUp={(e)=> inputRupiah('bayar' , e.target.value)} />
+                        </Form>
+                        <FormGroup className='ml-4'>
+                            <Input className="custom-control-input" type='checkbox' name='lunas' id='lunas' onChange={this.check} />
+                            <Label className="custom-control-label" htmlFor='lunas'>Lunas</Label>
+                        </FormGroup>
+                        <Button type='button' color='success' size='sm' style={{width: '100%'}} onClick={this.save}>Bayar</Button>
+                        <hr />
+                    
+                        { loading ? <Loading active={loading} />
+                            :
+                            <Tabel
+                                data ={[dataBayar]}
+                                keyField = {'id'}
+                                columns ={[
+                                    {
+                                        dataField: 'tanggal',
+                                        text: 'Tanggal'
+                                    },
+                                    {
+                                        dataField: 'bayar',
+                                        text: 'Bayar',
+                                        formatter: this.format
+                                    },
+                                    {
+                                        dataField: 'sisa',
+                                        text: 'Sisa',
+                                        formatter: this.format
+                                    }
+                                ]}                            
+                                    width={{ width:'300px'}}
+                                />
+
                             }
-                        ]}                            
+
+                    </div> 
+                    : flag === 2 ?
+                        <Tabel
+                            data ={[dataBayar]}
+                            keyField = {'id'}
+                            columns ={[
+                                {
+                                        dataField: 'tanggal',
+                                        text: 'Tanggal'
+                                },
+                                {
+                                        dataField: 'bayar',
+                                        text: 'Bayar',
+                                        formatter: this.format
+                                },
+                                {
+                                        dataField: 'sisa',
+                                        text: 'Sisa',
+                                        formatter: this.format
+                                }
+                            ]}                            
                             width={{ width:'300px'}}
-                        />
+                        /> :''
+
 
                 }
+                
             </Modal>
         )
     }

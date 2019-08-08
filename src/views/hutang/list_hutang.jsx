@@ -17,7 +17,8 @@ export default class list_hutang extends Component {
             dataNota:[],
             dataBayar:[],
             loading: false,
-            lunas:[]
+            lunas:[],
+            flag: 0
         }
         this.button = this.button.bind(this);
         this.mode = this.mode.bind(this);
@@ -27,6 +28,7 @@ export default class list_hutang extends Component {
         this.refreshnota = this.refreshnota.bind(this);
         this.button2 = this.button2.bind(this);
         this.refreshAll = this.refreshAll.bind(this);
+        this.cekDetail = this.cekDetail.bind(this);
     }
 
     componentDidMount(){
@@ -62,10 +64,19 @@ export default class list_hutang extends Component {
         let data = this.state.nota.filter( x => x.id === id)[0]; 
         apiGet1('pembayaran_hutang/row_data_pembayaran_hutang' , id)
             .then(res =>{
-                this.setState({ title: data.no_nota , dataNota: data , dataBayar: res });
+                this.setState({ title: data.no_nota , dataNota: data , dataBayar: res , flag: 1 });
                 this.mode();  
             });
         
+    }
+
+    cekDetail(id){
+        let data = this.state.lunas.filter( x => x.id === id)[0]; 
+        apiGet1('pembayaran_hutang/row_data_pembayaran_hutang' , id)
+            .then(res =>{
+                this.setState({ title: data.no_nota , dataNota: data , dataBayar: res , flag: 2 });
+                this.mode();  
+            });
     }
 
     refreshnota(data){
@@ -77,7 +88,7 @@ export default class list_hutang extends Component {
     }
 
     button2(id){
-        return <Button type='button' color='success' onClick={()=> this.bayar(id)} size='sm'>Detail Pembayaran</Button> 
+        return <Button type='button' color='success' onClick={()=> this.cekDetail(id)} size='sm'>Detail Pembayaran</Button> 
     }
 
     formatUang(nilai){
@@ -89,10 +100,10 @@ export default class list_hutang extends Component {
     }
 
     render() {
-        let { nota , modal , title , dataBayar , dataNota , loading  , tab , lunas} = this.state;
+        let { nota , modal , title , dataBayar , dataNota , loading  , tab , lunas , flag} = this.state;
         return (
             <Page title='List Hutang'>
-                <Form modal={modal} mode={this.mode} title={title} dataBayar={dataBayar} nota={dataNota} loading={loading} setloading={this.setLoading} refresh={this.refreshnota} refreshAll={this.refreshAll} />
+                <Form modal={modal} mode={this.mode} title={title} dataBayar={dataBayar} nota={dataNota} loading={loading} setloading={this.setLoading} refresh={this.refreshnota} refreshAll={this.refreshAll} flag={flag} />
                 <Nav tabs className='mb-3'>
                     <NavItem>
                         <NavLink

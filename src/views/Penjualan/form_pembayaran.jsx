@@ -58,7 +58,7 @@ export default class form_pembayaran extends Component {
                 header.cara_bayar = data.cara_bayar || '0';
                 header.no_rekening = data.no_rekening || 0;
                 header.bayar = rupiahToNumber(data.bayar || '0');
-                header.kembali = rupiahToNumber(data.kembali || '0');
+                header.kembali = '-'+rupiahToNumber(data.kembali || '0');
                 header.tanggal_jam_ambil = data.tanggal_ambil || '0';
                 header.metode_pembayaran = data.metode_pembayaran || '0';
                 header.total_harga = rupiahToNumber(data.total_harga || '0');
