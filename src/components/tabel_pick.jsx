@@ -9,12 +9,16 @@ class Table extends React.Component{
 
     render(){
         let { data , keyField , columns ,rowEvents } = this.props;
-  
+
         optionTable.sizePerPage = 20;
+        for(let i = 0; i < columns.length; i++){
+            columns[i].style = { cursor:'pointer'}
+        }
+
         return <ToolkitProvider
                     keyField={keyField}
                     data={ data }
-                    columns={ columns }    
+                    columns={ columns }   
                 >
                     {
                     props => (
@@ -24,6 +28,8 @@ class Table extends React.Component{
                                     { ...props.baseProps }
                                     striped
                                     rowEvents={rowEvents}
+                                    hover
+                                    condensed
                                 
                                 />   
                                 

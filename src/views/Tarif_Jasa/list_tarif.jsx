@@ -5,7 +5,7 @@ import Tabel from 'components/tabel';
 import ButtonAction from 'components/ButtonAction';
 import Loading from 'components/Loading';
 import { Button } from 'reactstrap';
-import { apiGet , apiPost , msgdialog , formatRupiah } from 'app';
+import { apiGet , apiPost , msgdialog , formatRupiah , dataUser } from 'app';
 
 class Listtarif extends React.Component {
   constructor(){
@@ -73,7 +73,8 @@ class Listtarif extends React.Component {
   }
 
   button(id){
-    return <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
+    return  dataUser().tingkatan === 'Owner' ? <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
+            : <Button type='button' color='danger' size='sm'>No Access</Button>
   }
 
   tambah(){

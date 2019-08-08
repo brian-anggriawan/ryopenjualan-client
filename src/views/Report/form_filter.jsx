@@ -14,6 +14,7 @@ import {
   } from "reactstrap";
 import { getDate , getMounth , getYears , formatTanggal , apiPostPenjualan , apiGet } from 'app';
 import Select from 'react-select';
+import Serialize from 'form-serialize';
 
 
 let Harian = ({ onchange })=>{
@@ -37,8 +38,7 @@ export default class form_filter extends Component {
             tanggal2:getDate(),
             bulan: getMounth(),
             tahun: getYears(),
-            petugas:[],
-            desain:''
+            petugas:[]
         }
         this.set = this.set.bind(this);
         this.print = this.print.bind(this);
@@ -58,7 +58,10 @@ export default class form_filter extends Component {
     }
 
     print(){
-        let { filter , tanggal1 , tanggal2 , bulan , tahun , desain } = this.state;
+        let { filter , tanggal1 , tanggal2 , bulan , tahun  } = this.state;
+
+       let desain =  Serialize(document.getElementById('report') ,{ hash: true}).petugas_desain;
+
         let { url } = this.props;
         let data ={};
 
@@ -68,18 +71,18 @@ export default class form_filter extends Component {
                     data.filter = 'tanggal';
                     data.dari_tanggal = tanggal1;
                     data.sampai_tanggal = tanggal2;
-                    data.kode_desain = desain;
+                    data.kode_petugas_design = desain;
                     break;
                 case 'bulan':
                     data.filter = 'bulan';
                     data.filter_bulan = bulan < 10 ? `0${bulan}` : bulan;
                     data.filter_tahun_bulan = tahun;
-                    data.kode_desain = desain;
+                    data.kode_petugas_design = desain;
                     break;
                 case 'tahun':
                     data.filter = 'tahun';
                     data.filter_tahun = tahun;
-                    data.kode_desain = desain;
+                    data.kode_petugas_design = desain;
                     break;
                 default: console.log('');
             }  
@@ -231,7 +234,7 @@ export default class form_filter extends Component {
                         value: x.kode_petugas,
                         label: x.nama_petugas
                         }))}
-                        name='petugas_desain' className='select' onchange={(e)=> this.setState({ desain: e.value})}/>
+                        name='petugas_desain' className='select'/>
                     </FormGroup>
                     :''
                     
