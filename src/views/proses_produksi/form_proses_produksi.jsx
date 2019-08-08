@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Modal from 'layouts/list_modal';
 import { Input , Table , Form , FormGroup , Label} from 'reactstrap';
 import cuid from 'cuid';
-import { apiGet } from 'app';
+import { apiGet , apiPost , dataUser } from 'app';
 import Select from 'react-select';
-import { Button } from 'semantic-ui-react';
+import { Button } from 'reactstrap';
+import Serialize from 'form-serialize';
 
 export default class form_proses_produksi extends Component {
     constructor(){
@@ -17,6 +18,7 @@ export default class form_proses_produksi extends Component {
 
         this.addRow = this.addRow.bind(this);
         this.dinamicRow = this.dinamicRow.bind(this);
+        this.simpan = this.simpan.bind(this);
     }
 
     addRow(){
@@ -58,6 +60,38 @@ export default class form_proses_produksi extends Component {
        
     }
 
+    simpan(){
+        let { ket  , row } = this.state;
+        let { mode , refresh , nonota } = this.props;
+
+        let dt  = Serialize(document.getElementById('detail') , { hash : true });
+        let data = {
+            no_nota: nonota,
+            operator:dataUser().username,
+            area_cetak: ket
+        };
+
+        let arrayDetail = [];
+        
+        row.map(x => (
+            arrayDetail.push({
+                nama_jenis_bahan:dt[`bahan${x.key}`] || ''
+            })
+        ))
+
+        let detail2 = arrayDetail.filter(x => x.nama_jenis_bahan !== '');
+        data.detail = detail2;
+
+        apiPost('operator_produksi/tambah' , data)
+            .then(res =>{
+                if (res) {
+                    mode();
+                    refresh();
+                }
+            })
+
+    }
+
     render() {
         let { mode , modal , nonota } = this.props;
         let { row } = this.state;
@@ -68,7 +102,7 @@ export default class form_proses_produksi extends Component {
                     <Input type='text' autoFocus={true} onChange={(e)=> this.setState({ ket: e.target.value })} />
                 </FormGroup>
                 <Form id='detail'>
-                    <Table responsive style={{ width: '100%'}}>
+                    <Table style={{ width: '100%'}}>
                         <thead>
                             <tr>
                                 <th>Jenis Bahan</th>
@@ -79,7 +113,7 @@ export default class form_proses_produksi extends Component {
                         </tbody>
                     </Table>
                 </Form>
-                <Button color='success' type='button' size='sm' style={{ width: '100%'}}>Simpan</Button>
+                <Button onClick={this.simpan} color='success' type='button' size='sm' style={{ width: '100%'}}>Simpan</Button>
             </Modal>
         )
     }

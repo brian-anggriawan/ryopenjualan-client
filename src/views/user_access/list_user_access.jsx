@@ -117,7 +117,6 @@ class Listuseraccess extends React.Component {
           proses[i].cek = false;
         }
       }
-      console.log(proses)
       this.setState({ dataMenu: proses.filter(x => x.cek !== true) });
       this.mode(); 
     }

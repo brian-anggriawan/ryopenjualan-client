@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/list_modal';
 import Tabel from 'components/tabel';
-import { Input , Button , Form} from 'reactstrap';
+import { Input , Button , Form , FormGroup , Label} from 'reactstrap';
 import { formatRupiah , inputRupiah, rupiahToNumber , apiPost , apiGet1} from 'app';
 import Serialize from 'form-serialize';
 import Loading from 'components/Loading';
@@ -12,6 +12,7 @@ export default class form_hutang extends Component {
         this.state={}
 
         this.save = this.save.bind(this);
+        this.check = this.check.bind(this);
     }
 
     format(value){
@@ -31,14 +32,26 @@ export default class form_hutang extends Component {
         data.nama_pelanggan = nota.nama_pelanggan;
         data.bayar = bayar;
         data.sisa = sisa;
+        data.kembali = nota.kembali;
 
         apiPost('pembayaran_hutang/tambah' ,data);
         
         apiGet1('pembayaran_hutang/row_data_pembayaran_hutang' , nota.id)
         .then(res =>{
+            this.props.refreshAll();
             this.props.refresh(res);
-            this.props.setloading();
+            this.props.mode();
         });
+    }
+
+    check(){
+        let cek = document.getElementById('lunas').checked;
+
+        if (cek) {
+            document.getElementById('bayar').value = formatRupiah(this.props.nota.kembali.toString() ,'');
+        }else{
+            document.getElementById('bayar').value = formatRupiah('0','')
+        }
     }
 
     render() {
@@ -46,9 +59,13 @@ export default class form_hutang extends Component {
         return (
             <Modal modal={modal} mode={mode} title={title} >
                 <Form id='save'>
-                    <Input type='text' name='bayar' id='bayar' onKeyUp={(e)=> inputRupiah('bayar' , e.target.value)} />
-                    <Button type='button' color='success' size='sm' style={{width: '100%'}} onClick={this.save}>Bayar</Button>
+                    <Input type='text' name='bayar' className='mb-3' id='bayar' onKeyUp={(e)=> inputRupiah('bayar' , e.target.value)} />
                 </Form>
+                <FormGroup className='ml-4'>
+                        <Input className="custom-control-input" type='checkbox' name='lunas' id='lunas' onChange={this.check} />
+                        <Label className="custom-control-label" htmlFor='lunas'>Lunas</Label>
+                </FormGroup>
+                <Button type='button' color='success' size='sm' style={{width: '100%'}} onClick={this.save}>Bayar</Button>
                 <hr />
                 {
                     loading ? <Loading active={loading} />

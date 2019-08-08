@@ -14,7 +14,7 @@ Menu Hutang
 	1. Tambah List Lunas
 
 Menu Operator 
-	1.Pilih Nota -> Tulis Area Cetak -> Terus isi detail jenis bahan
+	v 1.Pilih Nota -> Tulis Area Cetak -> Terus isi detail jenis bahan
 
 Menu Retur 
 	1. Pilih Nota Muncul Modal bisa Edit Dan Hapus

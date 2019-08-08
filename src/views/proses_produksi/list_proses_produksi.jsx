@@ -64,7 +64,7 @@ export default class list_proses_produksi extends Component {
           }
         return (
             <Page title={'Proses Produksi'}> 
-                <Form modal={modal} mode={this.mode} nonota={nonota} />
+                <Form modal={modal} mode={this.mode} nonota={nonota} refresh={this.refresh} />
                 <Tabel
                 data ={nota}
                 keyField = {'id'}

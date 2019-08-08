@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Page from 'layouts/Page';
 import Tabel from 'components/tabel';
 import { apiGet , formatRupiah , apiGet1 } from 'app';
-import { Button} from 'reactstrap';
+import { Button , NavLink  , TabContent ,TabPane , Nav , NavItem} from 'reactstrap';
 import Form from './form_hutang';
-//import classnames from 'classnames';
+import classnames from 'classnames';
 
 export default class list_hutang extends Component {
     constructor(){
@@ -16,7 +16,8 @@ export default class list_hutang extends Component {
             tab: '1',
             dataNota:[],
             dataBayar:[],
-            loading: false
+            loading: false,
+            lunas:[]
         }
         this.button = this.button.bind(this);
         this.mode = this.mode.bind(this);
@@ -24,13 +25,24 @@ export default class list_hutang extends Component {
         this.toggle = this.toggle.bind(this);
         this.setLoading = this.setLoading.bind(this);
         this.refreshnota = this.refreshnota.bind(this);
+        this.button2 = this.button2.bind(this);
+        this.refreshAll = this.refreshAll.bind(this);
     }
 
     componentDidMount(){
+       this.refreshAll();
+    }
+
+    refreshAll(){
         apiGet('pembayaran_hutang/result_data_pembayaran_hutang')
+        .then(res =>{
+            this.setState({ nota: res });
+        });
+    
+        apiGet('pembayaran_hutang/result_data_pembayaran_hutang_lunas')
             .then(res =>{
-                this.setState({ nota: res });
-            })
+                this.setState({ lunas: res });
+        })
     }
 
     toggle(value){
@@ -64,6 +76,10 @@ export default class list_hutang extends Component {
         return <Button type='button' color='success' onClick={()=> this.bayar(id)} size='sm'>Bayar</Button>
     }
 
+    button2(id){
+        return <Button type='button' color='success' onClick={()=> this.bayar(id)} size='sm'>Detail Pembayaran</Button> 
+    }
+
     formatUang(nilai){
         return formatRupiah(nilai,'');
     }
@@ -73,15 +89,16 @@ export default class list_hutang extends Component {
     }
 
     render() {
-        let { nota , modal , title , dataBayar , dataNota , loading } = this.state;
+        let { nota , modal , title , dataBayar , dataNota , loading  , tab , lunas} = this.state;
         return (
             <Page title='List Hutang'>
-                <Form modal={modal} mode={this.mode} title={title} dataBayar={dataBayar} nota={dataNota} loading={loading} setloading={this.setLoading} refresh={this.refreshnota} />
-                {/* <Nav tabs className='mb-3'>
+                <Form modal={modal} mode={this.mode} title={title} dataBayar={dataBayar} nota={dataNota} loading={loading} setloading={this.setLoading} refresh={this.refreshnota} refreshAll={this.refreshAll} />
+                <Nav tabs className='mb-3'>
                     <NavItem>
                         <NavLink
                              className={classnames({ active: tab === '1' })}
                              onClick={() => { this.toggle('1'); }}
+                             style={{ cursor:'pointer'}}
                         >
                             Kredit
                         </NavLink>
@@ -90,6 +107,7 @@ export default class list_hutang extends Component {
                         <NavLink
                              className={classnames({ active: tab === '2' })}
                              onClick={() => { this.toggle('2'); }}
+                             style={{ cursor:'pointer'}}
                         >
                             Lunas
                         </NavLink>
@@ -98,94 +116,98 @@ export default class list_hutang extends Component {
                 <TabContent activeTab={tab}>
                     <TabPane tabId='1'>
                         <Tabel
-                        data ={nota}
-                        keyField = {'id'}
-                        columns ={[
-                            {
-                                dataField: 'tanggal',
-                                text: 'Tanggal'
-                            },
-                            {
-                                dataField: 'no_nota',
-                                text: 'No Nota'
-                            },
-                            {
-                                dataField: 'nama_pelanggan',
-                                text: 'Nama Pelanggan'
-                            },
-                            {
-                                dataField: 'alamat',
-                                text: 'Alamat'
-                            },
-                            {
-                                dataField: 'no_telepon',
-                                text: 'No Telp'
-                            },
-                            {
-                                dataField: 'total_harga',
-                                text: 'Total Harga',
-                                formatter: this.formatUang
-                            },
-                            {
-                                dataField: 'bayar',
-                                text: 'DP',
-                                formatter: this.formatUang
-                            },
-                            {
-                            dataField: 'id',
-                            formatter: this.button,
-                            text: 'Action'
-                            }
-                        ]}                            
-                            width={{ width:'300px'}}
+                            data ={nota}
+                            keyField = {'id'}
+                            columns ={[
+                                {
+                                    dataField: 'tanggal',
+                                    text: 'Tanggal'
+                                },
+                                {
+                                    dataField: 'no_nota',
+                                    text: 'No Nota'
+                                },
+                                {
+                                    dataField: 'nama_pelanggan',
+                                    text: 'Nama Pelanggan'
+                                },
+                                {
+                                    dataField: 'alamat',
+                                    text: 'Alamat'
+                                },
+                                {
+                                    dataField: 'no_telepon',
+                                    text: 'No Telp'
+                                },
+                                {
+                                    dataField: 'total_harga',
+                                    text: 'Total Harga',
+                                    formatter: this.formatUang
+                                },
+                                {
+                                    dataField: 'bayar',
+                                    text: 'Bayar',
+                                    formatter: this.formatUang
+                                },
+                                {
+                                    dataField: 'kembali',
+                                    text: 'Sisa',
+                                    formatter: this.formatUang
+                                },
+                                {
+                                dataField: 'id',
+                                formatter: this.button,
+                                text: 'Action'
+                                }
+                            ]}                            
+                                width={{ width:'300px'}}
                         />
                     </TabPane>
                     <TabPane tabId='2'>
-                        Haloo
-                    </TabPane>
-                </TabContent> */}
                     <Tabel
-                        data ={nota}
-                        keyField = {'id'}
-                        columns ={[
-                            {
-                                dataField: 'tanggal',
-                                text: 'Tanggal'
-                            },
-                            {
-                                dataField: 'no_nota',
-                                text: 'No Nota'
-                            },
-                            {
-                                dataField: 'nama_pelanggan',
-                                text: 'Nama Pelanggan'
-                            },
-                            {
-                                dataField: 'alamat',
-                                text: 'Alamat'
-                            },
-                            {
-                                dataField: 'no_telepon',
-                                text: 'No Telp'
-                            },
-                            {
-                                dataField: 'total_harga',
-                                text: 'Total Harga',
-                                formatter: this.formatUang
-                            },
-                            {
-                                dataField: 'bayar',
-                                text: 'DP',
-                                formatter: this.formatUang
-                            },
-                            {
-                            dataField: 'id',
-                            formatter: this.button,
-                            text: 'Action'
-                            }
-                        ]}                            
-                            width={{ width:'300px'}}
+                            data ={lunas}
+                            keyField = {'id'}
+                            columns ={[
+                                {
+                                    dataField: 'tanggal',
+                                    text: 'Tanggal'
+                                },
+                                {
+                                    dataField: 'no_nota',
+                                    text: 'No Nota'
+                                },
+                                {
+                                    dataField: 'nama_pelanggan',
+                                    text: 'Nama Pelanggan'
+                                },
+                                {
+                                    dataField: 'alamat',
+                                    text: 'Alamat'
+                                },
+                                {
+                                    dataField: 'no_telepon',
+                                    text: 'No Telp'
+                                },
+                                {
+                                    dataField: 'total_harga',
+                                    text: 'Total Harga',
+                                    formatter: this.formatUang
+                                },
+                                {
+                                    dataField: 'bayar',
+                                    text: 'DP',
+                                    formatter: this.formatUang
+                                },
+                                {
+                                    dataField: 'id',
+                                    formatter: this.button2,
+                                    text: 'Action'
+                                }
+                            ]}                            
+                                width={{ width:'300px'}}
                         />
+                    </TabPane>
+                </TabContent>
             </Page>
         )
     }
