@@ -6,6 +6,7 @@ import ButtonAction from 'components/ButtonAction';
 import Loading from 'components/Loading';
 import { Button } from 'reactstrap';
 import { apiGet , apiPost , msgdialog , formatRupiah , dataUser } from 'app';
+import XlsExport from 'xlsexport';
 
 class Listtarif extends React.Component {
   constructor(){
@@ -25,6 +26,7 @@ class Listtarif extends React.Component {
     this.delete = this.delete.bind(this);
     this.button = this.button.bind(this);
     this.getData = this.getData.bind(this);
+    this.exportExcel = this.exportExcel.bind(this);
   }
 
   mode(){
@@ -92,6 +94,22 @@ class Listtarif extends React.Component {
     return formatRupiah(nilai,'')
   }
 
+  exportExcel(){
+    let data = [];
+    this.state.data.map(x =>(
+      data.push({
+        kode_jasa: x.kode_jasa,
+        nama_jasa: x.nama_jasa,
+        jenis: x.jenis,
+        satuan: x.satuan,
+        harga_jual1: x.harga_jual1,
+        harga_jual2: x.harga_jual2
+      })
+    ))
+    let xls = new XlsExport( data, 'dataJasa');
+    xls.exportToXLS('dataHargaJasa.xls');
+  }
+
   render() {
     let { data , loading, modal, edit , flag , satuan , jenis} = this.state;
 
@@ -105,7 +123,17 @@ class Listtarif extends React.Component {
     return (
       <Page title={'Harga Jasa'}>
         <Form mode={this.mode} modal={modal} edit={edit} flag={flag} getData={this.getData} count={data.length} satuan={satuan} jenis={jenis} />
-        <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
+        {
+          dataUser().tingkatan === 'Owner' ?
+          <div>
+              <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
+              <Button type='button' size='sm' color='success' onClick={this.exportExcel}>Export Excel</Button>
+              <Button type='button' size='sm' color='info'>Import</Button>
+              <Button type='button' size='sm' color='danger'>Hapus Semua</Button>
+          </div>
+          :
+          <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
+        }
         <Tabel
           data ={data}
           keyField = {'id'}

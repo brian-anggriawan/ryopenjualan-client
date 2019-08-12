@@ -32,6 +32,7 @@
     "react-hotkey": "^0.7.0",
     "react-html2pdf": "^1.0.1",
     "react-icons": "^3.7.0",
+    "react-json-excel": "^1.0.0",
     "react-notification-alert": "0.0.12",
     "react-render-html": "^0.6.0",
     "react-router": "5.0.1",
@@ -44,7 +45,8 @@
     "save": "^2.4.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3",
-    "sweetalert2": "^8.14.0"
+    "sweetalert2": "^8.14.0",
+    "xlsexport": "^1.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
