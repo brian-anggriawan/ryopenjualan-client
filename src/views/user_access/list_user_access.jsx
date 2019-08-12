@@ -82,9 +82,7 @@ class Listuseraccess extends React.Component {
     apiPostGet('list_menu/row_list_menu' ,{ id_user: user})
       .then(res =>{
         if (res) {
-          setTimeout(()=>{
-            this.setState({ access: res.data , loading: false , user: user , loading2: false ,modal: false}); 
-          } , 5000)
+          this.setState({ access: res.data , loading: false , user: user , loading2: false ,modal: false}); 
         }
       }) 
   }

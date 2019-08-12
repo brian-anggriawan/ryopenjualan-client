@@ -26,8 +26,17 @@ export default class list_member extends Component {
         let { mode , modal , member } = this.props;
         let { value } = this.state;
 
+        // let filter = member.filter(x => {
+        //     return x.kode_pelanggan.toLowerCase().includes(value.toLowerCase())
+        // });
+
         let filter = member.filter(x => {
-            return x.kode_pelanggan.toLowerCase().includes(value.toLowerCase())
+            if (x.kode_pelanggan.toLowerCase().includes(value.toLowerCase()) ) {
+                return x.kode_pelanggan.toLowerCase().includes(value.toLowerCase()) 
+            }else{
+                return x.nama_pelanggan.toLowerCase().includes(value.toLowerCase()) 
+            }
+                
         });
 
         let pick = (e) =>{

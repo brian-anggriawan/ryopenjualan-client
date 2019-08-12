@@ -28,7 +28,7 @@ class formModal extends React.Component{
                         <span aria-hidden = {true}> x </span>
                     </Button>
                 </div>
-                <Form id={this.props.idform}> 
+                <Form id={this.props.idform} autoFocus={false}> 
                     <div className='modal-body'>
                         {this.props.children}
                     </div>

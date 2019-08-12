@@ -67,7 +67,7 @@ export default class form_pembayaran extends Component {
                 apiPostPenjualan('penjualan/tambah' , header)
                     .then(res =>{
                         if (res.result === 'true') {
-                            window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
+                            window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
                             clear();   
                         }      
                     })
@@ -85,7 +85,7 @@ export default class form_pembayaran extends Component {
             apiPostPenjualan('penjualan/tambah' , header)
                 .then(res =>{
                     if (res.result === 'true') {
-                        window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
+                        window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
                         clear();   
                     }      
                 })

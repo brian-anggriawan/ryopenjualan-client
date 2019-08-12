@@ -4,7 +4,6 @@ import { Input , FormGroup , Label  } from 'reactstrap';
 import Select from 'react-select';
 import { apiPost } from 'app';
 import serialize from 'form-serialize';
-import dt from 'moment';
 
 export default class form_pelanggan extends Component {
     constructor(){
@@ -37,8 +36,7 @@ export default class form_pelanggan extends Component {
      }
 
     render() {
-        let { mode , modal ,edit , flag , count} = this.props;
-        let tanggal = dt(new Date()).format('l').replace('/','').replace('/','');
+        let { mode , modal ,edit , flag } = this.props;
 
         return (
             <div>
@@ -52,7 +50,7 @@ export default class form_pelanggan extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for='nnama_pelangganame'>Nama</Label>
-                                <Input type='text' name='nama_pelanggan' defaultValue={edit.nama_pelanggan} />
+                                <Input type='text' name='nama_pelanggan' autoFocus={true} defaultValue={edit.nama_pelanggan} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for='alamat'>alamat</Label>
@@ -90,7 +88,7 @@ export default class form_pelanggan extends Component {
                         <div>
                             <FormGroup>
                                 <Label for='kode_pelanggan'>Kode Pelanggan</Label>
-                                <Input type='text' name='kode_pelanggan' readOnly defaultValue={`PLG-${count+1}${tanggal}`}/>
+                                <Input type='text' name='kode_pelanggan' autoFocus={true}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label for='nama_pelanggan'>Nama</Label>

@@ -11,6 +11,7 @@ import Select from 'react-select';
 import Member from './list_member';
 import Bayar from './form_pembayaran';
 import Jasa from './list_jasa';
+import { msgerror } from "app";
 
 
 class Listpenjualan extends React.Component {
@@ -236,7 +237,15 @@ class Listpenjualan extends React.Component {
             })
           ))
         this.setState({ detail: arrayDetail.filter(x => x.kode_jasa !== '') , header: dataHeader });
-        this.mode2();
+
+        let count = Object.keys(dataHeader).length;
+        if (count === 9) {
+          this.mode2();
+        }else{
+          msgerror('Header Masih ada Yang Kosong')
+        }
+
+        
   }
 
   onKeyDown(keyName, e, handle) {

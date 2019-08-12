@@ -13,12 +13,15 @@ export default class form_proses_produksi extends Component {
         this.state = {
             ket:'',
             row:[],
+            rowNota: [],
             bahan:[]
         }
 
         this.addRow = this.addRow.bind(this);
         this.dinamicRow = this.dinamicRow.bind(this);
+        this.dinamicRowNota = this.dinamicRowNota.bind(this);
         this.simpan = this.simpan.bind(this);
+        this.addRowNota = this.addRowNota.bind(this);
     }
 
     addRow(){
@@ -42,6 +45,28 @@ export default class form_proses_produksi extends Component {
         this.setState({ row: copy });
     }
 
+    addRowNota(){
+        let { rowNota } = this.state;
+        let { nota } = this.props;
+        let id = cuid(10);
+        let tanggal = new Date();
+        let index = `${tanggal.getHours()}${tanggal.getMinutes()}${tanggal.getSeconds()}`;
+
+        let copy = [ ...rowNota];
+            copy.push(
+                <tr key={id}>
+                    <td>
+                        <Select options={nota.map(x => ({
+                            value: x.no_nota,
+                            label: x.no_nota
+                            }))}
+                        name={`nota${id}`} className='select' tabIndex={index + 1 } onKeyDown={(e)=> this.dinamicRowNota(e.keyCode , id)}/>
+                    </td>
+                </tr>
+            )
+        this.setState({ rowNota: copy });
+    }
+
     dinamicRow(e ,id ){
         let index = this.state.row.findIndex( x => x.key === id) + 1;
         let count = this.state.row.length;
@@ -51,37 +76,56 @@ export default class form_proses_produksi extends Component {
         }
     }
 
+    dinamicRowNota(e , id){
+        let index = this.state.rowNota.findIndex( x => x.key === id) + 1;
+        let count = this.state.rowNota.length;
+
+        if (e === 13 && index === count) {
+            this.addRowNota();
+        }
+    }
+
     componentDidMount(){
        apiGet('operator_produksi/result_jenis_bahan')
             .then(res =>{
                 this.setState({ bahan: res });
                 this.addRow();
+                this.addRowNota();
             })
        
     }
 
     simpan(){
-        let { ket  , row } = this.state;
-        let { mode , refresh , nonota } = this.props;
+        let { ket  , row , rowNota } = this.state;
+        let { mode , refresh } = this.props;
 
-        let dt  = Serialize(document.getElementById('detail') , { hash : true });
-        let data = {
-            no_nota: nonota,
-            operator:dataUser().username,
-            area_cetak: ket
-        };
+        let header = Serialize(document.getElementById('nota') , { hash: true });
+        let detail  = Serialize(document.getElementById('detail') , { hash : true });
 
-        let arrayDetail = [];
-        
+        let arrayHd = [];
+        let arrayDt = [];
+
         row.map(x => (
-            arrayDetail.push({
-                nama_jenis_bahan:dt[`bahan${x.key}`] || ''
+            arrayDt.push({
+                nama_jenis_bahan:detail[`bahan${x.key}`] || ''
             })
         ))
 
-        let detail2 = arrayDetail.filter(x => x.nama_jenis_bahan !== '');
-        data.detail = detail2;
+        let dt = arrayDt.filter(x => x.nama_jenis_bahan !== '');
 
+        rowNota.map(x =>(
+            arrayHd.push({
+                no_nota: header[`nota${x.key}`],
+                operator: dataUser().username,
+                area_cetak: ket,
+                detail: dt
+            })  
+
+        ))
+
+        let data = {};
+            data.header = arrayHd.filter(x => x.no_nota !== undefined);
+        
         apiPost('operator_produksi/tambah' , data)
             .then(res =>{
                 if (res) {
@@ -93,14 +137,26 @@ export default class form_proses_produksi extends Component {
     }
 
     render() {
-        let { mode , modal , nonota } = this.props;
-        let { row } = this.state;
+        let { mode , modal } = this.props;
+        let { row , rowNota } = this.state;
         return (
-            <Modal title={`Proses Produksi Nota ${nonota}`} modal={modal} mode={mode}>
+            <Modal title={`Proses Produksi Nota`} modal={modal} mode={mode}>
                 <FormGroup>
                     <Label for='area'>Area Cetak</Label>
                     <Input type='text' autoFocus={true} onChange={(e)=> this.setState({ ket: e.target.value })} />
                 </FormGroup>
+                <Form id='nota'>
+                    <Table style={{ width: '100%'}}>
+                        <thead>
+                            <tr>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { rowNota }
+                        </tbody>
+                    </Table>
+                </Form>
                 <Form id='detail'>
                     <Table style={{ width: '100%'}}>
                         <thead>

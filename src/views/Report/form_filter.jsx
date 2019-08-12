@@ -108,8 +108,10 @@ export default class form_filter extends Component {
 
         apiPostPenjualan(`/${url}/print_laporan` , data)
                 .then(res =>{
-                        let  myWindow = window.open("", "MsgWindow", "width=4000,height=4000");
-                        myWindow.document.write(res);   
+                        // let  myWindow = window.open("", "MsgWindow", "width=4000,height=4000");
+                        // myWindow.document.write(res);   
+                        let myWindow = window.open('','_blank');
+                        myWindow.document.write(res);
                    
                 })
     }

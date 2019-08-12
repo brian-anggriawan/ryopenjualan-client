@@ -12,14 +12,13 @@ export default class list_proses_produksi extends Component {
         this.state = {
             nota:[],
             loading: false,
-            modal: false,
-            nonota:''
+            modal: false
         }
         this.setLoading = this.setLoading.bind(this);
         this.refresh = this.refresh.bind(this);
-        this.button = this.button.bind(this);
+        //this.button = this.button.bind(this);
         this.mode = this.mode.bind(this);
-        this.setDetail = this.setDetail.bind(this);
+        //this.setDetail = this.setDetail.bind(this);
     }
 
     setLoading(){
@@ -42,18 +41,18 @@ export default class list_proses_produksi extends Component {
             })
     }
 
-    button( id ){
-        return <Button type='button' color='success' size='sm' onClick={()=> this.setDetail(id)}>Proses</Button>
-    }
+    // button( id ){
+    //     return <Button type='button' color='success' size='sm' onClick={()=> this.setDetail(id)}>Proses</Button>
+    // }
 
-    setDetail(id){
-        let nonota = this.state.nota.filter(x => x.id === id)[0].no_nota;
-        this.setState({ nonota: nonota});
-        this.mode();
-    }
+    // setDetail(id){
+    //     let nonota = this.state.nota.filter(x => x.id === id)[0].no_nota;
+    //     this.setState({ nonota: nonota});
+    //     this.mode();
+    // }
 
     render() {
-        let { nota , loading , nonota , modal } = this.state;
+        let { nota , loading , modal } = this.state;
 
         if (loading){
             return(
@@ -64,7 +63,8 @@ export default class list_proses_produksi extends Component {
           }
         return (
             <Page title={'Proses Produksi'}> 
-                <Form modal={modal} mode={this.mode} nonota={nonota} refresh={this.refresh} />
+                <Form modal={modal} mode={this.mode} nota={nota} refresh={this.refresh} />
+                <Button color='primary' size='sm' type='button' onClick={this.mode} style={{width:'100%'}}>Proses Nota</Button>
                 <Tabel
                 data ={nota}
                 keyField = {'id'}
@@ -94,11 +94,11 @@ export default class list_proses_produksi extends Component {
                         text: 'Total Harga',
                         formatter: this.formatUang
                     },
-                    {
-                        dataField: 'id',
-                        text: 'Action',
-                        formatter: this.button
-                    }
+                    // {
+                    //     dataField: 'id',
+                    //     text: 'Action',
+                    //     formatter: this.button
+                    // }
 
                    
                 ]}                            

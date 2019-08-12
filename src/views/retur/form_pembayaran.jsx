@@ -43,7 +43,8 @@ export default class form_pembayaran extends Component {
             apiPostPenjualan('retur/tambah' , header)
                 .then(res =>{
                     if (res.result === 'true') {
-                        window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
+                        //window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'MsgWindow', 'width=4000,height=4000');
+                        window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
                         clear();
                         mode();   
                     }      
