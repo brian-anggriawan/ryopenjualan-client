@@ -4,6 +4,7 @@ import { FormGroup , Label , Input ,Button , Form } from 'reactstrap';
 import Serialize from 'form-serialize';
 import Select from 'react-select';
 import { inputRupiah , rupiahToNumber ,formatRupiah , apiPostPenjualan , urlServer , msgerror , dataUser} from 'app';
+import Loading from 'components/Loading';
 
 export default class form_pembayaran extends Component {
     constructor(){
@@ -11,8 +12,8 @@ export default class form_pembayaran extends Component {
         this.state ={
             flagnorek: false,
             kredit: false,
-            text:'',
-            diskon: ''
+            diskon: '',
+            loading:false
         }
         this.simpan = this.simpan.bind(this);
         this.cara = this.cara.bind(this);
@@ -32,11 +33,6 @@ export default class form_pembayaran extends Component {
     metode(e){
         if (e.value === 'TRANSFER' || e.value === 'EDC') {
             this.setState({ flagnorek: true , kredit: false });
-            if (e.value === 'TRANSFER') {
-                this.setState({ text: 'No Rekening'})
-            }else{
-                this.setState({ text: 'No Kartu'})
-            }
         }else{
             this.setState({ flagnorek: false , kredit: false })   
         }
@@ -48,6 +44,8 @@ export default class form_pembayaran extends Component {
         let data = Serialize(document.getElementById('pembayaran') ,{ hash: true });
         let cek  = data.cara_bayar;
 
+        this.setState({ loading: true });
+
         if (cek === 'KREDIT') {
             let bayar = parseInt(rupiahToNumber(data.bayar || '0'));
             let proses = (50 / 100) * header.total_harga;
@@ -56,7 +54,7 @@ export default class form_pembayaran extends Component {
                 msgerror('Diskon Hanya Boleh Minimal 50%')
             }else{
                 header.cara_bayar = data.cara_bayar || '0';
-                header.no_rekening = data.no_rekening || 0;
+                header.nama_bank = data.nama_bank || '0';
                 header.bayar = rupiahToNumber(data.bayar || '0');
                 header.kembali = '-'+rupiahToNumber(data.kembali || '0');
                 header.tanggal_jam_ambil = data.tanggal_ambil || '0';
@@ -68,27 +66,39 @@ export default class form_pembayaran extends Component {
                     .then(res =>{
                         if (res.result === 'true') {
                             window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
+                            this.setState({ loading: false });
                             clear();   
                         }      
                     })
             }
         }else{
-            header.cara_bayar = data.cara_bayar || '0';
-            header.no_rekening = data.no_rekening || 0;
-            header.bayar = rupiahToNumber(data.bayar || '0');
-            header.kembali = rupiahToNumber(data.kembali || '0');
-            header.tanggal_jam_ambil = data.tanggal_ambil || '0';
-            header.metode_pembayaran = data.metode_pembayaran || '0';
-            header.total_harga = rupiahToNumber(data.total_harga || '0');
-            header.diskon = diskon === 'Nominal' ? rupiahToNumber(data.diskon) : diskon === 'Persen' ? data.diskon : '0';
-            header.detail = detail;
-            apiPostPenjualan('penjualan/tambah' , header)
-                .then(res =>{
-                    if (res.result === 'true') {
-                        window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
-                        clear();   
-                    }      
-                })
+
+            let cekBayar = rupiahToNumber(data.bayar || '0');
+            let cekTotal = rupiahToNumber(data.total_harga || '0');
+
+            if (parseInt(cekBayar) >= parseInt(cekTotal)) {
+                header.cara_bayar = data.cara_bayar || '0';
+                header.nama_bank = data.nama_bank || '0';
+                header.bayar = rupiahToNumber(data.bayar || '0');
+                header.kembali = rupiahToNumber(data.kembali || '0');
+                header.tanggal_jam_ambil = data.tanggal_ambil || '0';
+                header.metode_pembayaran = data.metode_pembayaran || '0';
+                header.total_harga = rupiahToNumber(data.total_harga || '0');
+                header.diskon = diskon === 'Nominal' ? rupiahToNumber(data.diskon) : diskon === 'Persen' ? data.diskon : '0';
+                header.detail = detail;
+                apiPostPenjualan('penjualan/tambah' , header)
+                    .then(res =>{
+                        if (res.result === 'true') {
+                            window.open(`${urlServer}/penjualan/cetak_nota/${res.id_penjualan}`,'_blank');
+                            this.setState({ loading: false });
+                            clear();   
+                        }      
+                    })
+            }else{
+                this.setState({ loading: false });
+                msgerror('Uang Pembayaran Masih Kurang');
+                
+            }
         }
         
     }
@@ -131,13 +141,17 @@ export default class form_pembayaran extends Component {
 
     render() {
         let { modal , mode , header } = this.props;
-        let { flagnorek , kredit ,text , diskon } = this.state;
+        let { flagnorek , kredit , diskon , loading } = this.state;
 
         let total_harga = formatRupiah((header.total_harga || '0').toString(),'');
         
         return (
             <Modal modal={modal} mode={mode} title={'Pembayaran'}>
-                <Form id='pembayaran'>
+                {
+                    loading ? <Loading active={loading} /> 
+                    
+                    :
+                    <Form id='pembayaran'>
                     <FormGroup>
                         <Label>Tanggal Pengambilan</Label>
                         <Input autoFocus={true} type='text' name='tanggal_ambil'  tabIndex='1'/>
@@ -179,9 +193,29 @@ export default class form_pembayaran extends Component {
                     {
                         flagnorek ? 
                         <FormGroup>
-                            <Label for='no_rekening'>{text}</Label>
-                            <Input type='number' name='no_rekening' tabIndex='5'/>
-                        </FormGroup> : ''
+                            <Label for='nama_bank'>Nama Bank </Label>
+                            <Select 
+                                options={[
+                                    {
+                                        label: 'BNI',
+                                        value:'BNI'
+                                    },
+                                    {
+                                        label: 'MANDIRI',
+                                        value:'MANDIRI'
+                                    },
+                                    {
+                                        label: 'BRI',
+                                        value:'BRI'
+                                    },
+                                    {
+                                        label: 'BCA',
+                                        value:'BCA'
+                                    }
+                                ]}
+                                name='nama_bank' id='nama_bank' tabIndex= '5'  className='select'/>
+                        </FormGroup> 
+                        : ''
 
                     }
                     {
@@ -252,6 +286,9 @@ export default class form_pembayaran extends Component {
                     <hr />
                     <Button type='button' color='success' tabIndex='6' onClick={this.simpan} size='sm' style={{ width: '100%'}}>Bayar</Button>
                 </Form>
+
+                }
+                
             </Modal>
         )
     }

@@ -59,9 +59,8 @@ export default class form_filter extends Component {
 
     print(){
         let { filter , tanggal1 , tanggal2 , bulan , tahun  } = this.state;
-
-       let desain =  Serialize(document.getElementById('report') ,{ hash: true}).petugas_desain;
-
+        let x = Serialize(document.getElementById('report') ,{ hash: true});
+    
         let { url } = this.props;
         let data ={};
 
@@ -71,21 +70,42 @@ export default class form_filter extends Component {
                     data.filter = 'tanggal';
                     data.dari_tanggal = tanggal1;
                     data.sampai_tanggal = tanggal2;
-                    data.kode_petugas_design = desain;
+                    data.kode_petugas_design = x.petugas_desain;
                     break;
                 case 'bulan':
                     data.filter = 'bulan';
                     data.filter_bulan = bulan < 10 ? `0${bulan}` : bulan;
                     data.filter_tahun_bulan = tahun;
-                    data.kode_petugas_design = desain;
+                    data.kode_petugas_design = x.petugas_desain;
                     break;
                 case 'tahun':
                     data.filter = 'tahun';
                     data.filter_tahun = tahun;
-                    data.kode_petugas_design = desain;
+                    data.kode_petugas_design = x.petugas_desain;
                     break;
                 default: console.log('');
             }  
+        }else if (this.props.title === 'Laporan Metode Pembayaran'){
+            switch(filter){
+                case 'tanggal':
+                    data.filter = 'tanggal';
+                    data.dari_tanggal = tanggal1;
+                    data.sampai_tanggal = tanggal2;
+                    data.metode_pembayaran = x.metode;
+                    break;
+                case 'bulan':
+                    data.filter = 'bulan';
+                    data.filter_bulan = bulan < 10 ? `0${bulan}` : bulan;
+                    data.filter_tahun_bulan = tahun;
+                    data.metode_pembayaran = x.metode;
+                    break;
+                case 'tahun':
+                    data.filter = 'tahun';
+                    data.filter_tahun = tahun;
+                    data.metode_pembayaran = x.metode;
+                    break;
+                default: console.log('');
+            }    
         }else{
             switch(filter){
                 case 'tanggal':
@@ -240,6 +260,29 @@ export default class form_filter extends Component {
                     </FormGroup>
                     :''
                     
+                }
+                {
+                  title === 'Laporan Metode Pembayaran' ?
+                  <FormGroup>
+                      <Label for='metode'>Metode Pembayaran</Label>
+                      <Select 
+                            options={[
+                                {
+                                    label: 'CASH',
+                                    value:'CASH'
+                                },
+                                {
+                                    label: 'TRANSFER',
+                                    value:'TRANSFER'
+                                },
+                                {
+                                    label: 'EDC',
+                                    value:'EDC'
+                                }
+                            ]}
+                      name='metode' className='select'/>
+                  </FormGroup>
+                  :''  
                 }
                 </Form>
                 <Button style={{ width:'100%'}} color='primary' onClick={this.print}>

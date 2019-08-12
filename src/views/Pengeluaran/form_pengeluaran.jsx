@@ -5,6 +5,7 @@ import Select from 'react-select';
 import serialize from 'form-serialize';
 import { apiPost  , apiGet , inputRupiah ,formatRupiah , formatTanggal , rupiahToNumber ,dataUser} from 'app';
 import cuid from 'cuid';
+import Loading from 'components/Loading';
 
 export default class form_pengeluaran extends Component {
     constructor(){
@@ -12,7 +13,8 @@ export default class form_pengeluaran extends Component {
         this.state={
             jenis:[],
             row:[],
-            total:0
+            total:0,
+            loading: false
         }
         
         this.save = this.save.bind(this);
@@ -81,6 +83,8 @@ export default class form_pengeluaran extends Component {
         let { row } = this.state;
         let arrayDetail = [];
         
+        this.setState({ loading: true });
+        
         row.map(x => (
             arrayDetail.push({
                 tanggal:formatTanggal(new Date()),
@@ -99,6 +103,7 @@ export default class form_pengeluaran extends Component {
         apiPost('pengeluaran/tambah' ,hasil)
             .then(res =>{
                 if (res) {
+                    this.setState({ loading: true });
                     this.props.getData();
                 }
         })  
@@ -107,36 +112,41 @@ export default class form_pengeluaran extends Component {
 
     render() {
         let { modal , mode } = this.props;
-        let { jenis , row , total } = this.state;
+        let { jenis , row , total , loading } = this.state;
 
         return (
             <div>
                 <Modal title={'Form Pengeluaran Biaya'} modal={modal} mode={mode} >
-                    <Form id='header'>
-                        <FormGroup>
-                            <Label for='nama_acc'>Jenis Biaya</Label>
-                            <Select autoFocus={true} className='select'  options={jenis.map(x => ({
-                                value: x.kelompok_acc,
-                                label: x.kelompok_acc
-                            }))}
-                            name='nama_acc'/>
-                        </FormGroup>
-                    </Form>
-                    <Form id='detail' className='mb-3'>
-                        <Table responsive style={{ width:'100%'}}>
-                            <thead>
-                                <tr>
-                                    <th>Keterangan</th>
-                                    <th>Nominal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { row }
-                            </tbody>
-                        </Table>
-                    </Form>
-                    <h3>{`Total : ${formatRupiah(total.toString(),'')}`}</h3>
-                    <Button style={{width: '100%'}} color='success' size='sm' onClick={this.save}>Simpan</Button>
+                    {
+                        loading ? <Loading active={loading} /> :
+                        <div>
+                            <Form id='header'>
+                                <FormGroup>
+                                    <Label for='nama_acc'>Jenis Biaya</Label>
+                                    <Select autoFocus={true} className='select'  options={jenis.map(x => ({
+                                        value: x.kelompok_acc,
+                                        label: x.kelompok_acc
+                                    }))}
+                                    name='nama_acc'/>
+                                </FormGroup>
+                            </Form>
+                            <Form id='detail' className='mb-3'>
+                                <Table responsive style={{ width:'100%'}}>
+                                    <thead>
+                                        <tr>
+                                            <th>Keterangan</th>
+                                            <th>Nominal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        { row }
+                                    </tbody>
+                                </Table>
+                            </Form>
+                            <h3>{`Total : ${formatRupiah(total.toString(),'')}`}</h3>
+                            <Button style={{width: '100%'}} color='success' size='sm' onClick={this.save}>Simpan</Button>
+                        </div>
+                    }
                 </Modal>   
             </div>
         )

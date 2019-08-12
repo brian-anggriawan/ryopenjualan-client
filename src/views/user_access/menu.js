@@ -238,6 +238,30 @@ let Menu = [
       component:'Laporan_pengeluaran_biaya_detail',
       icon: "sport_user-run",
       layout: "/admin",
+    },
+    {
+      path: "/report14",
+      name: "Laporan Metode Pembayaran",
+      group: 'report',
+      component:'laporan_metode_pembayaran',
+      icon: "sport_user-run",
+      layout: "/admin",
+    },
+    {
+      path: "/report15",
+      name: "Laporan Proses Produksi",
+      group: 'report',
+      component:'laporan_proses_produksi',
+      icon: "sport_user-run",
+      layout: "/admin",
+    },
+    {
+      path: "/report16",
+      name: "Laporan Retur",
+      group: 'report',
+      component:'Laporan_retur',
+      icon: "sport_user-run",
+      layout: "/admin",
     }
   ];
   export default Menu;

@@ -3,12 +3,14 @@ import Modal from 'layouts/list_modal';
 import { Input , Button , Form , FormGroup , Label } from 'reactstrap';
 import { formatRupiah , inputRupiah , rupiahToNumber  , apiPostPenjualan , urlServer } from 'app';
 import Serialize from 'form-serialize';
+import Loading from 'components/Loading';
 
 export default class form_pembayaran extends Component {
-
     constructor(){
         super()
-        this.state={}
+        this.state={
+            loading: false
+        }
 
         this.bayar = this.bayar.bind(this);
         this.kredit = this.kredit.bind(this);
@@ -53,12 +55,17 @@ export default class form_pembayaran extends Component {
     
     render() {
         let { mode , modal , pembayaran  , total } = this.props;
+        let { loading } = this.state;
         let total_harga = formatRupiah((total || '0').toString(),'');
 
 
         return (
             <Modal title={'Form Pembayaran'} mode={mode} modal={modal}>
-                <Form id='header'>
+                {
+                    loading ? <Loading active={true} />
+                    :
+
+                    <Form id='header'>
                     {
                         pembayaran === '0' ?
                         <FormGroup>
@@ -84,7 +91,9 @@ export default class form_pembayaran extends Component {
                         </FormGroup>
                         <hr />
                     <Button type='button' color='success' tabIndex='6' onClick={this.simpan} size='sm' style={{ width: '100%'}}>Bayar</Button>
-                </Form>
+                    </Form>
+
+                }
             </Modal>
         )
     }

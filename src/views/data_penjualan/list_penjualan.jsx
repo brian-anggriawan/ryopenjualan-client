@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Page from 'layouts/Page';
 import Tabel from 'components/tabel';
-import { apiGet , formatRupiah , urlServer , apiGet1 } from 'app';
+import { apiGet , formatRupiah , urlServer , apiPostGet  } from 'app';
 import { Button  } from 'reactstrap';
 import Detail from './list_nota';
 import Loading from 'components/Loading';
@@ -55,14 +55,13 @@ export default class list_penjualan extends Component {
         let { header } = this.state;
 
         let nota = header.filter(x => x.id === id)[0].no_nota;
-        apiGet1('/riwayat_penjualan/row_data_riwayat_penjualan/', id)
+        apiPostGet('/riwayat_penjualan/row_data_riwayat_penjualan/', { id : id})
             .then(res =>{
-                this.setState({ detail: res , nonota: nota });
+                this.setState({ detail: res.data , nonota: nota });
             })
         this.mode();
     }
 
-    
 
     render() {
         let { modal , header , detail ,nonota , loading } = this.state;

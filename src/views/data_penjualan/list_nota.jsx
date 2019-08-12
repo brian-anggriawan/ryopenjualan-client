@@ -13,7 +13,7 @@ export default class list_nota extends Component {
         return (
             <Modal title={`Detail Nota ${nota}`} modal={modal} mode={mode} >
                 <Tabel
-                    data ={[data]}
+                    data ={data}
                     keyField = {'id'}
                     columns ={[
                         {
