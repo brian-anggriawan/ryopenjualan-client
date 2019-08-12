@@ -40,6 +40,7 @@ export default class form_pembayaran extends Component {
             header.total_harga = total
             header.bayar = rupiahToNumber(data.bayar || '0');
             header.kembali = pembayaran === '0' ?  rupiahToNumber(data.kembali || '0') : pembayaran === '1' ? '-'+rupiahToNumber(data.kembali || '0') : rupiahToNumber(data.kembali || '0') ;
+            header.ket_retur = data.ket_retur;
             header.detail = detail;
 
             apiPostPenjualan('retur/tambah' , header)
@@ -80,14 +81,17 @@ export default class form_pembayaran extends Component {
                         </FormGroup>
                         : ''
                     }
-
+                         <FormGroup>
+                            <Label for='ket_retur'>Keterangan</Label>
+                            <Input type='text' name='ket_retur' tabIndex='2'/>
+                        </FormGroup>
                         <FormGroup>
                             <Label for='total_harga'>Total Harga</Label>
-                            <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='2' readOnly/>
+                            <Input type='text' name='total_harga' id='total_harga' defaultValue={total_harga} tabIndex='3' readOnly/>
                         </FormGroup>
                         <FormGroup>
                             <Label for='kembali'>Sisa Bayar</Label>
-                            <Input type='text' name='kembali' id='kembali' tabIndex='3' readOnly/>
+                            <Input type='text' name='kembali' id='kembali' tabIndex='4' readOnly/>
                         </FormGroup>
                         <hr />
                     <Button type='button' color='success' tabIndex='6' onClick={this.simpan} size='sm' style={{ width: '100%'}}>Bayar</Button>

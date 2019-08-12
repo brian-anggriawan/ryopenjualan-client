@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/list_modal';
-import { Input , Table , Form , Row , Col } from 'reactstrap';
+import { Input , Table , Form  } from 'reactstrap';
 import cuid from 'cuid';
 import { apiGet , apiPost , dataUser } from 'app';
 import Select from 'react-select';
@@ -14,7 +14,6 @@ export default class form_proses_produksi extends Component {
         this.state = {
             row:[],
             rowNota: [],
-            rowCetak:[],
             bahan:[],
             loading: false
         }
@@ -24,8 +23,6 @@ export default class form_proses_produksi extends Component {
         this.dinamicRowNota = this.dinamicRowNota.bind(this);
         this.simpan = this.simpan.bind(this);
         this.addRowNota = this.addRowNota.bind(this);
-        this.addRowCetak = this.addRowCetak.bind(this);
-        this.dinamicRowCetak = this.dinamicRowCetak.bind(this);
     }
 
     addRow(){
@@ -42,7 +39,10 @@ export default class form_proses_produksi extends Component {
                             value: x.nama_jenis_bahan,
                             label: x.nama_jenis_bahan
                             }))}
-                        name={`bahan${id}`} className='select' tabIndex={index + 1 } onKeyDown={(e)=> this.dinamicRow(e.keyCode , id)}/>
+                        name={`bahan${id}`} className='select' tabIndex={index + 1 } />
+                    </td>
+                    <td>
+                        <Input type='text' name={`area${id}`} tabIndex={index + 2 } onKeyDown={(e)=> this.dinamicRow(e.keyCode , id)} />
                     </td>
                 </tr>
             )
@@ -71,23 +71,6 @@ export default class form_proses_produksi extends Component {
         this.setState({ rowNota: copy });
     }
 
-    addRowCetak(){
-        let { rowCetak } = this.state;
-        let id = cuid(10);
-        let tanggal = new Date();
-        let index = `${tanggal.getHours()}${tanggal.getMinutes()}${tanggal.getSeconds()}`;
-
-        let copy = [ ...rowCetak];
-            copy.push(
-                <tr key={id}>
-                    <td>
-                        <Input type='text' name={`area${id}`} tabIndex={ index + 1} onKeyDown={(e)=> this.dinamicRowCetak(e.keyCode , id)}  />
-                    </td>
-                </tr>
-            )
-        this.setState({ rowCetak: copy });
-    }
-
     dinamicRow(e ,id ){
         let index = this.state.row.findIndex( x => x.key === id) + 1;
         let count = this.state.row.length;
@@ -106,14 +89,6 @@ export default class form_proses_produksi extends Component {
         }
     }
 
-    dinamicRowCetak(e , id){
-        let index = this.state.rowCetak.findIndex( x => x.key === id) + 1;
-        let count = this.state.rowCetak.length;
-
-        if (e === 13 && index === count) {
-            this.addRowCetak();
-        }
-    }
 
     componentDidMount(){
        apiGet('operator_produksi/result_jenis_bahan')
@@ -121,7 +96,6 @@ export default class form_proses_produksi extends Component {
                 this.setState({ bahan: res });
                 this.addRow();
                 this.addRowNota();
-                this.addRowCetak();
             })
        
     }
@@ -132,35 +106,26 @@ export default class form_proses_produksi extends Component {
 
         let header = Serialize(document.getElementById('nota') , { hash: true });
         let detail  = Serialize(document.getElementById('detail') , { hash : true });
-        let area = Serialize(document.getElementById('area') , { hash : true });
 
         let arrayHd = [];
         let arrayDt = [];
-        let arrayArea = [];
 
         row.map(x => (
             arrayDt.push({
-                nama_jenis_bahan:detail[`bahan${x.key}`] || ''
+                nama_jenis_bahan:detail[`bahan${x.key}`] || '',
+                area_cetak:detail[`area${x.key}`] || '',
             })
         ))
 
         let dt = arrayDt.filter(x => x.nama_jenis_bahan !== '');
 
-        row.map(x => (
-            arrayArea.push({
-                area_cetak: area[`area${x.key}`]
-            })
-        ))
-
-        let ar = arrayArea.filter(x => x.area !== '');
 
 
         rowNota.map(x =>(
             arrayHd.push({
                 no_nota: header[`nota${x.key}`],
                 operator: dataUser().username,
-                produksi_area_detail: ar,
-                produksi_bahan_detail: dt
+                detail: dt
             })  
 
         ))
@@ -180,7 +145,7 @@ export default class form_proses_produksi extends Component {
 
     render() {
         let { mode , modal } = this.props;
-        let { row , rowNota , loading , rowCetak } = this.state;
+        let { row , rowNota , loading  } = this.state;
         return (
             <Modal title={`Proses Produksi Nota`} modal={modal} mode={mode}>
                 {
@@ -200,36 +165,19 @@ export default class form_proses_produksi extends Component {
                             </Table>
                         </Form>
                         <hr />
-                        <Row>
-                            <Col>
-                                <Form id='area'>
-                                    <Table style={{ width: '100%'}}>
-                                        <thead>
-                                            <tr>
-                                                <th>Area Cetak</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            { rowCetak }
-                                        </tbody>
-                                    </Table>
-                                </Form>
-                            </Col>
-                            <Col>
-                                <Form id='detail'>
-                                    <Table style={{ width: '100%'}}>
-                                        <thead>
-                                            <tr>
-                                                <th>Jenis Bahan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            { row }
-                                        </tbody>
-                                    </Table>
-                                </Form>
-                            </Col>
-                        </Row>
+                        <Form id='detail'>
+                            <Table style={{ width: '100%'}}>
+                                <thead>
+                                    <tr>
+                                        <th>Jenis Bahan</th>
+                                        <th>Area Cetak</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { row }
+                                </tbody>
+                            </Table>
+                        </Form>
                         <Button onClick={this.simpan} color='success' type='button' size='sm' style={{ width: '100%'}}>Simpan</Button>
                     </div>
                 }
