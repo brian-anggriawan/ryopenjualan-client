@@ -12,6 +12,53 @@ export let optionTable = {
     showTotal: true
 };
 
+export let mounthName =  (value) =>{
+    let hasil;
+
+    switch(value){
+        case '01':
+            hasil =  'Januari';
+            break;
+        case '02':
+            hasil =  'Februari';
+            break
+        case '03':
+            hasil =  'Maret';
+            break
+        case '04':
+            hasil =  'April';
+            break
+        case '05':
+            hasil =  'Mei';
+            break
+        case '06':
+            hasil =  'Juni';
+            break
+        case '07':
+            hasil =  'Juli';
+            break
+        case '08':
+            hasil =  'Agustus';
+            break
+        case '09':
+            hasil =  'September';
+            break
+        case '10':
+            hasil =  'Oktober';
+            break
+        case '11':
+            hasil =  'November';
+            break
+        case '12':
+            hasil =  'Desember';
+            break
+        default: 
+            hasil = 'bulan tidak ada'
+    }
+
+    return hasil;
+}
+
 export let getDate =()=>{
    return formatTanggal(new Date())
 }
