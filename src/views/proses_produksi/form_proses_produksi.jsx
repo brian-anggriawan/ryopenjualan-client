@@ -124,13 +124,13 @@ export default class form_proses_produksi extends Component {
         rowNota.map(x =>(
             arrayHd.push({
                 no_nota: header[`nota${x.key}`],
-                operator: dataUser().username,
                 detail: dt
             })  
 
         ))
 
         let data = {};
+            data.operator = dataUser().username;
             data.header = arrayHd.filter(x => x.no_nota !== undefined);
         
         apiPost('operator_produksi/tambah' , data)

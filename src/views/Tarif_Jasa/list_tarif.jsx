@@ -128,8 +128,8 @@ class Listtarif extends React.Component {
           <div>
               <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
               <Button type='button' size='sm' color='success' onClick={this.exportExcel}>Export Excel</Button>
-              <Button type='button' size='sm' color='info'>Import</Button>
-              <Button type='button' size='sm' color='danger'>Hapus Semua</Button>
+              {/* <Button type='button' size='sm' color='info'>Import</Button>
+              <Button type='button' size='sm' color='danger'>Hapus Semua</Button> */}
           </div>
           :
           <Button type='button' size='sm' color='primary' onClick={this.tambah}>Tambah</Button>
