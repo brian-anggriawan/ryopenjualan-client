@@ -29,7 +29,8 @@ class Listpenjualan extends React.Component {
       detail:[],
       idInputJasa:'',
       total:0,
-      loadingJasa: false
+      loadingJasa: false,
+      loadingMember: false
 
     }
     this.add = this.add.bind(this);
@@ -49,6 +50,7 @@ class Listpenjualan extends React.Component {
     this.pickMember = this.pickMember.bind(this);
     this.pickJasa = this.pickJasa.bind(this);
     this.refreshJasa = this.refreshJasa.bind(this);
+    this.refreshMember = this.refreshMember.bind(this);
  
   }
 
@@ -286,15 +288,23 @@ class Listpenjualan extends React.Component {
     })
   }
 
+  refreshMember(){
+    this.setState({ loadingMember: true });
+    apiGet('/penjualan/result_data_member')
+    .then(res =>{
+      this.setState({member: res , loadingMember: false }); 
+    })
+  }
+
   render() {
-    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail , loadingJasa} = this.state;
+    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail , loadingJasa ,loadingMember} = this.state;
     return (
       <Hotkeys 
         keyName="shift+a ,shift+s ,f5"
         onKeyUp={this.onKeyDown}
       >
       <Page title={'Penjualan'}>
-        <Member modal={modal} mode={this.mode} member={ member } setMember={this.setMember} />
+        <Member modal={modal} mode={this.mode} member={ member } setMember={this.setMember} loading={loadingMember} refresh={this.refreshMember} />
         <Bayar modal={modal2} mode={this.mode2} header={header} detail={detail} clear={this.clearAll}  />
         <Jasa modal={modal3} mode={this.mode3} jasa={jasa} idinput={idInputJasa} setJasa={this.setJasa} loading={loadingJasa} refresh={this.refreshJasa}  />
         <Row>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Modal from 'layouts/list_modal';
 import Tabel from 'components/tabel_pick';
-import { Input } from 'reactstrap';
+import { Input , Button } from 'reactstrap';
+import Loading from 'components/Loading';
 
 export default class list_member extends Component {
     constructor(){
@@ -23,7 +24,7 @@ export default class list_member extends Component {
 
     render() {
         
-        let { mode , modal , member } = this.props;
+        let { mode , modal , member , loading ,refresh } = this.props;
         let { value } = this.state;
 
         // let filter = member.filter(x => {
@@ -53,32 +54,39 @@ export default class list_member extends Component {
 
         return (
             <Modal title={'List Member'} mode={mode} modal={modal}>
-                <div className='mb-3'>
-                    <Input autoFocus={true} type='text' placeholder='Kode Member' onKeyUp={(e)=> pick(e.keyCode)} onChange={(e)=> this.setState({ value: e.target.value  })} value={value} />
-                </div>
-                 <Tabel
-                    data ={filter}
-                    keyField = {'id'}
-                    rowEvents={rowEvents}
-                    columns ={[
-                    {
-                        dataField: 'kode_pelanggan',
-                        text: 'Kode Pelanggan'
-                    },
-                    {
-                        dataField: 'nama_pelanggan',
-                        text: 'Nama Pelanggan'
-                    },
-                    {
-                        dataField: 'alamat',
-                        text: 'Alamat'
-                    },
-                    {
-                        dataField: 'jenis_pelanggan',
-                        text: 'Jenis'
-                    }
-                    ]}                            
-                />
+                <Button type='button' size='sm' color='success' onClick={refresh} style={{ width:'100%'}}>Refresh Member</Button>
+                {
+                    loading ? <Loading active={loading} />
+                    :
+                    <div>
+                        <div className='mb-3'>
+                        <Input autoFocus={true} type='text' placeholder='Kode Member' onKeyUp={(e)=> pick(e.keyCode)} onChange={(e)=> this.setState({ value: e.target.value  })} value={value} />
+                        </div>
+                        <Tabel
+                            data ={filter}
+                            keyField = {'id'}
+                            rowEvents={rowEvents}
+                            columns ={[
+                            {
+                                dataField: 'kode_pelanggan',
+                                text: 'Kode Pelanggan'
+                            },
+                            {
+                                dataField: 'nama_pelanggan',
+                                text: 'Nama Pelanggan'
+                            },
+                            {
+                                dataField: 'alamat',
+                                text: 'Alamat'
+                            },
+                            {
+                                dataField: 'jenis_pelanggan',
+                                text: 'Jenis'
+                            }
+                            ]}                            
+                        />
+                    </div>
+                }
             </Modal>
         )
     }
