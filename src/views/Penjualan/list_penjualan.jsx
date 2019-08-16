@@ -28,7 +28,8 @@ class Listpenjualan extends React.Component {
       header:[],
       detail:[],
       idInputJasa:'',
-      total:0
+      total:0,
+      loadingJasa: false
 
     }
     this.add = this.add.bind(this);
@@ -47,6 +48,7 @@ class Listpenjualan extends React.Component {
     this.clearAll = this.clearAll.bind(this);
     this.pickMember = this.pickMember.bind(this);
     this.pickJasa = this.pickJasa.bind(this);
+    this.refreshJasa = this.refreshJasa.bind(this);
  
   }
 
@@ -276,8 +278,16 @@ class Listpenjualan extends React.Component {
     }
   }
 
+  refreshJasa(){
+    this.setState({ loadingJasa: true });
+    apiGet('/penjualan/result_data_jasa')
+    .then(res =>{
+      this.setState({jasa: res , loadingJasa: false }); 
+    })
+  }
+
   render() {
-    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail} = this.state;
+    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail , loadingJasa} = this.state;
     return (
       <Hotkeys 
         keyName="shift+a ,shift+s ,f5"
@@ -286,7 +296,7 @@ class Listpenjualan extends React.Component {
       <Page title={'Penjualan'}>
         <Member modal={modal} mode={this.mode} member={ member } setMember={this.setMember} />
         <Bayar modal={modal2} mode={this.mode2} header={header} detail={detail} clear={this.clearAll}  />
-        <Jasa modal={modal3} mode={this.mode3} jasa={jasa} idinput={idInputJasa} setJasa={this.setJasa}  />
+        <Jasa modal={modal3} mode={this.mode3} jasa={jasa} idinput={idInputJasa} setJasa={this.setJasa} loading={loadingJasa} refresh={this.refreshJasa}  />
         <Row>
           <Col sm='3'>
             <Row>
