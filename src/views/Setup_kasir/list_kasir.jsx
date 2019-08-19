@@ -1,6 +1,6 @@
 import React from "react";
 import Page from 'layouts/Page';
-import { Button , Input } from 'reactstrap';
+import { Button , Input  } from 'reactstrap';
 import Tabel from 'components/tabel';
 import ButtonAction from 'components/ButtonAction';
 

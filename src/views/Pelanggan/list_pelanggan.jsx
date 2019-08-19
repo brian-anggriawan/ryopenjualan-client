@@ -3,7 +3,7 @@ import Page from 'layouts/Page';
 import Form from './form_pelanggan';
 import Tabel from 'components/tabel';
 import ButtonAction from 'components/ButtonAction';
-import { apiGet , apiPost , msgdialog  } from 'app';
+import { apiGet , apiPost , msgdialog , dataUser  } from 'app';
 import Loading from 'components/Loading';
 import { Button } from 'reactstrap';
 
@@ -91,7 +91,8 @@ class Listpelanggan extends React.Component {
   }
 
   button(id){
-    return <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
+    return  dataUser().tingkatan === 'Owner' ? <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
+            : <Button type='button' color='danger' size='sm'>No Access</Button>
   }
 
   render() {

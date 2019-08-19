@@ -4,7 +4,7 @@ import Form from './form_supplier';
 import Tabel from 'components/tabel';
 import ButtonAction from 'components/ButtonAction';
 import Loading from 'components/Loading';
-import { apiGet , apiPost , msgdialog } from 'app';
+import { apiGet , apiPost , msgdialog , dataUser } from 'app';
 import { Button } from 'reactstrap';
 class Listsupplier extends React.Component {
   constructor(){
@@ -56,7 +56,8 @@ class Listsupplier extends React.Component {
   }
 
   button(id){
-    return <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
+    return  dataUser().tingkatan === 'Owner' ? <ButtonAction hapus={()=> this.delete(id)} edit={()=> this.edit(id)}  />
+            : <Button type='button' color='danger' size='sm'>No Access</Button>
   }
 
   tambah(){
