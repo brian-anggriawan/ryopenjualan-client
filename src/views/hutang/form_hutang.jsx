@@ -146,6 +146,14 @@ export default class form_hutang extends Component {
                                         text: 'Tanggal'
                                     },
                                     {
+                                        dataField: 'metode_pembayaran',
+                                        text: 'pembayaran'
+                                    },
+                                    {
+                                        dataField: 'nama_bank',
+                                        text: 'Bank'
+                                    },
+                                    {
                                         dataField: 'bayar',
                                         text: 'Bayar',
                                         formatter: this.format
@@ -168,18 +176,26 @@ export default class form_hutang extends Component {
                             keyField = {'id'}
                             columns ={[
                                 {
-                                        dataField: 'tanggal',
-                                        text: 'Tanggal'
+                                    dataField: 'tanggal',
+                                    text: 'Tanggal'
                                 },
                                 {
-                                        dataField: 'bayar',
-                                        text: 'Bayar',
-                                        formatter: this.format
+                                    dataField: 'metode_pembayaran',
+                                    text: 'pembayaran'
                                 },
                                 {
-                                        dataField: 'sisa',
-                                        text: 'Sisa',
-                                        formatter: this.format
+                                    dataField: 'nama_bank',
+                                    text: 'Bank'
+                                },
+                                {
+                                    dataField: 'bayar',
+                                    text: 'Bayar',
+                                    formatter: this.format
+                                },
+                                {
+                                    dataField: 'sisa',
+                                    text: 'Sisa',
+                                    formatter: this.format
                                 }
                             ]}                            
                             width={{ width:'300px'}}
