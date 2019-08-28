@@ -112,6 +112,14 @@ let Menu = [
       group: 'transaksi'
     },
     {
+      path: "/pemasukkan",
+      name: "Pemasukkan",
+      icon: "files_single-copy-04",
+      component: 'Auth(Pemasukkan)',
+      layout: "/admin",
+      group: 'transaksi'
+    },
+    {
       path: "/userlogin",
       name: "User Login",
       icon: "users_single-02",

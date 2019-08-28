@@ -18,6 +18,7 @@ import Jenisbahan from 'views/jenis_bahan/jenis_bahan';
 import DataPenjualan from 'views/data_penjualan/list_penjualan';
 import Produksi from 'views/proses_produksi/list_proses_produksi';
 import Retur from 'views/retur/retur';
+import Pemasukkan from 'views/Pemasukkan/list_pemasukkan';
 
 
 var dashRoutes = [
@@ -138,6 +139,14 @@ var dashRoutes = [
     name: "Pengeluaran",
     icon: "shopping_cart-simple",
     component: Auth(Pengeluaran),
+    layout: "/admin",
+    group: 'transaksi'
+  },
+  {
+    path: "/pemasukkan",
+    name: "Pemasukkan",
+    icon: "files_single-copy-04",
+    component: Auth(Pemasukkan),
     layout: "/admin",
     group: 'transaksi'
   },
