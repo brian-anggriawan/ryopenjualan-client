@@ -131,6 +131,7 @@ export default class form_proses_produksi extends Component {
     }
 
     simpan(){
+        this.setState({ loading : true });
         let {  row , rowNota } = this.state;
         let { mode , refresh } = this.props;
 
@@ -171,6 +172,7 @@ export default class form_proses_produksi extends Component {
         apiPost('operator_produksi/tambah' , data)
             .then(res =>{
                 if (res) {
+                    this.setState({ loading : false });
                     mode();
                     refresh();
                 }
@@ -216,7 +218,7 @@ export default class form_proses_produksi extends Component {
                             <Table style={{ width: '100%'}}>
                                 <thead>
                                     <tr>
-                                        <th>Jenis Bahan</th>
+                                        <th style={{width: '50%'}}>Jenis Bahan</th>
                                         <th>Jumlah 1</th>
                                         <th>Jumlah 2</th>
                                         <th>Area Cetak</th>
