@@ -144,8 +144,8 @@ export default class form_proses_produksi extends Component {
         row.map(x => (
             arrayDt.push({
                 nama_jenis_bahan:detail[`bahan${x.key}`] || '',
-                jumlah1:detail[`jumlah1${x.key}`] || 0,
-                jumlah2:detail[`jumlah2${x.key}`] || 0,
+                panjang:detail[`jumlah1${x.key}`] || 0,
+                lebar:detail[`jumlah2${x.key}`] || 0,
                 area_cetak:detail[`area${x.key}`] || 0,
                 jumlah_cetak:detail[`jumlah${x.key}`] || 0,
                 kesalahan:detail[`kesalahan${x.key}`] || 0,
@@ -219,8 +219,8 @@ export default class form_proses_produksi extends Component {
                                 <thead>
                                     <tr>
                                         <th style={{width: '50%'}}>Jenis Bahan</th>
-                                        <th>Jumlah 1</th>
-                                        <th>Jumlah 2</th>
+                                        <th>Panjang</th>
+                                        <th>Lebar</th>
                                         <th>Area Cetak</th>
                                         <th>Jumlah Cetak</th>
                                         <th>Keterangan</th>
