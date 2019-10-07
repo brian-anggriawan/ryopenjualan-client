@@ -8,7 +8,6 @@ import Hotkeys from 'react-hot-keys';
 import cuid from 'cuid';
 import { UncontrolledTooltip } from 'reactstrap';
 import Select from 'react-select';
-import Member from './list_member';
 import Bayar from './form_pembayaran';
 import Jasa from './list_jasa';
 import { msgerror } from "app";
@@ -20,7 +19,6 @@ class Listpenjualan extends React.Component {
     this.state = {
       row:[],
       petugas:[],
-      modal: false,
       member:[],
       jasa:[],
       modal2: false,
@@ -30,7 +28,7 @@ class Listpenjualan extends React.Component {
       idInputJasa:'',
       total:0,
       loadingJasa: false,
-      loadingMember: false
+      kode_pelanggan:''
 
     }
     this.add = this.add.bind(this);
@@ -40,31 +38,28 @@ class Listpenjualan extends React.Component {
     this.deleteRow = this.deleteRow.bind(this);
     this.addRow = this.addRow.bind(this);
     this.save = this.save.bind(this);
-    this.mode = this.mode.bind(this);
-    this.setMember = this.setMember.bind(this);
     this.mode2 = this.mode2.bind(this);
     this.mode3 = this.mode3.bind(this);
     this.setJasa = this.setJasa.bind(this);
     this.hitungTotalHarga = this.hitungTotalHarga.bind(this);
     this.clearAll = this.clearAll.bind(this);
-    this.pickMember = this.pickMember.bind(this);
     this.pickJasa = this.pickJasa.bind(this);
     this.refreshJasa = this.refreshJasa.bind(this);
-    this.refreshMember = this.refreshMember.bind(this);
+    this.setMember = this.setMember.bind(this);
  
   }
 
   setJasa(data){
-    let { idInputJasa } = this.state;
+    let { idInputJasa , kode_pelanggan } = this.state;
     document.getElementById(`kode${idInputJasa}`).value = data.kode_jasa;
     document.getElementById(`jasa${idInputJasa}`).value = data.nama_jasa;
     document.getElementById(`satuan${idInputJasa}`).value = data.satuan;
     document.getElementById(`jenis${idInputJasa}`).value = data.jenis;
     document.getElementById(`qty${idInputJasa}`).value = '1';
 
-    let cek = document.getElementById('kode_pelanggan').value;
 
-    if (cek === '00') {
+
+    if (kode_pelanggan === '00') {
       document.getElementById(`harga${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');  
       document.getElementById(`total${idInputJasa}`).value = formatRupiah(data.harga_jual1 ,'');
     }else{
@@ -76,15 +71,27 @@ class Listpenjualan extends React.Component {
 
   }
 
-  setMember(kode , nama , alamat , jenis){
-    document.getElementById('nama_pelanggan').value = nama;
-    document.getElementById('kode_pelanggan').value = kode;
-    document.getElementById('alamat').value = alamat;
+  setMember(e){
+    
+    if (e.keyCode === 13) {
+      let { member } = this.state;
+
+      let data = member.filter( x => x.kode_pelanggan.toLowerCase()  === e.target.value.toLowerCase())[0] || 0;
+
+      if (data === 0) {
+        alert('Kode Member Tidak Terdaftar')
+        this.setState({ kode_pelanggan: '' });
+        document.getElementById('nama_pelanggan').value = '';
+        document.getElementById('alamat').value = '';
+      } else {
+        document.getElementById('nama_pelanggan').value = data.nama_pelanggan;
+        document.getElementById('alamat').value = data.alamat;
+        this.setState({ kode_pelanggan: e.target.value });
+      }
+    } 
+
   }
 
-  mode(){
-    this.setState({ modal: !this.state.modal });
-  }
 
   mode2(){
     this.setState({ modal2: !this.state.modal2  });
@@ -192,7 +199,7 @@ class Listpenjualan extends React.Component {
   }
 
   clearAll(){
-    this.setState({ row: [] , modal: false , modal2: false , modal3: false , header:[] , detail:[] , idinput:'' , total: 0 });
+    this.setState({ row: [] , modal: false , modal2: false , modal3: false , header:[] , detail:[] , idinput:'' , total: 0 , kode_pelanggan:'' });
     document.getElementById('no_nota').value = '';
     document.getElementById('header').hidden = true;
     document.getElementById('save').hidden = true;
@@ -274,12 +281,6 @@ class Listpenjualan extends React.Component {
     }) 
   }
 
-  pickMember(e){
-    if (e.keyCode === 17) {
-      this.mode();
-    }
-  }
-
   refreshJasa(){
     this.setState({ loadingJasa: true });
     apiGet('/penjualan/result_data_jasa')
@@ -288,23 +289,15 @@ class Listpenjualan extends React.Component {
     })
   }
 
-  refreshMember(){
-    this.setState({ loadingMember: true });
-    apiGet('/penjualan/result_data_member')
-    .then(res =>{
-      this.setState({member: res , loadingMember: false }); 
-    })
-  }
 
   render() {
-    let { row , petugas , modal , member , jasa , modal2 , modal3 , idInputJasa , total , header , detail , loadingJasa ,loadingMember} = this.state;
+    let { row , petugas  , jasa , modal2 , modal3 , idInputJasa , total , header , detail , loadingJasa } = this.state;
     return (
       <Hotkeys 
         keyName="shift+a ,shift+s ,f5"
         onKeyUp={this.onKeyDown}
       >
       <Page title={'Penjualan'}>
-        <Member modal={modal} mode={this.mode} member={ member } setMember={this.setMember} loading={loadingMember} refresh={this.refreshMember} />
         <Bayar modal={modal2} mode={this.mode2} header={header} detail={detail} clear={this.clearAll}  />
         <Jasa modal={modal3} mode={this.mode3} jasa={jasa} idinput={idInputJasa} setJasa={this.setJasa} loading={loadingJasa} refresh={this.refreshJasa}  />
         <Row>
@@ -344,24 +337,25 @@ class Listpenjualan extends React.Component {
               </FormGroup>
             </Col>
             <Col>
+                <FormGroup>
+                  <Label for='kode_pelanggan'>Kode Pelanggan</Label>
+                  <Input type='text' name='kode_pelanggan' id='kode_pelanggan' tabIndex='2' onKeyDown={this.setMember} />
+                </FormGroup>
                 <FormGroup >
                   <Label for='nama_pelanggan'>Nama Pelanggan</Label>
-                  <Input type='text' name='nama_pelanggan' placeholder='Tekan ctrl unutk pilih member' id='nama_pelanggan' onKeyUp={(e)=> this.pickMember(e)} tabIndex='2'/>
+                  <Input type='text' name='nama_pelanggan'  id='nama_pelanggan' tabIndex='3'/>
                 </FormGroup>
-              <FormGroup>
-                <Label for='alamat'>Alamat</Label>
-                <Input type='text' name='alamat' id='alamat' tabIndex='3' />
-              </FormGroup>
             </Col>
             <Col>
               <FormGroup>
-                <Label for='no_telepon'>No Telp</Label>
-                <Input type='number' name='no_telepon' tabIndex='4'/>
+                <Label for='alamat'>Alamat</Label>
+                <Input type='text' name='alamat' id='alamat' tabIndex='4' />
               </FormGroup>
               <FormGroup>
-                <Label for='kode_pelanggan'>Kode Pelanggan</Label>
-                <Input type='text' name='kode_pelanggan' id='kode_pelanggan' tabIndex='5' readOnly/>
+                <Label for='no_telepon'>No Telp</Label>
+                <Input type='number' name='no_telepon' tabIndex='5'/>
               </FormGroup>
+             
             </Col>
           </Row>
         </Form>
